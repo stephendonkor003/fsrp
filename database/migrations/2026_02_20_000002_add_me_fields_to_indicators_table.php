@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -58,25 +59,66 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('myb_indicators', function (Blueprint $table) {
-            $table->dropForeignKeyIfExists(['parent_indicator_id']);
-            $table->dropForeignKeyIfExists(['indicator_level_id']);
-            $table->dropForeignKeyIfExists(['frequency_of_reporting_id']);
-            $table->dropForeignKeyIfExists(['unit_id']);
+        if (!Schema::hasTable('myb_indicators')) {
+            return;
+        }
 
-            $table->dropColumn([
-                'parent_indicator_id',
-                'baseline_year',
-                'baseline_type',
-                'indicator_level_id',
-                'methodology',
-                'notes',
-                'responsible_party',
-                'frequency_of_reporting_id',
-                'unit_id',
-                'primary_source',
-                'definitions',
-            ]);
+        $this->dropForeignKeyIfExists('myb_indicators', 'parent_indicator_id');
+        $this->dropForeignKeyIfExists('myb_indicators', 'indicator_level_id');
+        $this->dropForeignKeyIfExists('myb_indicators', 'frequency_of_reporting_id');
+        $this->dropForeignKeyIfExists('myb_indicators', 'unit_id');
+
+        $columns = array_values(array_filter([
+            'parent_indicator_id',
+            'baseline_year',
+            'baseline_type',
+            'indicator_level_id',
+            'methodology',
+            'notes',
+            'responsible_party',
+            'frequency_of_reporting_id',
+            'unit_id',
+            'primary_source',
+            'definitions',
+        ], fn ($column) => Schema::hasColumn('myb_indicators', $column)));
+
+        if ($columns !== []) {
+            Schema::table('myb_indicators', function (Blueprint $table) use ($columns) {
+                $table->dropColumn($columns);
+            });
+        }
+    }
+
+    private function dropForeignKeyIfExists(string $table, string $column): void
+    {
+        $driver = DB::getDriverName();
+        $constraint = "{$table}_{$column}_foreign";
+
+        if ($driver === 'pgsql') {
+            DB::statement(sprintf(
+                'ALTER TABLE %s DROP CONSTRAINT IF EXISTS %s',
+                $table,
+                $constraint
+            ));
+
+            return;
+        }
+
+        if ($driver === 'mysql') {
+            $exists = DB::table('information_schema.KEY_COLUMN_USAGE')
+                ->where('TABLE_SCHEMA', DB::getDatabaseName())
+                ->where('TABLE_NAME', $table)
+                ->where('COLUMN_NAME', $column)
+                ->whereNotNull('REFERENCED_TABLE_NAME')
+                ->exists();
+
+            if (!$exists) {
+                return;
+            }
+        }
+
+        Schema::table($table, function (Blueprint $blueprint) use ($column) {
+            $blueprint->dropForeign([$column]);
         });
     }
 };
