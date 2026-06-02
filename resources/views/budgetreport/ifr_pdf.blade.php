@@ -118,7 +118,29 @@
     </div>
 
     <div class="section">
-        <h3 style="margin: 0 0 8px 0; color: #0f172a;">Section 2: Graphs & Trends</h3>
+        <h3 style="margin: 0 0 8px 0; color: #0f172a;">Section 2: Designated Account & Prior Review Evidence</h3>
+        <table>
+            <tr>
+                <th style="width: 25%;">Designated Account Activity</th>
+                <td style="width: 25%;">
+                    {{ !empty($ifrEvidence['designated_account_activities']) ? implode(', ', $ifrEvidence['designated_account_activities']) : 'N/A' }}
+                </td>
+                <th style="width: 25%;">Bank Statement References</th>
+                <td>
+                    {{ !empty($ifrEvidence['bank_statement_references']) ? implode(', ', $ifrEvidence['bank_statement_references']) : 'N/A' }}
+                </td>
+            </tr>
+            <tr>
+                <th>Subject to Prior Review</th>
+                <td>{{ $currency }} {{ number_format($ifrEvidence['prior_review_amount'] ?? 0, 2) }} ({{ number_format($ifrEvidence['prior_review_count'] ?? 0) }} records)</td>
+                <th>Not Subject to Prior Review</th>
+                <td>{{ $currency }} {{ number_format($ifrEvidence['not_prior_review_amount'] ?? 0, 2) }} ({{ number_format($ifrEvidence['not_prior_review_count'] ?? 0) }} records)</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="section">
+        <h3 style="margin: 0 0 8px 0; color: #0f172a;">Section 3: Graphs & Trends</h3>
 
         @if (!empty($chartImages['line']) || !empty($chartImages['bar']) || !empty($chartImages['bubble']))
             <table>
@@ -202,7 +224,7 @@
     </div>
 
     <div class="section">
-        <h3 style="margin: 0 0 8px 0; color: #0f172a;">Section 3: IFR Summary</h3>
+        <h3 style="margin: 0 0 8px 0; color: #0f172a;">Section 4: IFR Summary</h3>
         <ul>
             @foreach ($summary as $line)
                 <li>{{ $line }}</li>

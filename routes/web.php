@@ -99,6 +99,7 @@ use App\Http\Controllers\{
 	    ApprovedWorkPlanController,
 	    PurchaseRequestController,
 	    BudgetReportController,
+	    FsrpSafeguardsController,
 	    ProjectBudgetController,
 	    MeConfigurationController,
         MeIndicatorController,
@@ -106,8 +107,9 @@ use App\Http\Controllers\{
         MeSurveyController,
         IndicatorSurveyController,
         PublicIndicatorSurveyController,
-        WorldIndicatorsController,
-        WorldIndicatorSettingsController,
+    WorldIndicatorsController,
+    WorldIndicatorSettingsController,
+    FoodSecurityAnalyticsController,
 	};
 
 /*
@@ -148,6 +150,7 @@ use App\Http\Controllers\System\{
     MemberStateCommunicationAdminController,
     MemberStateQuestionAdminController,
     MemberStateNationalDataReviewController,
+    MemberStateCommodityTrendReviewController,
 };
 
 use App\Http\Controllers\{
@@ -259,6 +262,21 @@ Route::middleware(['auth', 'verified', 'not.funding.partner'])
 
             Route::post('/{entry}/status', [MemberStateNationalDataReviewController::class, 'updateStatus'])
                 ->middleware('permission:national_data.approve')
+                ->name('status.update');
+        });
+
+        /*
+        |--------------------------------------------------------------------------
+        | MEMBER-STATE FOOD COMMODITY REVIEW
+        |--------------------------------------------------------------------------
+        */
+        Route::prefix('commodity-trend-reviews')->name('commodity-trend-reviews.')->group(function () {
+            Route::get('/', [MemberStateCommodityTrendReviewController::class, 'index'])
+                ->middleware('permission:commodity_data.review')
+                ->name('index');
+
+            Route::post('/{entry}/status', [MemberStateCommodityTrendReviewController::class, 'updateStatus'])
+                ->middleware('permission:commodity_data.approve')
                 ->name('status.update');
         });
 
@@ -534,37 +552,37 @@ Route::middleware(['auth', 'not.funding.partner', 'permission:finance.access'])
         // Load projects
         Route::get('commitments/ajax/projects',
             [BudgetCommitmentController::class, 'projects']
-        );
+        )->name('commitments.ajax.projects');
 
         // Load activities by project
         Route::get('commitments/ajax/activities/{project}',
             [BudgetCommitmentController::class, 'activities']
-        );
+        )->name('commitments.ajax.activities');
 
         // Load sub-activities by activity
         Route::get('commitments/ajax/sub-activities/{activity}',
             [BudgetCommitmentController::class, 'subActivities']
-        );
+        )->name('commitments.ajax.sub-activities');
 
 	        // Load allocation years
 	        Route::get('commitments/ajax/allocation-years/{level}/{id}',
 	            [BudgetCommitmentController::class, 'allocationYears']
-	        );
+	        )->name('commitments.ajax.allocation-years');
 
 	        // Allocation breakdown (allocated/committed/remaining by year)
 	        Route::get('commitments/ajax/allocation-breakdown/{level}/{id}',
 	            [BudgetCommitmentController::class, 'allocationBreakdown']
-	        );
+	        )->name('commitments.ajax.allocation-breakdown');
 
         // Remaining budget
         Route::get('commitments/ajax/remaining-budget',
             [BudgetCommitmentController::class, 'remainingBudget']
-        );
+        )->name('commitments.ajax.remaining-budget');
 
         // Resources by category
         Route::get('resources/ajax/resources/{category}',
             [BudgetCommitmentController::class, 'resourcesByCategory']
-        );
+        )->name('resources.ajax.resources');
 
         Route::post('commitments/{commitment}/submit',
             [BudgetCommitmentController::class, 'submit']
@@ -2428,6 +2446,8 @@ Route::get('/impact-map/download/pdf', [ImpactMapController::class, 'downloadPdf
 Route::get('/impact-map/download/excel', [ImpactMapController::class, 'downloadExcel'])
     ->middleware('throttle:10,1')
     ->name('impact.download.excel');
+Route::get('/food-commodities-map', [FoodSecurityAnalyticsController::class, 'commodities'])
+    ->name('food-security.commodities');
 Route::get('/world-indicators-performance', [WorldIndicatorsController::class, 'index'])
     ->name('world.indicators.performance');
 Route::get('/api/world-indicators/country-metrics', [WorldIndicatorsController::class, 'countryMetrics'])
@@ -2924,6 +2944,24 @@ Route::middleware(['auth', 'not.funding.partner'])
         Route::post('/', [ProcurementProgramPlanController::class, 'store'])->name('store');
     });
 
+/*
+|--------------------------------------------------------------------------
+| FSRP SAFEGUARDS / SEP / GRM
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth', 'not.funding.partner'])
+    ->prefix('fsrp/safeguards')
+    ->name('fsrp.safeguards.')
+    ->group(function () {
+        Route::get('/', [FsrpSafeguardsController::class, 'index'])->name('index');
+        Route::post('/screenings', [FsrpSafeguardsController::class, 'storeScreening'])->name('screenings.store');
+        Route::put('/screenings/{screening}', [FsrpSafeguardsController::class, 'updateScreening'])->name('screenings.update');
+        Route::post('/engagements', [FsrpSafeguardsController::class, 'storeEngagement'])->name('engagements.store');
+        Route::put('/engagements/{engagement}', [FsrpSafeguardsController::class, 'updateEngagement'])->name('engagements.update');
+        Route::post('/grievances', [FsrpSafeguardsController::class, 'storeGrievance'])->name('grievances.store');
+        Route::put('/grievances/{grievance}', [FsrpSafeguardsController::class, 'updateGrievance'])->name('grievances.update');
+    });
+
 
 /*
 |--------------------------------------------------------------------------
@@ -2944,6 +2982,7 @@ Route::middleware(['auth', 'not.funding.partner'])
         Route::get('/generate-code', [ProcurementPlanController::class, 'generateCode'])->name('generate-code');
         Route::get('/lookup', [ProcurementPlanController::class, 'lookup'])->name('lookup');
         Route::get('/sheet', [ProcurementPlanController::class, 'sheet'])->name('sheet');
+        Route::get('/compliance-dashboard', [ProcurementPlanController::class, 'complianceDashboard'])->name('compliance-dashboard');
         Route::get('/program-plans/{programPlan}/sheet', [ProcurementPlanController::class, 'programPlanSheet'])
             ->name('program-plans.sheet');
         Route::get('/sub-activities/{activity}', [ProcurementPlanController::class, 'getSubActivities'])->name('sub-activities');

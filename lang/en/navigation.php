@@ -15,6 +15,7 @@ return [
     'features' => 'Features',
     'process' => 'System Flow',
     'customization' => 'Customization',
-    'impact_map' => 'Impact Map',
-    'world_indicators_performance' => 'World Indicators / Performance',
+    'impact_map' => 'Food Security Impact Map',
+    'food_commodities_map' => 'Food Commodities Map',
+    'world_indicators_performance' => 'Food Security Indicators',
 ];

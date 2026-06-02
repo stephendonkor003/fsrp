@@ -85,6 +85,8 @@ class RolePermissionSeeder extends Seeder
             'questions.respond',
             'national_data.review',
             'national_data.approve',
+            'commodity_data.review',
+            'commodity_data.approve',
         ];
 
         // Communication Officer

@@ -12,6 +12,8 @@ class ConsortiumWorkplan extends BaseModel
     protected $fillable = [
         'consortium_id',
         'program_funding_id',
+        'fsrp_component_id',
+        'fsrp_subcomponent_id',
         'title',
         'period_label',
         'starts_on',
@@ -38,6 +40,16 @@ class ConsortiumWorkplan extends BaseModel
     public function programFunding(): BelongsTo
     {
         return $this->belongsTo(ProgramFunding::class, 'program_funding_id');
+    }
+
+    public function fsrpComponent(): BelongsTo
+    {
+        return $this->belongsTo(FsrpComponent::class, 'fsrp_component_id');
+    }
+
+    public function fsrpSubcomponent(): BelongsTo
+    {
+        return $this->belongsTo(FsrpSubcomponent::class, 'fsrp_subcomponent_id');
     }
 
     public function reports(): HasMany

@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
 
 <head>
     <meta charset="UTF-8">
     <title>{{ $procurement->title }} | FSRP</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Apply for {{ $procurement->title }} through the FSRP digital procurement platform.">
+    <meta name="description" content="{{ __('public_pages.procurement_apply_meta_description', ['title' => $procurement->title]) }}">
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/style.css">
@@ -234,28 +234,7 @@
 </head>
 
 <body>
-    <header class="navbar">
-        <div class="logo">
-
-            <img src="{{ asset('assets/images/au.png') }}" alt="" class="logo logo-sm">
-
-        </div>
-        <nav class="nav-links">
-            <a href="{{ route('landing.index') }}">Home</a>
-            <a href="#process">System Flow</a>
-            <a href="#customization">Customization</a>
-            <a href="#contact">Contact</a>
-            <a href="{{ route('events') }}">Events</a>
-            <a href="{{ route('careers.index') }}">Career</a>
-            <a href="{{ route('public.procurement.index') }}">FaQ's</a>
-        </nav>
-
-        <div class="nav-actions">
-            <a href="{{ route('login') }}" class="btn btn-login">Login</a>
-            {{-- <a href="{{ route('applicants.create') }}" class="btn btn-primary">Call for Proposals</a> --}}
-
-        </div>
-    </header>
+<x-public-header active="procurement" language-style="procurement-show" />
 
     {{-- ===== HEADER ===== --}}
     <section class="page-header">
@@ -265,7 +244,7 @@
             <br>
             <br>
             <h1>{{ $procurement->title }}</h1>
-            <p>Reference: {{ $procurement->reference_no ?? 'N/A' }}</p>
+            <p>{{ __('public_pages.procurement_reference') }}: {{ $procurement->reference_no ?? __('public_pages.dash') }}</p>
         </div>
     </section>
 
@@ -285,13 +264,13 @@
         {{-- ===== ERROR SUMMARY ===== --}}
         @if ($errors->any())
             <div class="alert alert-danger">
-                <strong>Please correct the errors below.</strong>
+                <strong>{{ __('public_pages.procurement_error_summary') }}</strong>
             </div>
         @endif
 
         {{-- ===== PROCUREMENT DETAILS ===== --}}
             <div class="card">
-                <h3>Procurement Details</h3>
+                <h3>{{ __('public_pages.procurement_details') }}</h3>
 
                 <div style="margin-top:1rem; line-height:1.7;">
                     {!! nl2br(e(strip_tags($procurement->description ?? ''))) !!}
@@ -318,7 +297,7 @@
 
         {{-- ===== APPLICATION FORM ===== --}}
         <div class="card">
-            <h3>Application Form</h3>
+            <h3>{{ __('public_pages.procurement_application_form') }}</h3>
 
             {{-- @if ($form && $form->fields->count()) --}}
             @if ($form?->fields?->isNotEmpty())
@@ -415,7 +394,7 @@
                                     {{-- SINGLE SELECT (SELECT2) --}}
                                 @elseif ($field->field_type === 'select')
                                     <select name="{{ $field->field_key }}" class="form-select select2-single"
-                                        data-placeholder="Select an option" {{ $isRequired ? 'required' : '' }}>
+                                        data-placeholder="{{ __('public_pages.procurement_select_option') }}" {{ $isRequired ? 'required' : '' }}>
                                         <option></option>
                                         @foreach ($options as $option)
                                             <option value="{{ $option }}"
@@ -428,7 +407,7 @@
                                     {{-- MULTI SELECT (SELECT2) --}}
                                 @elseif (in_array($field->field_type, ['checkbox', 'multiselect']))
                                     <select name="{{ $field->field_key }}[]" class="form-select select2-multiple"
-                                        multiple data-placeholder="Select one or more options"
+                                        multiple data-placeholder="{{ __('public_pages.procurement_select_options') }}"
                                         {{ $isRequired ? 'required' : '' }}>
                                         @foreach ($options as $option)
                                             <option value="{{ $option }}"
@@ -439,7 +418,7 @@
                                     </select>
 
                                     @if ($isRequired)
-                                        <small class="text-muted">Select one or more options</small>
+                                        <small class="text-muted">{{ __('public_pages.procurement_select_options') }}</small>
                                     @endif
 
                                     {{-- FILE --}}
@@ -459,14 +438,14 @@
 
                     <div style="text-align:center;margin-top:2rem;">
                         <button type="submit" class="btn-submit">
-                            Submit Application
+                            {{ __('public_pages.procurement_submit_application') }}
                         </button>
                     </div>
 
                 </form>
             @else
                 <p style="color:#999;">
-                    No application form has been attached to this procurement yet.
+                    {{ __('public_pages.procurement_no_form') }}
                 </p>
             @endif
 
@@ -474,40 +453,7 @@
         </div>
 
     </div>
-    <footer id="contact" class="footer">
-        <div class="footer-content">
-
-            <div class="footer-logo">
-                <h3>FSRP<span> Administration</span></h3>
-                <p>
-                    Western and Central Africa - West Africa Food System Resilience Program (FSRP) ? supporting African Union
-                    institutions through centralized governance, policy coordination,
-                    and strategic oversight of programs and funded initiatives.
-                </p>
-            </div>
-
-            <div class="footer-links">
-                <h4>Quick Links</h4>
-                <a href="#">Home</a>
-                <a href="#process">Institutional Process Flow</a>
-                <a href="#customization">Centralized Oversight</a>
-                <a href="#contact">Contact</a>
-            </div>
-
-            <div class="footer-contact">
-                <h4>Contact</h4>
-                <p>Email: fsrpinfo@africanunion.org</p>
-                <p>&copy; 2026 Western and Central Africa - West Africa Food System Resilience Program (FSRP)</p>
-            </div>
-
-        </div>
-
-        <p style="margin-top: 10px; font-weight: 600; text-align: center;">
-            Supporting African Union policy coordination, governance reform,
-            and evidence-based decision-making across the continent.
-        </p>
-
-    </footer>
+    <x-public-footer />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>

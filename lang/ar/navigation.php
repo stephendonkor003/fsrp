@@ -16,5 +16,6 @@ return [
     'process' => 'تدفق النظام',
     'customization' => 'التخصيص',
     'impact_map' => 'خريطة التأثير',
+    'food_commodities_map' => 'Food Commodities Map',
     'world_indicators_performance' => 'World Indicators / Performance',
 ];

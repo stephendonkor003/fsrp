@@ -8,9 +8,35 @@
         <div>
             <h4 class="mb-1">Commodities and Trend Reporting</h4>
             <p class="mb-0 text-muted">
-                Shared commodity catalog (no duplicates) and country-level trend data.
+                Shared food commodity catalog and country-level trend data. Public analytics only use records approved by the back office.
             </p>
         </div>
+    </div>
+
+    @if (session('success')) <div class="alert alert-success border-0 shadow-sm">{{ session('success') }}</div> @endif
+    @if (session('error')) <div class="alert alert-danger border-0 shadow-sm">{{ session('error') }}</div> @endif
+
+    @php
+        $reviewLabels = [
+            'pending' => 'Pending Review',
+            'approved' => 'Approved',
+            'revision_required' => 'Revision Required',
+            'rejected' => 'Rejected',
+        ];
+        $reviewClasses = [
+            'pending' => 'warning',
+            'approved' => 'success',
+            'revision_required' => 'danger',
+            'rejected' => 'secondary',
+        ];
+    @endphp
+
+    <div class="row g-3 mb-4">
+        <div class="col-md"><div class="card border-0 shadow-sm"><div class="card-body py-3"><div class="small text-muted text-uppercase fw-bold">Total</div><div class="fs-5 fw-bold">{{ number_format((int) ($stats['total'] ?? 0)) }}</div></div></div></div>
+        <div class="col-md"><div class="card border-0 shadow-sm"><div class="card-body py-3"><div class="small text-muted text-uppercase fw-bold">Pending</div><div class="fs-5 fw-bold text-warning">{{ number_format((int) ($stats['pending'] ?? 0)) }}</div></div></div></div>
+        <div class="col-md"><div class="card border-0 shadow-sm"><div class="card-body py-3"><div class="small text-muted text-uppercase fw-bold">Approved</div><div class="fs-5 fw-bold text-success">{{ number_format((int) ($stats['approved'] ?? 0)) }}</div></div></div></div>
+        <div class="col-md"><div class="card border-0 shadow-sm"><div class="card-body py-3"><div class="small text-muted text-uppercase fw-bold">Revision Req.</div><div class="fs-5 fw-bold text-danger">{{ number_format((int) ($stats['revision_required'] ?? 0)) }}</div></div></div></div>
+        <div class="col-md"><div class="card border-0 shadow-sm"><div class="card-body py-3"><div class="small text-muted text-uppercase fw-bold">Rejected</div><div class="fs-5 fw-bold text-secondary">{{ number_format((int) ($stats['rejected'] ?? 0)) }}</div></div></div></div>
     </div>
 
     <div class="row g-3 mb-4">
@@ -26,21 +52,21 @@
                             <label class="form-label">Commodity Name</label>
                             <input type="text" name="name" value="{{ old('name') }}"
                                    class="form-control @error('name') is-invalid @enderror"
-                                   placeholder="e.g., Gold" required>
+                                   placeholder="e.g., Rice" required>
                             @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Category</label>
                             <input type="text" name="category" value="{{ old('category') }}"
                                    class="form-control @error('category') is-invalid @enderror"
-                                   placeholder="Mineral, Energy, Agriculture">
+                                   placeholder="Cereal, pulse, roots and tubers">
                             @error('category') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Unit of Measure</label>
                             <input type="text" name="unit_of_measure" value="{{ old('unit_of_measure') }}"
                                    class="form-control @error('unit_of_measure') is-invalid @enderror"
-                                   placeholder="tons, barrels, kg">
+                                   placeholder="metric tons, kg, bags">
                             @error('unit_of_measure') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
                         <div class="col-12">
@@ -100,6 +126,13 @@
                             @error('production_volume') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
                         <div class="col-md-4">
+                            <label class="form-label">Stock Volume</label>
+                            <input type="number" step="0.001" name="stock_volume"
+                                   class="form-control @error('stock_volume') is-invalid @enderror"
+                                   value="{{ old('stock_volume') }}">
+                            @error('stock_volume') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        </div>
+                        <div class="col-md-4">
                             <label class="form-label">Export Volume</label>
                             <input type="number" step="0.001" name="export_volume"
                                    class="form-control @error('export_volume') is-invalid @enderror"
@@ -107,11 +140,39 @@
                             @error('export_volume') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
                         <div class="col-md-4">
+                            <label class="form-label">Import Volume</label>
+                            <input type="number" step="0.001" name="import_volume"
+                                   class="form-control @error('import_volume') is-invalid @enderror"
+                                   value="{{ old('import_volume') }}">
+                            @error('import_volume') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        </div>
+                        <div class="col-md-4">
                             <label class="form-label">Export Value (USD)</label>
                             <input type="number" step="0.01" name="export_value_usd"
                                    class="form-control @error('export_value_usd') is-invalid @enderror"
                                    value="{{ old('export_value_usd') }}">
                             @error('export_value_usd') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Market Price</label>
+                            <input type="number" step="0.01" name="market_price"
+                                   class="form-control @error('market_price') is-invalid @enderror"
+                                   value="{{ old('market_price') }}">
+                            @error('market_price') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Price Currency</label>
+                            <input type="text" name="market_price_currency"
+                                   class="form-control @error('market_price_currency') is-invalid @enderror"
+                                   value="{{ old('market_price_currency', 'USD') }}" maxlength="12">
+                            @error('market_price_currency') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Availability Score (%)</label>
+                            <input type="number" min="0" max="100" step="0.01" name="availability_score"
+                                   class="form-control @error('availability_score') is-invalid @enderror"
+                                   value="{{ old('availability_score') }}">
+                            @error('availability_score') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
                         <div class="col-12">
                             <label class="form-label">Trend Summary</label>
@@ -126,7 +187,7 @@
                             @error('impact_notes') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
                         <div class="col-12">
-                            <button class="btn btn-primary">Save Trend Data</button>
+                            <button class="btn btn-primary">Submit for Review</button>
                         </div>
                     </form>
                 </div>
@@ -138,7 +199,26 @@
         <div class="col-lg-8">
             <div class="card border-0 shadow-sm">
                 <div class="card-header bg-white">
-                    <strong>Commodity Trend Records</strong>
+                    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
+                        <strong>Commodity Trend Records</strong>
+                        <form method="GET" action="{{ route('member-state.commodities.index') }}" class="d-flex flex-wrap gap-2">
+                            <select name="commodity_id" class="form-select form-select-sm" style="min-width:160px;">
+                                <option value="">All commodities</option>
+                                @foreach($commodities as $commodity)
+                                    <option value="{{ $commodity->id }}" @selected(($filters['commodity_id'] ?? '') === $commodity->id)>{{ $commodity->name }}</option>
+                                @endforeach
+                            </select>
+                            <select name="review_status" class="form-select form-select-sm" style="min-width:145px;">
+                                <option value="">All status</option>
+                                @foreach($reviewLabels as $key => $label)
+                                    <option value="{{ $key }}" @selected(($filters['review_status'] ?? '') === $key)>{{ $label }}</option>
+                                @endforeach
+                            </select>
+                            <input type="date" name="from" value="{{ $filters['from'] ?? '' }}" class="form-control form-control-sm">
+                            <input type="date" name="to" value="{{ $filters['to'] ?? '' }}" class="form-control form-control-sm">
+                            <button class="btn btn-sm btn-outline-secondary">Filter</button>
+                        </form>
+                    </div>
                 </div>
                 <div class="card-body p-0">
                     <div class="table-responsive">
@@ -148,9 +228,13 @@
                                 <th>Date</th>
                                 <th>Commodity</th>
                                 <th>Production</th>
+                                <th>Stock</th>
                                 <th>Export</th>
+                                <th>Import</th>
+                                <th>Availability</th>
                                 <th>Value (USD)</th>
                                 <th>Growth</th>
+                                <th>Status</th>
                                 <th></th>
                             </tr>
                             </thead>
@@ -165,21 +249,35 @@
                                         @endif
                                     </td>
                                     <td>{{ $trend->production_volume !== null ? number_format((float) $trend->production_volume, 3) : '-' }}</td>
+                                    <td>{{ $trend->stock_volume !== null ? number_format((float) $trend->stock_volume, 3) : '-' }}</td>
                                     <td>{{ $trend->export_volume !== null ? number_format((float) $trend->export_volume, 3) : '-' }}</td>
+                                    <td>{{ $trend->import_volume !== null ? number_format((float) $trend->import_volume, 3) : '-' }}</td>
+                                    <td>{{ $trend->availability_score !== null ? number_format((float) $trend->availability_score, 2) . '%' : '-' }}</td>
                                     <td>{{ $trend->export_value_usd !== null ? number_format((float) $trend->export_value_usd, 2) : '-' }}</td>
                                     <td>{{ $trend->growth_rate_pct !== null ? number_format((float) $trend->growth_rate_pct, 3) . '%' : '-' }}</td>
+                                    <td>
+                                        @php $status = (string) ($trend->review_status ?? 'pending'); @endphp
+                                        <span class="badge bg-{{ $reviewClasses[$status] ?? 'secondary' }}">{{ $reviewLabels[$status] ?? ucfirst(str_replace('_', ' ', $status)) }}</span>
+                                        @if($trend->review_notes)
+                                            <div class="small text-muted">{{ \Illuminate\Support\Str::limit($trend->review_notes, 70) }}</div>
+                                        @endif
+                                    </td>
                                     <td class="text-end">
-                                        <form action="{{ route('member-state.commodities.trends.destroy', $trend) }}" method="POST"
-                                              onsubmit="return confirm('Delete this trend record?');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button class="btn btn-sm btn-outline-danger">Delete</button>
-                                        </form>
+                                        @if($trend->review_status !== 'approved')
+                                            <form action="{{ route('member-state.commodities.trends.destroy', $trend) }}" method="POST"
+                                                  onsubmit="return confirm('Delete this trend record?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button class="btn btn-sm btn-outline-danger">Delete</button>
+                                            </form>
+                                        @else
+                                            <span class="small text-muted">Locked</span>
+                                        @endif
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="7" class="text-center text-muted py-4">No commodity trends submitted yet.</td>
+                                    <td colspan="11" class="text-center text-muted py-4">No commodity trends submitted yet.</td>
                                 </tr>
                             @endforelse
                             </tbody>
@@ -197,7 +295,7 @@
         <div class="col-lg-4">
             <div class="card border-0 shadow-sm">
                 <div class="card-header bg-white">
-                    <strong>Growth Summary by Commodity</strong>
+                    <strong>Approved Growth Summary by Commodity</strong>
                 </div>
                 <div class="card-body p-0">
                     <div class="table-responsive">

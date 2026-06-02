@@ -191,20 +191,7 @@
 </head>
 
 <body>
-
-    {{-- ================= NAVBAR ================= --}}
-    <header class="navbar">
-        <div class="logo">
-            <img src="{{ asset('assets/images/FSRP.white.bg.africa.png') }}" alt="FSRP" style="height:40px">
-        </div>
-
-        <nav class="nav-links">
-            <a href="/">Home</a>
-            <a href="#vacancies">Vacancies</a>
-            <a href="{{ route('careers.index') }}" class="active">Careers</a>
-            <a href="{{ route('login') }}">Login</a>
-        </nav>
-    </header>
+    <x-public-header active="careers" language-style="careers-legacy" />
 
     {{-- ================= HERO ================= --}}
     <section class="career-hero">

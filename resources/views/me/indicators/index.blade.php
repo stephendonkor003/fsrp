@@ -569,6 +569,36 @@
                                     </select>
                                 </div>
 
+                                <div class="row g-3 mb-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label">FSRP Component</label>
+                                        <select name="fsrp_component_id" id="indicatorFsrpComponent" class="form-select">
+                                            <option value="">Select Component</option>
+                                            @foreach ($fsrpComponents as $component)
+                                                <option value="{{ $component->id }}" @selected((string) old('fsrp_component_id', $editingIndicator->fsrp_component_id ?? '') === (string) $component->id)>
+                                                    {{ $component->code }} - {{ $component->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label">FSRP Subcomponent</label>
+                                        <select name="fsrp_subcomponent_id" id="indicatorFsrpSubcomponent" class="form-select">
+                                            <option value="">Select Subcomponent</option>
+                                            @foreach ($fsrpComponents as $component)
+                                                @foreach ($component->subcomponents as $subcomponent)
+                                                    <option value="{{ $subcomponent->id }}"
+                                                        data-component-id="{{ $component->id }}"
+                                                        @selected((string) old('fsrp_subcomponent_id', $editingIndicator->fsrp_subcomponent_id ?? '') === (string) $subcomponent->id)>
+                                                        {{ $subcomponent->code }} - {{ $subcomponent->name }}
+                                                    </option>
+                                                @endforeach
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+
                                 <div class="row g-3">
                                     <div class="col-md-6">
                                         <label class="form-label">Baseline Type</label>
@@ -648,6 +678,53 @@
                                             <small class="form-helper">Binary unit detected. Baseline value uses
                                                 Yes/No.</small>
                                         </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label">LOP Target</label>
+                                        <input type="number" step="0.01" name="lop_target_value" class="form-control"
+                                            value="{{ old('lop_target_value', $editingIndicator->lop_target_value ?? '') }}"
+                                            placeholder="Life-of-project target">
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label">Disaggregation</label>
+                                        <input type="text" name="disaggregation" class="form-control"
+                                            value="{{ old('disaggregation', $editingIndicator->disaggregation ?? '') }}"
+                                            placeholder="Gender, geography, age group, commodity...">
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label class="form-label">Period Target</label>
+                                        <input type="number" step="0.01" name="reporting_period_target_value" class="form-control"
+                                            value="{{ old('reporting_period_target_value', $editingIndicator->reporting_period_target_value ?? '') }}">
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label class="form-label">Period Achievement</label>
+                                        <input type="number" step="0.01" name="reporting_period_achievement_value" class="form-control"
+                                            value="{{ old('reporting_period_achievement_value', $editingIndicator->reporting_period_achievement_value ?? '') }}">
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label class="form-label">Period Performance %</label>
+                                        <input type="number" step="0.01" min="0" name="reporting_period_performance_pct" class="form-control"
+                                            value="{{ old('reporting_period_performance_pct', $editingIndicator->reporting_period_performance_pct ?? '') }}"
+                                            placeholder="Auto if blank">
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label">LOP Performance %</label>
+                                        <input type="number" step="0.01" min="0" name="lop_performance_pct" class="form-control"
+                                            value="{{ old('lop_performance_pct', $editingIndicator->lop_performance_pct ?? '') }}"
+                                            placeholder="Auto if blank">
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label">Performance Remarks</label>
+                                        <input type="text" name="performance_remarks" class="form-control"
+                                            value="{{ old('performance_remarks', $editingIndicator->performance_remarks ?? '') }}"
+                                            placeholder="Reason for variance, corrective action, or context">
                                     </div>
 
                                     <div class="col-md-12">
@@ -1098,11 +1175,19 @@
                                             <th>Sub-Activity</th>
                                             <th>Indicator</th>
                                             <th>Owner Type</th>
+                                            <th>FSRP Component</th>
+                                            <th>FSRP Subcomponent</th>
                                             <th>Level</th>
                                             <th>Frequency</th>
                                             <th>Baseline Type</th>
                                             <th>Baseline Period</th>
                                             <th>Baseline Value</th>
+                                            <th>Disaggregation</th>
+                                            <th>LOP Target</th>
+                                            <th>Period Target</th>
+                                            <th>Period Achievement</th>
+                                            <th>Period Performance %</th>
+                                            <th>LOP Performance %</th>
                                             <th>Responsible Party/Person</th>
                                             <th>Methodology</th>
                                             <th>Primary Source Type</th>
@@ -1112,6 +1197,7 @@
                                             <th>Actual</th>
                                             <th>Achievement</th>
                                             <th>Status</th>
+                                            <th>Performance Remarks</th>
                                             <th>Notes</th>
                                         </tr>
                                     </thead>
@@ -1126,7 +1212,7 @@
                                         @forelse ($managementReportRows as $row)
                                             @if ($row['program_key'] !== $lastProgramKey)
                                                 <tr class="report-group-row report-group-program">
-                                                    <td colspan="21">
+                                                    <td colspan="30">
                                                         Program Group: {{ $row['program'] }}
                                                     </td>
                                                 </tr>
@@ -1140,7 +1226,7 @@
 
                                             @if ($row['project'] !== '—' && $row['project_key'] !== $lastProjectKey)
                                                 <tr class="report-group-row report-group-project">
-                                                    <td colspan="21">
+                                                    <td colspan="30">
                                                         Project: {{ $row['project'] }}
                                                     </td>
                                                 </tr>
@@ -1153,7 +1239,7 @@
 
                                             @if ($row['activity'] !== '—' && $row['activity_key'] !== $lastActivityKey)
                                                 <tr class="report-group-row report-group-activity">
-                                                    <td colspan="21">
+                                                    <td colspan="30">
                                                         Activity: {{ $row['activity'] }}
                                                     </td>
                                                 </tr>
@@ -1165,7 +1251,7 @@
 
                                             @if ($row['sub_activity'] !== '—' && $row['sub_activity_key'] !== $lastSubActivityKey)
                                                 <tr class="report-group-row report-group-subactivity">
-                                                    <td colspan="21">
+                                                    <td colspan="30">
                                                         Sub-Activity: {{ $row['sub_activity'] }}
                                                     </td>
                                                 </tr>
@@ -1181,11 +1267,19 @@
                                                 <td>{{ $row['sub_activity'] }}</td>
                                                 <td class="fw-semibold wrap">{{ $row['indicator_name'] }}</td>
                                                 <td>{{ $row['owner_type'] }}</td>
+                                                <td class="wrap">{{ $row['fsrp_component'] }}</td>
+                                                <td class="wrap">{{ $row['fsrp_subcomponent'] }}</td>
                                                 <td>{{ $row['indicator_level'] }}</td>
                                                 <td>{{ $row['frequency'] }}</td>
                                                 <td>{{ $row['baseline_type'] }}</td>
                                                 <td>{{ $row['baseline_period'] }}</td>
                                                 <td>{{ $row['baseline_value'] }}</td>
+                                                <td class="wrap">{{ $row['disaggregation'] }}</td>
+                                                <td>{{ $row['lop_target'] }}</td>
+                                                <td>{{ $row['reporting_period_target'] }}</td>
+                                                <td>{{ $row['reporting_period_achievement'] }}</td>
+                                                <td>{{ $row['reporting_period_performance'] }}</td>
+                                                <td>{{ $row['lop_performance'] }}</td>
                                                 <td class="wrap">{{ $row['responsible'] }}</td>
                                                 <td class="wrap">{{ $row['methodology'] }}</td>
                                                 <td>{{ $row['primary_source_type'] }}</td>
@@ -1198,17 +1292,18 @@
                                                     <span
                                                         class="badge bg-{{ $row['status_class'] }}">{{ $row['status'] }}</span>
                                                 </td>
+                                                <td class="wrap">{{ $row['performance_remarks'] }}</td>
                                                 <td class="wrap">{{ $row['notes'] }}</td>
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td colspan="21" class="text-center text-muted py-4">
+                                                <td colspan="30" class="text-center text-muted py-4">
                                                     No indicators available for the management report sheet.
                                                 </td>
                                             </tr>
                                         @endforelse
                                         <tr id="managementReportNoResults" class="d-none">
-                                            <td colspan="21" class="text-center text-muted py-4">
+                                            <td colspan="30" class="text-center text-muted py-4">
                                                 No matching records for your search.
                                             </td>
                                         </tr>
@@ -1367,6 +1462,8 @@
             const definitionCustom = document.getElementById('definitionCustom');
             const definitionHint = document.getElementById('definitionHint');
             const methodologySelect = document.getElementById('methodologySelect');
+            const indicatorFsrpComponent = document.getElementById('indicatorFsrpComponent');
+            const indicatorFsrpSubcomponent = document.getElementById('indicatorFsrpSubcomponent');
 
             // Survey builder elements
             const surveyBlock = document.getElementById('indicatorSurveyBlock');
@@ -1783,6 +1880,32 @@
                 definitionHint.textContent = 'Select a table definition or type your own custom definition.';
             }
 
+            function syncIndicatorFsrpSubcomponents() {
+                if (!indicatorFsrpComponent || !indicatorFsrpSubcomponent) {
+                    return;
+                }
+
+                const componentId = indicatorFsrpComponent.value;
+                let selectedStillVisible = false;
+
+                Array.from(indicatorFsrpSubcomponent.options).forEach((option) => {
+                    if (!option.value) {
+                        option.hidden = false;
+                        return;
+                    }
+
+                    const visible = !componentId || option.dataset.componentId === componentId;
+                    option.hidden = !visible;
+                    if (visible && option.selected) {
+                        selectedStillVisible = true;
+                    }
+                });
+
+                if (!selectedStillVisible) {
+                    indicatorFsrpSubcomponent.value = '';
+                }
+            }
+
             baselineTypeSelect.addEventListener('change', applyBaselineTypeMode);
             baselinePeriodInput.addEventListener('input', validateBaselinePeriod);
             baselinePeriodInput.addEventListener('blur', validateBaselinePeriod);
@@ -1799,12 +1922,14 @@
             primarySourceValue.addEventListener('input', updateDataSourceTemplateLink);
             definitionSelect.addEventListener('change', updateDefinitionHint);
             definitionCustom.addEventListener('input', updateDefinitionHint);
+            indicatorFsrpComponent?.addEventListener('change', syncIndicatorFsrpSubcomponents);
 
             applyBaselineTypeMode();
             toggleBaselineValueInput();
             updatePrimarySourceUI();
             updateDataSourceTemplateLink();
             updateDefinitionHint();
+            syncIndicatorFsrpSubcomponents();
 
             // Init survey block
             applySurveyVisibility();

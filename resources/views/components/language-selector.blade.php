@@ -3,10 +3,10 @@
 @php
     $locales = [
         'en' => ['short' => 'EN', 'name' => 'English'],
-        'fr' => ['short' => 'FR', 'name' => 'French'],
-        'ar' => ['short' => 'AR', 'name' => 'Arabic'],
-        'pt' => ['short' => 'PT', 'name' => 'Portuguese'],
-        'es' => ['short' => 'ES', 'name' => 'Spanish'],
+        'fr' => ['short' => 'FR', 'name' => 'Francais'],
+        'ar' => ['short' => 'AR', 'name' => 'العربية'],
+        'pt' => ['short' => 'PT', 'name' => 'Portugues'],
+        'es' => ['short' => 'ES', 'name' => 'Espanol'],
         'sw' => ['short' => 'SW', 'name' => 'Kiswahili'],
     ];
     $currentLocale = app()->getLocale();
@@ -129,8 +129,10 @@
     <ul class="lang-menu" role="listbox">
         @foreach ($locales as $locale => $info)
             <li role="option">
-                <a href="{{ route('language.switch.get', $locale) }}"
-                   class="{{ $currentLocale === $locale ? 'lang-active' : '' }}">
+                <a href="{{ route('language.switch.get', ['locale' => $locale, 'redirect' => url()->full()]) }}"
+                   class="{{ $currentLocale === $locale ? 'lang-active' : '' }}"
+                   lang="{{ $locale }}"
+                   hreflang="{{ $locale }}">
                     <span class="lang-code">{{ $info['short'] }}</span>
                     <span>{{ $info['name'] }}</span>
                 </a>

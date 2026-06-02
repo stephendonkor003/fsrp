@@ -15,7 +15,16 @@ class Indicator extends BaseModel
         'baseline_year',
         'baseline_type',
         'baseline_value',
+        'fsrp_component_id',
+        'fsrp_subcomponent_id',
         'indicator_level_id',
+        'disaggregation',
+        'lop_target_value',
+        'reporting_period_target_value',
+        'reporting_period_achievement_value',
+        'reporting_period_performance_pct',
+        'lop_performance_pct',
+        'performance_remarks',
         'methodology',
         'notes',
         'responsible_party',
@@ -28,6 +37,11 @@ class Indicator extends BaseModel
 
     protected $casts = [
         'baseline_type' => 'string',
+        'lop_target_value' => 'decimal:4',
+        'reporting_period_target_value' => 'decimal:4',
+        'reporting_period_achievement_value' => 'decimal:4',
+        'reporting_period_performance_pct' => 'decimal:2',
+        'lop_performance_pct' => 'decimal:2',
     ];
 
     // Polymorphic relationship to parent (Program, Project, Activity, SubActivity)
@@ -50,6 +64,16 @@ class Indicator extends BaseModel
     public function unit()
     {
         return $this->belongsTo(IndicatorUnit::class, 'unit_id');
+    }
+
+    public function fsrpComponent()
+    {
+        return $this->belongsTo(FsrpComponent::class, 'fsrp_component_id');
+    }
+
+    public function fsrpSubcomponent()
+    {
+        return $this->belongsTo(FsrpSubcomponent::class, 'fsrp_subcomponent_id');
     }
 
     // Nested project indicators (if this indicator belongs to a program)

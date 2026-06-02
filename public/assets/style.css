@@ -614,6 +614,26 @@ html {
     transform: scale(1.04);
 }
 
+.slide.video-slide {
+    background: #000;
+}
+
+.slide.video-slide.active {
+    transform: none;
+}
+
+.slide video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+}
+
+.slide.active video {
+    pointer-events: auto;
+}
+
 .overlay {
     position: absolute;
     top: 0;
@@ -625,6 +645,7 @@ html {
         rgba(0, 77, 46, 0.80) 0%,
         rgba(0, 0, 0, 0.70) 100%
     );
+    pointer-events: none;
     z-index: 2;
 }
 

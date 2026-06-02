@@ -15,6 +15,8 @@ class ConsortiumActivityReport extends BaseModel
         'workplan_id',
         'activity_id',
         'sub_activity_id',
+        'fsrp_component_id',
+        'fsrp_subcomponent_id',
         'title',
         'reporting_period_start',
         'reporting_period_end',
@@ -54,6 +56,16 @@ class ConsortiumActivityReport extends BaseModel
     public function workplan(): BelongsTo
     {
         return $this->belongsTo(ConsortiumWorkplan::class, 'workplan_id');
+    }
+
+    public function fsrpComponent(): BelongsTo
+    {
+        return $this->belongsTo(FsrpComponent::class, 'fsrp_component_id');
+    }
+
+    public function fsrpSubcomponent(): BelongsTo
+    {
+        return $this->belongsTo(FsrpSubcomponent::class, 'fsrp_subcomponent_id');
     }
 
     public function evidence(): HasMany

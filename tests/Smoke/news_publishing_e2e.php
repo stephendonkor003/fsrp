@@ -8,7 +8,6 @@ use App\Models\Permission;
 use App\Models\Role;
 use App\Models\User;
 use Database\Seeders\PermissionSeeder;
-use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Foundation\Testing\Concerns\InteractsWithAuthentication;
 use Illuminate\Foundation\Testing\Concerns\InteractsWithExceptionHandling;
 use Illuminate\Foundation\Testing\Concerns\InteractsWithSession;
@@ -21,10 +20,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
-require __DIR__ . '/../../vendor/autoload.php';
-
-$app = require __DIR__ . '/../../bootstrap/app.php';
-$app->make(Kernel::class)->bootstrap();
+$app = require __DIR__ . '/bootstrap.php';
 
 class NewsPublishingSmoke
 {
@@ -101,7 +97,7 @@ class NewsPublishingSmoke
             $this->assertTrue($post->approved_at !== null, 'Published news was not approved.');
             $this->assertTrue($post->notified_at !== null, 'Subscribers were not marked notified.');
 
-            Mail::assertSent(NewsPublishedNotification::class, function (NewsPublishedNotification $mail) use ($subscriber, $post) {
+            Mail::assertQueued(NewsPublishedNotification::class, function (NewsPublishedNotification $mail) use ($subscriber, $post) {
                 return $mail->subscriber->email === $subscriber->email && $mail->post->id === $post->id;
             });
 

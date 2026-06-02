@@ -232,43 +232,13 @@
 <body>
 
 <!-- NAVBAR -->
-<header class="navbar" role="banner">
-    <a href="{{ route('landing.index') }}" class="logo" aria-label="FSRP Home">
-        <img src="{{ asset('assets/images/au.png') }}" alt="FSRP" class="logo-sm">
-    </a>
-    <nav class="nav-links" aria-label="Main navigation">
-        <a href="{{ route('landing.index') }}">{{ __('navigation.home') }}</a>
-        <div class="has-dropdown">
-            <a href="#">{{ __('public_pages.programs') }}</a>
-            <ul class="nav-dropdown">
-                <li><a href="{{ route('events') }}">{{ __('public_pages.events_webinars') }}</a></li>
-                <li><a href="{{ route('careers.index') }}">{{ __('navigation.careers') }}</a></li>
-            </ul>
-        </div>
-        <div class="has-dropdown">
-            <a href="#" class="active">{{ __('public_pages.analytics') }}</a>
-            <ul class="nav-dropdown">
-                <li><a href="{{ route('impact.map') }}">{{ __('navigation.impact_map') }}</a></li>
-                <li><a href="{{ route('world.indicators.performance') }}">{{ __('navigation.world_indicators_performance') }}</a></li>
-            </ul>
-        </div>
-        <a href="{{ route('news.index') }}">{{ __('public_pages.news_updates') }}</a>
-        <a href="#contact">{{ __('navigation.contact') }}</a>
-    </nav>
-    <div class="nav-actions">
-        <a href="{{ route('login') }}" class="btn btn-primary">{{ __('public_pages.administrative_portal') }}</a>
-        <a href="{{ route('login') }}" class="btn btn-login">{{ __('navigation.login') }}</a>
-        <x-language-selector style="treaties" />
-    </div>
-    <button class="hamburger-btn" id="hamburgerBtn" onclick="openMobileNav()" aria-label="Open menu" aria-expanded="false">
-        <span></span><span></span><span></span>
-    </button>
-</header>
+<x-public-header active="treaties" language-style="treaties" />
 
 <!-- HERO -->
 <section class="treaties-hero">
     <div class="breadcrumb">
         <a href="{{ route('impact.map') }}">{{ __('navigation.impact_map') }}</a>
+        <a href="{{ route('food-security.commodities') }}">{{ __('navigation.food_commodities_map') }}</a>
         &nbsp;/&nbsp; {{ __('public_pages.treaties_breadcrumb') }}
     </div>
     <h1>{{ __('public_pages.treaties_title') }}</h1>

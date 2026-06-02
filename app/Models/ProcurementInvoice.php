@@ -21,6 +21,9 @@ class ProcurementInvoice extends BaseModel
         'reference_no',
         'amount',
         'currency',
+        'bank_statement_reference',
+        'prior_review_expenditure',
+        'ifr_notes',
         'status',
         'created_by',
         'approved_by',
@@ -31,6 +34,7 @@ class ProcurementInvoice extends BaseModel
     protected $casts = [
         'invoice_month' => 'date',
         'amount' => 'decimal:2',
+        'prior_review_expenditure' => 'boolean',
         'approved_at' => 'datetime',
     ];
 

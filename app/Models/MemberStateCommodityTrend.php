@@ -16,11 +16,20 @@ class MemberStateCommodityTrend extends BaseModel
         'commodity_id',
         'recorded_on',
         'production_volume',
+        'stock_volume',
         'export_volume',
+        'import_volume',
         'export_value_usd',
+        'market_price',
+        'market_price_currency',
         'growth_rate_pct',
+        'availability_score',
         'trend_summary',
         'impact_notes',
+        'review_status',
+        'reviewed_by',
+        'reviewed_at',
+        'review_notes',
         'created_by',
         'updated_by',
     ];
@@ -28,10 +37,20 @@ class MemberStateCommodityTrend extends BaseModel
     protected $casts = [
         'recorded_on' => 'date',
         'production_volume' => 'decimal:3',
+        'stock_volume' => 'decimal:3',
         'export_volume' => 'decimal:3',
+        'import_volume' => 'decimal:3',
         'export_value_usd' => 'decimal:2',
+        'market_price' => 'decimal:2',
         'growth_rate_pct' => 'decimal:3',
+        'availability_score' => 'decimal:2',
+        'reviewed_at' => 'datetime',
     ];
+
+    public function scopeApproved($query)
+    {
+        return $query->where('review_status', 'approved');
+    }
 
     public function memberState(): BelongsTo
     {
@@ -51,5 +70,10 @@ class MemberStateCommodityTrend extends BaseModel
     public function updater(): BelongsTo
     {
         return $this->belongsTo(User::class, 'updated_by');
+    }
+
+    public function reviewer(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'reviewed_by');
     }
 }

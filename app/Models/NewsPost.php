@@ -19,6 +19,8 @@ class NewsPost extends BaseModel
         'cover_image_path',
         'status',
         'tags',
+        'fsrp_component_id',
+        'fsrp_subcomponent_id',
         'created_by',
         'submitted_by',
         'submitted_at',
@@ -50,6 +52,16 @@ class NewsPost extends BaseModel
     public function approver(): BelongsTo
     {
         return $this->belongsTo(User::class, 'approved_by');
+    }
+
+    public function fsrpComponent(): BelongsTo
+    {
+        return $this->belongsTo(FsrpComponent::class, 'fsrp_component_id');
+    }
+
+    public function fsrpSubcomponent(): BelongsTo
+    {
+        return $this->belongsTo(FsrpSubcomponent::class, 'fsrp_subcomponent_id');
     }
 
     public function scopePublished($query)

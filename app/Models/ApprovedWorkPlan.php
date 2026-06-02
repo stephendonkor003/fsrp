@@ -14,6 +14,8 @@ class ApprovedWorkPlan extends BaseModel
         'budget_commitment_id',
         'program_funding_id',
         'governance_node_id',
+        'fsrp_component_id',
+        'fsrp_subcomponent_id',
         'fiscal_year',
         'planned_amount',
         'currency',
@@ -49,6 +51,16 @@ class ApprovedWorkPlan extends BaseModel
     public function governanceNode(): BelongsTo
     {
         return $this->belongsTo(GovernanceNode::class, 'governance_node_id');
+    }
+
+    public function fsrpComponent(): BelongsTo
+    {
+        return $this->belongsTo(FsrpComponent::class, 'fsrp_component_id');
+    }
+
+    public function fsrpSubcomponent(): BelongsTo
+    {
+        return $this->belongsTo(FsrpSubcomponent::class, 'fsrp_subcomponent_id');
     }
 
     public function creator(): BelongsTo

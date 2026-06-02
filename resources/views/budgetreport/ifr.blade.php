@@ -228,10 +228,61 @@
                 </div>
             </div>
 
+            {{-- SECTION 2: DESIGNATED ACCOUNT / PRIOR REVIEW EVIDENCE --}}
+            <div class="card shadow-sm mt-4">
+                <div class="card-body">
+                    <div class="section-title">Section 2: Designated Account & Prior Review Evidence</div>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="border rounded p-3 h-100">
+                                <div class="fw-semibold mb-2">Designated Account Activity</div>
+                                @if (!empty($ifrEvidence['designated_account_activities']))
+                                    <ul class="mb-0">
+                                        @foreach ($ifrEvidence['designated_account_activities'] as $activity)
+                                            <li>{{ $activity }}</li>
+                                        @endforeach
+                                    </ul>
+                                @else
+                                    <span class="text-muted">No designated-account activity references recorded.</span>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="border rounded p-3 h-100">
+                                <div class="fw-semibold mb-2">Bank Statement References</div>
+                                @if (!empty($ifrEvidence['bank_statement_references']))
+                                    <ul class="mb-0">
+                                        @foreach ($ifrEvidence['bank_statement_references'] as $reference)
+                                            <li>{{ $reference }}</li>
+                                        @endforeach
+                                    </ul>
+                                @else
+                                    <span class="text-muted">No bank-statement references recorded.</span>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="border rounded p-3 h-100">
+                                <div class="text-muted small">Expenditures Subject to Prior Review</div>
+                                <div class="h5 mb-1">{{ $currency }} {{ number_format($ifrEvidence['prior_review_amount'] ?? 0, 2) }}</div>
+                                <small>{{ number_format($ifrEvidence['prior_review_count'] ?? 0) }} disbursement(s)</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="border rounded p-3 h-100">
+                                <div class="text-muted small">Expenditures Not Subject to Prior Review</div>
+                                <div class="h5 mb-1">{{ $currency }} {{ number_format($ifrEvidence['not_prior_review_amount'] ?? 0, 2) }}</div>
+                                <small>{{ number_format($ifrEvidence['not_prior_review_count'] ?? 0) }} disbursement(s)</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             {{-- SECTION 2: CHARTS --}}
             <div class="card shadow-sm mt-4">
                 <div class="card-body">
-                    <div class="section-title">Section 2: Graphs & Trends</div>
+                    <div class="section-title">Section 3: Graphs & Trends</div>
                     <h5 class="fw-bold mb-3">Graphs & Insights</h5>
                     <div class="row g-4">
                         <div class="col-lg-4">
@@ -259,7 +310,7 @@
             {{-- SECTION 3: SUMMARY --}}
             <div class="card shadow-sm mt-4">
                 <div class="card-body summary-card">
-                    <div class="section-title">Section 3: IFR Summary</div>
+                    <div class="section-title">Section 4: IFR Summary</div>
                     <h5 class="fw-bold mb-3">Summary</h5>
                     <ul class="mb-0">
                         @foreach ($summary as $line)

@@ -186,38 +186,7 @@
 <body>
 
 <!-- ── NAVBAR ── -->
-<header class="navbar">
-    <div class="logo">
-        <img src="{{ asset('assets/images/au.png') }}" alt="FSRP" class="logo logo-sm">
-    </div>
-    <nav class="nav-links">
-        <a href="{{ route('landing.index') }}">Home</a>
-
-        <div class="has-dropdown">
-            <a href="#">Programs</a>
-            <ul class="nav-dropdown">
-                <li><a href="{{ route('events') }}">Events / Webinars</a></li>
-                <li><a href="{{ route('careers.index') }}">Careers</a></li>
-            </ul>
-        </div>
-
-        <div class="has-dropdown">
-            <a href="#">Analytics</a>
-            <ul class="nav-dropdown">
-                <li><a href="{{ route('impact.map') }}">Impact Map</a></li>
-                <li><a href="{{ route('world.indicators.performance') }}">World Indicators / Performance</a></li>
-            </ul>
-        </div>
-
-        <a href="{{ route('news.index') }}" class="active">News &amp; Updates</a>
-        <a href="#contact">Contact</a>
-    </nav>
-    <div class="nav-actions">
-        <a href="{{ route('public.procurement.index') }}" class="btn btn-primary">Policy Programs &amp; Research</a>
-        <a href="{{ route('login') }}" class="btn btn-login">Login</a>
-        <x-language-selector style="news" />
-    </div>
-</header>
+<x-public-header active="news" language-style="news" />
 
 <!-- ── HERO ── -->
 <section class="news-hero">

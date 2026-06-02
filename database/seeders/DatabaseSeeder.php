@@ -24,6 +24,8 @@ class DatabaseSeeder extends Seeder
             ConsortiumOperationsPermissionsSeeder::class,
             HrGovernancePermissionsSeeder::class,
             ProcurementPermissionsSeeder::class,
+            FsrpTaxonomySeeder::class,
+            FsrpEventNewsSeeder::class,
             MasterAdminSeeder::class,
         ]);
     }

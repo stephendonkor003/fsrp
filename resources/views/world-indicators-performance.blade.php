@@ -128,85 +128,11 @@
     </style>
 </head>
 <body>
-    <!-- ====== MOBILE NAV OVERLAY ====== -->
-    <div class="mobile-nav-overlay" id="navOverlay" onclick="closeMobileNav()"></div>
-
-    <!-- ====== MOBILE NAV DRAWER ====== -->
-    <nav class="mobile-nav" id="mobileNav">
-        <div class="mobile-nav-header">
-            <img src="{{ asset('assets/images/au.png') }}" alt="FSRP">
-            <button class="mobile-nav-close" onclick="closeMobileNav()" aria-label="Close menu">&times;</button>
-        </div>
-        <a href="{{ route('landing.index') }}" onclick="closeMobileNav()">{{ __('navigation.home') }}</a>
-
-        <button class="mobile-dropdown-toggle" onclick="toggleMobileDropdown(this)">
-            Programs <span class="mobile-dropdown-arrow">▾</span>
-        </button>
-        <div class="mobile-dropdown-items">
-            <a href="{{ route('events') }}" onclick="closeMobileNav()">{{ __('landing.events_webinars') }}</a>
-            <a href="{{ route('careers.index') }}" onclick="closeMobileNav()">{{ __('navigation.careers') }}</a>
-        </div>
-
-        <button class="mobile-dropdown-toggle" onclick="toggleMobileDropdown(this)">
-            Analytics <span class="mobile-dropdown-arrow">▾</span>
-        </button>
-        <div class="mobile-dropdown-items">
-            <a href="{{ route('impact.map') }}" onclick="closeMobileNav()">{{ __('navigation.impact_map') }}</a>
-            <a href="{{ route('world.indicators.performance') }}" class="active" onclick="closeMobileNav()">{{ __('navigation.world_indicators_performance') }}</a>
-        </div>
-
-        <a href="{{ route('news.index') }}" onclick="closeMobileNav()">News &amp; Updates</a>
-        <a href="#contact" onclick="closeMobileNav()">{{ __('navigation.contact') }}</a>
-        <div class="mobile-nav-actions">
-            <a href="{{ route('public.procurement.index') }}" class="btn btn-primary">{{ __('landing.policy_programs') }}</a>
-            <a href="{{ route('login') }}" class="btn btn-login">{{ __('navigation.login') }}</a>
-            <x-language-selector style="world" />
-        </div>
-    </nav>
-
-    <!-- ====== NAVBAR ====== -->
-    <header class="navbar" role="banner">
-        <a href="{{ route('landing.index') }}" class="logo" aria-label="FSRP Home">
-            <img src="{{ asset('assets/images/au.png') }}" alt="Western and Central Africa - West Africa Food System Resilience Program (FSRP)" class="logo-sm">
-        </a>
-
-        <nav class="nav-links" aria-label="Main navigation">
-            <a href="{{ route('landing.index') }}">{{ __('navigation.home') }}</a>
-
-            <div class="has-dropdown">
-                <a href="#">Programs</a>
-                <ul class="nav-dropdown">
-                    <li><a href="{{ route('events') }}">{{ __('landing.events_webinars') }}</a></li>
-                    <li><a href="{{ route('careers.index') }}">{{ __('navigation.careers') }}</a></li>
-                </ul>
-            </div>
-
-            <div class="has-dropdown">
-                <a href="#" class="active">Analytics</a>
-                <ul class="nav-dropdown">
-                    <li><a href="{{ route('impact.map') }}">{{ __('navigation.impact_map') }}</a></li>
-                    <li><a href="{{ route('world.indicators.performance') }}" class="active">{{ __('navigation.world_indicators_performance') }}</a></li>
-                </ul>
-            </div>
-
-            <a href="{{ route('news.index') }}">News &amp; Updates</a>
-            <a href="#contact">{{ __('navigation.contact') }}</a>
-        </nav>
-
-        <div class="nav-actions">
-            <a href="{{ route('public.procurement.index') }}" class="btn btn-primary">{{ __('landing.policy_programs') }}</a>
-            <a href="{{ route('login') }}" class="btn btn-login">{{ __('navigation.login') }}</a>
-            <x-language-selector style="landing" />
-        </div>
-
-        <button class="hamburger-btn" id="hamburgerBtn" onclick="openMobileNav()" aria-label="Open menu" aria-expanded="false">
-            <span></span><span></span><span></span>
-        </button>
-    </header>
+    <x-public-header active="indicators" language-style="world" />
 
     <section class="hero-world">
         <h1>{{ $settings->page_title }}</h1>
-        <p>{{ $settings->page_intro ?: 'Explore country and regional indicators through map overlays, side-by-side charts, and detailed data sheets.' }}</p>
+        <p>{{ $settings->page_intro ?: 'Explore food-security, resilience, and member-state reporting indicators through map overlays, side-by-side charts, and detailed data sheets.' }}</p>
         <div class="hero-meta">
             <div class="source-pills">
                 @forelse ($enabledSources as $source)
@@ -337,6 +263,7 @@
                 <h4>{{ __('landing.footer_links_title') }}</h4>
                 <a href="{{ route('landing.index') }}">{{ __('landing.footer_link_home') }}</a>
                 <a href="{{ route('impact.map') }}">{{ __('navigation.impact_map') }}</a>
+                <a href="{{ route('food-security.commodities') }}">{{ __('navigation.food_commodities_map') }}</a>
                 <a href="{{ route('world.indicators.performance') }}">{{ __('navigation.world_indicators_performance') }}</a>
                 <a href="{{ route('careers.index') }}">{{ __('navigation.careers') }}</a>
                 <a href="#contact">{{ __('navigation.contact') }}</a>

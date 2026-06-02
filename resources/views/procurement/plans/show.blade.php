@@ -95,6 +95,28 @@
                                 </p>
                             </div>
 
+                            <div class="col-md-6">
+                                <label class="text-muted small">FSRP Component</label>
+                                <p class="mb-0">
+                                    @if($plan->fsrpComponent)
+                                        {{ $plan->fsrpComponent->code }} - {{ $plan->fsrpComponent->name }}
+                                    @else
+                                        <span class="text-muted">â€”</span>
+                                    @endif
+                                </p>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="text-muted small">FSRP Subcomponent</label>
+                                <p class="mb-0">
+                                    @if($plan->fsrpSubcomponent)
+                                        {{ $plan->fsrpSubcomponent->code }} - {{ $plan->fsrpSubcomponent->name }}
+                                    @else
+                                        <span class="text-muted">â€”</span>
+                                    @endif
+                                </p>
+                            </div>
+
                             @if($plan->description)
                                 <div class="col-12">
                                     <label class="text-muted small">Description</label>
@@ -102,10 +124,62 @@
                                 </div>
                             @endif
 
-                            @if($plan->notes)
+                            @if($plan->remarks)
                                 <div class="col-12">
                                     <label class="text-muted small">Notes</label>
-                                    <p class="mb-0">{{ $plan->notes }}</p>
+                                    <p class="mb-0">{{ $plan->remarks }}</p>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm mb-3">
+                    <div class="card-header bg-white">
+                        <h5 class="card-title mb-0">World Bank Procurement Tracking</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="text-muted small">PPSD Reference</label>
+                                <p class="mb-0">{{ $plan->ppsd_reference ?: 'Not recorded' }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="text-muted small">STEP Plan ID</label>
+                                <p class="mb-0">{{ $plan->step_plan_id ?: 'Not recorded' }}</p>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="text-muted small">STEP Status</label>
+                                <p class="mb-0">{{ ucwords(str_replace('_', ' ', $plan->step_plan_status ?: 'not_uploaded')) }}</p>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="text-muted small">STEP Upload Date</label>
+                                <p class="mb-0">{{ $plan->step_last_uploaded_at?->format('F d, Y') ?? 'Not recorded' }}</p>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="text-muted small">Prior Review</label>
+                                <p class="mb-0">{{ $plan->prior_review_required ? 'Required' : 'Not required' }}</p>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="text-muted small">WB No-Objection Status</label>
+                                <p class="mb-0">{{ ucwords(str_replace('_', ' ', $plan->world_bank_no_objection_status ?: 'pending')) }}</p>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="text-muted small">WB No-Objection Date</label>
+                                <p class="mb-0">{{ $plan->world_bank_no_objection_date?->format('F d, Y') ?? 'Not recorded' }}</p>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="text-muted small">Risk Level</label>
+                                <p class="mb-0">{{ $plan->procurement_risk_level ? ucwords($plan->procurement_risk_level) : 'Not recorded' }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="text-muted small">Contract Log Reference</label>
+                                <p class="mb-0">{{ $plan->contract_log_reference ?: 'Not recorded' }}</p>
+                            </div>
+                            @if($plan->procurement_record_notes)
+                                <div class="col-md-6">
+                                    <label class="text-muted small">Record Notes</label>
+                                    <p class="mb-0">{{ $plan->procurement_record_notes }}</p>
                                 </div>
                             @endif
                         </div>

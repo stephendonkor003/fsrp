@@ -23,6 +23,8 @@ class PermissionSeeder extends Seeder
             ['name' => 'questions.respond', 'module' => 'system', 'description' => 'Respond to member-state questions and send official feedback'],
             ['name' => 'national_data.review', 'module' => 'system', 'description' => 'View and review member-state national data submissions'],
             ['name' => 'national_data.approve', 'module' => 'system', 'description' => 'Approve, reject, or request revisions for member-state national data'],
+            ['name' => 'commodity_data.review', 'module' => 'system', 'description' => 'View and review member-state food commodity trend submissions'],
+            ['name' => 'commodity_data.approve', 'module' => 'system', 'description' => 'Approve, reject, or request revisions for member-state food commodity trend data'],
 
             // Prescreening
             ['name' => 'prescreening.access', 'module' => 'prescreening', 'description' => 'Access prescreening module'],

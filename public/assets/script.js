@@ -1,14 +1,67 @@
 // Background slider (only runs when .slide elements exist)
 (function () {
-    var slides = document.querySelectorAll('.slide');
+    var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
     if (!slides.length) return;
-    var index = 0;
-    function showNextSlide() {
-        slides[index].classList.remove('active');
-        index = (index + 1) % slides.length;
-        slides[index].classList.add('active');
+
+    var index = Math.max(0, slides.findIndex(function (slide) {
+        return slide.classList.contains('active');
+    }));
+    var timer = null;
+    var slideDelay = 6000;
+
+    function resetSlideVideo(slide) {
+        var video = slide.querySelector('video');
+        if (!video) return;
+
+        video.pause();
+        video.currentTime = 0;
     }
-    setInterval(showNextSlide, 6000);
+
+    function playActiveVideo(slide) {
+        var video = slide.querySelector('video');
+        if (!video) return;
+
+        video.play().catch(function () {});
+    }
+
+    function setSlide(nextIndex) {
+        slides[index].classList.remove('active');
+        resetSlideVideo(slides[index]);
+
+        index = (nextIndex + slides.length) % slides.length;
+        slides[index].classList.add('active');
+        playActiveVideo(slides[index]);
+    }
+
+    function restartTimer() {
+        if (timer) clearInterval(timer);
+        timer = setInterval(function () {
+            setSlide(index + 1);
+        }, slideDelay);
+    }
+
+    slides.forEach(function (slide, slideIndex) {
+        var video = slide.querySelector('video');
+        if (!video) return;
+
+        video.addEventListener('play', function () {
+            if (timer) clearInterval(timer);
+        });
+
+        video.addEventListener('pause', function () {
+            if (slides[index] === slide && !video.ended) {
+                restartTimer();
+            }
+        });
+
+        video.addEventListener('ended', function () {
+            setSlide(slideIndex + 1);
+            restartTimer();
+        });
+    });
+
+    playActiveVideo(slides[index]);
+    restartTimer();
 })();
 
 // Country impact image sliders
@@ -168,4 +221,3 @@ window.addEventListener("load", function () {
         setTimeout(runTypewriter, 400);
     }
 });
-

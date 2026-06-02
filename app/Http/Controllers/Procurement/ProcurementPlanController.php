@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Procurement;
 use App\Http\Controllers\Controller;
 use App\Models\Activity;
 use App\Models\BudgetCommitment;
+use App\Models\FsrpComponent;
 use App\Models\ProcurementGeographic;
 use App\Models\ProcurementMethodPlanned;
 use App\Models\ProcurementPlan;
@@ -33,6 +34,8 @@ class ProcurementPlanController extends Controller
             'status',
             'stepStage',
             'stepApproval',
+            'fsrpComponent',
+            'fsrpSubcomponent',
             'creator'
         ]);
 
@@ -66,6 +69,59 @@ class ProcurementPlanController extends Controller
             ->pluck('fiscal_year');
 
         return view('procurement.plans.index', compact('plans', 'stages', 'fiscalYears'));
+    }
+
+    public function complianceDashboard()
+    {
+        $query = ProcurementPlan::with([
+            'activity:id,name',
+            'subActivity:id,name',
+            'methodPlanned:id,method_name',
+            'fsrpComponent:id,code,name',
+            'fsrpSubcomponent:id,code,name',
+        ]);
+
+        if (!auth()->user()->can('procurement.view_all')) {
+            $query->where('created_by', auth()->id());
+        }
+
+        $plans = $query->orderByDesc('updated_at')->get();
+        $currentYear = (int) now()->format('Y');
+
+        $dashboard = [
+            'total' => $plans->count(),
+            'step_pending' => $plans->filter(fn ($plan) => empty($plan->step_plan_id) || in_array($plan->step_plan_status ?: 'not_uploaded', ['not_uploaded', 'needs_update'], true))->count(),
+            'prior_review' => $plans->where('prior_review_required', true)->count(),
+            'no_objection_pending' => $plans->filter(fn ($plan) => in_array($plan->world_bank_no_objection_status ?: 'pending', ['pending', 'submitted', 'needs_revision'], true))->count(),
+            'high_risk' => $plans->filter(fn ($plan) => in_array($plan->procurement_risk_level, ['substantial', 'high'], true))->count(),
+            'annual_update_due' => $plans->filter(fn ($plan) => (int) ($plan->fiscal_year ?? 0) < $currentYear || $plan->updated_at?->lt(now()->subYear()))->count(),
+        ];
+
+        $flaggedPlans = $plans->map(function (ProcurementPlan $plan) use ($currentYear) {
+            $flags = [];
+
+            if (empty($plan->step_plan_id) || in_array($plan->step_plan_status ?: 'not_uploaded', ['not_uploaded', 'needs_update'], true)) {
+                $flags[] = 'STEP upload/update';
+            }
+            if ($plan->prior_review_required) {
+                $flags[] = 'Prior review';
+            }
+            if (in_array($plan->world_bank_no_objection_status ?: 'pending', ['pending', 'submitted', 'needs_revision'], true)) {
+                $flags[] = 'No-objection pending';
+            }
+            if (in_array($plan->procurement_risk_level, ['substantial', 'high'], true)) {
+                $flags[] = 'High-risk package';
+            }
+            if ((int) ($plan->fiscal_year ?? 0) < $currentYear || $plan->updated_at?->lt(now()->subYear())) {
+                $flags[] = 'Annual plan update';
+            }
+
+            $plan->compliance_flags = $flags;
+
+            return $plan;
+        })->filter(fn ($plan) => !empty($plan->compliance_flags))->values();
+
+        return view('procurement.plans.compliance-dashboard', compact('dashboard', 'flaggedPlans', 'currentYear'));
     }
 
     public function sheet(Request $request)
@@ -102,6 +158,11 @@ class ProcurementPlanController extends Controller
         $programPlans = ProcurementProgramPlan::where('is_active', true)
             ->orderBy('name')
             ->get();
+        $fsrpComponents = FsrpComponent::with(['subcomponents' => fn ($query) => $query->active()->orderBy('sort_order')->orderBy('code')])
+            ->active()
+            ->orderBy('sort_order')
+            ->orderBy('code')
+            ->get();
 
         // Generate a default procurement code
         $defaultCode = ProcurementPlan::generateCode();
@@ -115,7 +176,8 @@ class ProcurementPlanController extends Controller
             'stepStages',
             'stepApprovals',
             'defaultCode',
-            'programPlans'
+            'programPlans',
+            'fsrpComponents'
         ));
     }
 
@@ -131,6 +193,8 @@ class ProcurementPlanController extends Controller
             'description' => 'nullable|string',
             'activity_id' => 'nullable|exists:myb_activities,id',
             'sub_activity_id' => 'nullable|exists:myb_sub_activities,id',
+            'fsrp_component_id' => 'nullable|exists:fsrp_components,id',
+            'fsrp_subcomponent_id' => 'nullable|exists:fsrp_subcomponents,id',
             'method_planned_id' => 'nullable|exists:myb_procurement_method_planned,id',
             'program_plan_id' => 'required|exists:myb_procurement_program_plans,id',
             'geographic_id' => 'nullable|exists:myb_procurement_geographics,id',
@@ -138,6 +202,16 @@ class ProcurementPlanController extends Controller
             'status_id' => 'nullable|exists:myb_procurement_statuses,id',
             'step_stage_id' => 'nullable|exists:myb_procurement_step_stages,id',
             'step_approval_id' => 'nullable|exists:myb_procurement_step_approvals,id',
+            'ppsd_reference' => 'nullable|string|max:255',
+            'step_plan_id' => 'nullable|string|max:255',
+            'step_plan_status' => 'nullable|in:not_uploaded,uploaded,under_review,cleared,needs_update',
+            'step_last_uploaded_at' => 'nullable|date',
+            'prior_review_required' => 'boolean',
+            'world_bank_no_objection_status' => 'nullable|in:not_required,pending,submitted,cleared,objected,needs_revision',
+            'world_bank_no_objection_date' => 'nullable|date',
+            'procurement_risk_level' => 'nullable|in:low,moderate,substantial,high',
+            'contract_log_reference' => 'nullable|string|max:255',
+            'procurement_record_notes' => 'nullable|string|max:4000',
             'is_launched' => 'boolean',
             'estimated_start_date' => 'nullable|date',
             'estimated_end_date' => 'nullable|date|after_or_equal:estimated_start_date',
@@ -149,8 +223,9 @@ class ProcurementPlanController extends Controller
 
         $this->ensureSubActivityIsApprovedCommittedInScope($request);
 
-        $validated['is_code_auto_generated'] = $request->has('is_code_auto_generated');
-        $validated['is_launched'] = $request->has('is_launched');
+        $validated['is_code_auto_generated'] = $request->boolean('is_code_auto_generated');
+        $validated['is_launched'] = $request->boolean('is_launched');
+        $validated['prior_review_required'] = $request->boolean('prior_review_required');
         $validated['created_by'] = auth()->id();
 
         // If launched, set launched_at
@@ -188,6 +263,8 @@ class ProcurementPlanController extends Controller
             'status',
             'stepStage',
             'stepApproval.governanceNode',
+            'fsrpComponent',
+            'fsrpSubcomponent',
             'creator',
             'updater'
         ]);
@@ -216,6 +293,11 @@ class ProcurementPlanController extends Controller
         $programPlans = ProcurementProgramPlan::where('is_active', true)
             ->orderBy('name')
             ->get();
+        $fsrpComponents = FsrpComponent::with(['subcomponents' => fn ($query) => $query->active()->orderBy('sort_order')->orderBy('code')])
+            ->active()
+            ->orderBy('sort_order')
+            ->orderBy('code')
+            ->get();
 
         return view('procurement.plans.edit', compact(
             'plan',
@@ -227,7 +309,8 @@ class ProcurementPlanController extends Controller
             'statuses',
             'stepStages',
             'stepApprovals'
-            ,'programPlans'
+            ,'programPlans',
+            'fsrpComponents'
         ));
     }
 
@@ -242,6 +325,8 @@ class ProcurementPlanController extends Controller
             'description' => 'nullable|string',
             'activity_id' => 'nullable|exists:myb_activities,id',
             'sub_activity_id' => 'nullable|exists:myb_sub_activities,id',
+            'fsrp_component_id' => 'nullable|exists:fsrp_components,id',
+            'fsrp_subcomponent_id' => 'nullable|exists:fsrp_subcomponents,id',
             'method_planned_id' => 'nullable|exists:myb_procurement_method_planned,id',
             'program_plan_id' => 'required|exists:myb_procurement_program_plans,id',
             'geographic_id' => 'nullable|exists:myb_procurement_geographics,id',
@@ -249,6 +334,16 @@ class ProcurementPlanController extends Controller
             'status_id' => 'nullable|exists:myb_procurement_statuses,id',
             'step_stage_id' => 'nullable|exists:myb_procurement_step_stages,id',
             'step_approval_id' => 'nullable|exists:myb_procurement_step_approvals,id',
+            'ppsd_reference' => 'nullable|string|max:255',
+            'step_plan_id' => 'nullable|string|max:255',
+            'step_plan_status' => 'nullable|in:not_uploaded,uploaded,under_review,cleared,needs_update',
+            'step_last_uploaded_at' => 'nullable|date',
+            'prior_review_required' => 'boolean',
+            'world_bank_no_objection_status' => 'nullable|in:not_required,pending,submitted,cleared,objected,needs_revision',
+            'world_bank_no_objection_date' => 'nullable|date',
+            'procurement_risk_level' => 'nullable|in:low,moderate,substantial,high',
+            'contract_log_reference' => 'nullable|string|max:255',
+            'procurement_record_notes' => 'nullable|string|max:4000',
             'is_launched' => 'boolean',
             'estimated_start_date' => 'nullable|date',
             'estimated_end_date' => 'nullable|date|after_or_equal:estimated_start_date',
@@ -268,7 +363,8 @@ class ProcurementPlanController extends Controller
             $this->ensureSubActivityIsApprovedCommittedInScope($request);
         }
 
-        $validated['is_launched'] = $request->has('is_launched');
+        $validated['is_launched'] = $request->boolean('is_launched');
+        $validated['prior_review_required'] = $request->boolean('prior_review_required');
         $validated['updated_by'] = auth()->id();
 
         // If just launched now
@@ -444,6 +540,10 @@ class ProcurementPlanController extends Controller
                 'geographic' => $plan->geographic?->name,
                 'stage' => $plan->stage?->stage_name,
                 'status' => $plan->status?->name,
+                'step_plan_id' => $plan->step_plan_id,
+                'step_plan_status' => $plan->step_plan_status,
+                'world_bank_no_objection_status' => $plan->world_bank_no_objection_status,
+                'prior_review_required' => $plan->prior_review_required,
             ];
         });
 

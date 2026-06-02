@@ -16,5 +16,6 @@ return [
     'process' => 'Flux du Système',
     'customization' => 'Personnalisation',
     'impact_map' => 'Carte d\'Impact',
+    'food_commodities_map' => 'Carte des produits alimentaires',
     'world_indicators_performance' => 'World Indicators / Performance',
 ];

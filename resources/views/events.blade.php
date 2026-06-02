@@ -211,6 +211,40 @@
             color: #fff;
         }
 
+        .events-empty {
+            grid-column: 1 / -1;
+            background: #fff;
+            border-radius: 14px;
+            padding: 2.5rem;
+            text-align: center;
+            border-top: 4px solid var(--au-green);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.09);
+        }
+
+        .events-empty h2 {
+            color: var(--au-green);
+            margin: 0 0 0.75rem;
+        }
+
+        .events-empty p {
+            color: #617468;
+            margin: 0;
+        }
+
+        .events-result-note {
+            max-width: 1200px;
+            margin: -1.5rem auto 2rem;
+            padding: 0 2rem;
+            color: #617468;
+            font-size: 0.95rem;
+        }
+
+        .pagination-wrap {
+            max-width: 1200px;
+            margin: -3rem auto 4rem;
+            padding: 0 2rem;
+        }
+
         /* ===== MODAL ===== */
         .modal {
             position: fixed;
@@ -278,83 +312,7 @@
 </head>
 
 <body>
-    <!-- ====== MOBILE NAV OVERLAY ====== -->
-    <div class="mobile-nav-overlay" id="navOverlay" onclick="closeMobileNav()"></div>
-
-    <!-- ====== MOBILE NAV DRAWER ====== -->
-    <nav class="mobile-nav" id="mobileNav">
-        <div class="mobile-nav-header">
-            <img src="{{ asset('assets/images/au.png') }}" alt="FSRP">
-            <button class="mobile-nav-close" onclick="closeMobileNav()" aria-label="Close menu">&times;</button>
-        </div>
-        <a href="{{ route('landing.index') }}" onclick="closeMobileNav()">{{ __('navigation.home') }}</a>
-
-        <button class="mobile-dropdown-toggle" onclick="toggleMobileDropdown(this)">
-            Programs <span class="mobile-dropdown-arrow">▾</span>
-        </button>
-        <div class="mobile-dropdown-items">
-            <a href="{{ route('events') }}" class="active" onclick="closeMobileNav()">{{ __('landing.events_webinars') }}</a>
-            <a href="{{ route('careers.index') }}" onclick="closeMobileNav()">{{ __('navigation.careers') }}</a>
-        </div>
-
-        <button class="mobile-dropdown-toggle" onclick="toggleMobileDropdown(this)">
-            Analytics <span class="mobile-dropdown-arrow">▾</span>
-        </button>
-        <div class="mobile-dropdown-items">
-            <a href="{{ route('impact.map') }}" onclick="closeMobileNav()">{{ __('navigation.impact_map') }}</a>
-            <a href="{{ route('world.indicators.performance') }}" onclick="closeMobileNav()">{{ __('navigation.world_indicators_performance') }}</a>
-        </div>
-
-        <a href="{{ route('news.index') }}" onclick="closeMobileNav()">News &amp; Updates</a>
-        <a href="#contact" onclick="closeMobileNav()">{{ __('navigation.contact') }}</a>
-        <div class="mobile-nav-actions">
-            <a href="{{ route('public.procurement.index') }}" class="btn btn-primary">{{ __('landing.policy_programs') }}</a>
-            <a href="{{ route('login') }}" class="btn btn-login">{{ __('navigation.login') }}</a>
-            <x-language-selector style="events" />
-        </div>
-    </nav>
-
-    <!-- ====== NAVBAR ====== -->
-    <header class="navbar" role="banner">
-        <a href="{{ route('landing.index') }}" class="logo" aria-label="FSRP Home">
-            <img src="{{ asset('assets/images/au.png') }}" alt="Western and Central Africa - West Africa Food System Resilience Program (FSRP)" class="logo-sm">
-        </a>
-
-        <nav class="nav-links" aria-label="Main navigation">
-            <a href="{{ route('landing.index') }}">{{ __('navigation.home') }}</a>
-
-            <div class="has-dropdown">
-                <a href="#" class="active">Programs</a>
-                <ul class="nav-dropdown">
-                    <li><a href="{{ route('events') }}" class="active">{{ __('landing.events_webinars') }}</a></li>
-                    <li><a href="{{ route('careers.index') }}">{{ __('navigation.careers') }}</a></li>
-                </ul>
-            </div>
-
-            <div class="has-dropdown">
-                <a href="#">Analytics</a>
-                <ul class="nav-dropdown">
-                    <li><a href="{{ route('impact.map') }}">{{ __('navigation.impact_map') }}</a></li>
-                    <li><a href="{{ route('world.indicators.performance') }}">{{ __('navigation.world_indicators_performance') }}</a></li>
-                </ul>
-            </div>
-
-            <a href="{{ route('news.index') }}">News &amp; Updates</a>
-            <a href="#contact">{{ __('navigation.contact') }}</a>
-        </nav>
-
-        <div class="nav-actions">
-            <a href="{{ route('public.procurement.index') }}" class="btn btn-primary">
-                {{ __('landing.policy_programs') }}
-            </a>
-            <a href="{{ route('login') }}" class="btn btn-login">{{ __('navigation.login') }}</a>
-            <x-language-selector style="landing" />
-        </div>
-
-        <button class="hamburger-btn" id="hamburgerBtn" onclick="openMobileNav()" aria-label="Open menu" aria-expanded="false">
-            <span></span><span></span><span></span>
-        </button>
-    </header>
+    <x-public-header active="events" language-style="events" />
 
     <!-- ====== HERO ====== -->
     <section class="events-hero">
@@ -369,128 +327,70 @@
     </section>
 
     <!-- ====== FILTER BAR ====== -->
-    <div class="filter-bar">
-        <input type="text" placeholder="Search events by keyword..." id="searchInput" />
-        <button onclick="filterEvents()">Search Events</button>
-    </div>
+    <form class="filter-bar" method="GET" action="{{ route('events') }}">
+        <input type="text" name="q" value="{{ request('q') }}" placeholder="Search events by keyword..." id="searchInput" />
+        <button type="submit">Search Events</button>
+    </form>
+
+    @if(request('q'))
+        <p class="events-result-note">
+            Showing {{ $events->total() }} {{ \Illuminate\Support\Str::plural('result', $events->total()) }}
+            for "<strong>{{ request('q') }}</strong>".
+            <a href="{{ route('events') }}">Clear search</a>
+        </p>
+    @endif
 
     <!-- ====== EVENTS GRID ====== -->
     <section class="events-container" id="eventsContainer">
-
-        <div class="event-card">
-            <img src="{{ asset('assets/images/au1.jpg') }}" alt="FSRP Launch Webinar">
-            <div class="card-body">
-                <p class="event-date">July 24, 2025 &mdash; Status: Completed</p>
-                <h4>Launch of FSRP Call for Proposals</h4>
-                <p>
-                    This webinar introduced the FSRP Call for Proposals and provided an overview of the eligibility
-                    criteria, submission guidelines, and key objectives of the FSRP initiative.
-                </p>
-                <div class="card-links">
-                    <a href="https://drive.google.com/file/u/0/d/1cPV1APFR0zB5rSvNL9PvISpNXHY9LcDr/view?usp=sharing&pli=1"
-                        target="_blank" rel="noopener noreferrer" class="btn-view">View Recording</a>
+        @forelse($events as $event)
+            @php
+                $fallbackImages = [
+                    'assets/images/au1.jpg',
+                    'assets/images/au2.webp',
+                    'assets/images/au3.jpg',
+                    'assets/images/au4.jpg',
+                    'assets/images/au5.jpg',
+                    'assets/images/au6.jpg',
+                    'assets/images/au7.jpg',
+                ];
+                $coverUrl = $event->cover_image_path
+                    ? asset('storage/' . $event->cover_image_path)
+                    : asset($fallbackImages[$loop->index % count($fallbackImages)]);
+            @endphp
+            <article class="event-card">
+                <img src="{{ $coverUrl }}" alt="{{ $event->title }}" loading="lazy">
+                <div class="card-body">
+                    <p class="event-date">
+                        {{ optional($event->published_at)->format('F j, Y') }}
+                        @if($event->tags && count($event->tags))
+                            &mdash; {{ collect($event->tags)->take(2)->implode(' | ') }}
+                        @endif
+                    </p>
+                    <h4>{{ $event->title }}</h4>
+                    <p>{{ $event->excerpt ?: \Illuminate\Support\Str::limit(strip_tags($event->body), 160) }}</p>
+                    <div class="card-links">
+                        <a href="{{ route('news.show', $event) }}" class="btn-view">View Details</a>
+                        @foreach($event->attachments->take(2) as $attachment)
+                            <a href="{{ route('news.attachments.download', [$event, $attachment]) }}" class="btn-view">
+                                {{ $attachment->title }}
+                            </a>
+                        @endforeach
+                    </div>
                 </div>
+            </article>
+        @empty
+            <div class="events-empty">
+                <h2>No approved events yet</h2>
+                <p>Approved back-office webinar and event posts will appear here once published.</p>
             </div>
-        </div>
-
-        <div class="event-card">
-            <img src="{{ asset('assets/images/au2.webp') }}" alt="Follow-up Webinar August 5">
-            <div class="card-body">
-                <p class="event-date">August 5, 2025 &mdash; 2:00 pm EAT | Completed</p>
-                <h4>Follow-up Webinar: Consortium Application Guidance</h4>
-                <p>
-                    This webinar provided an overview of the FSRP Consortium Application Form and guidance on navigating
-                    the FSRP website, clarifying eligibility requirements and consortium formation.
-                </p>
-                <div class="card-links">
-                    <a href="https://drive.google.com/file/d/1gSqmT-U2guRVa7FNSfdvLp7RHS45L0Za/view" target="_blank"
-                        rel="noopener noreferrer" class="btn-view">View Recording</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="event-card">
-            <img src="{{ asset('assets/images/au3.jpg') }}" alt="Follow-up Webinar August 26">
-            <div class="card-body">
-                <p class="event-date">August 26, 2025 &mdash; 2:00 pm EAT | Completed</p>
-                <h4>Follow-up Webinar: Budget, Templates &amp; Commitment Letter</h4>
-                <p>
-                    This session provided additional guidance on proposal development, focusing on the budget and
-                    timeline template, CV Template, Past Research and Experience Template, and the Commitment Letter.
-                </p>
-                <div class="card-links">
-                    <a href="https://drive.google.com/file/d/1EzbZ7jbsf6I3FTM1urC9RG_Onld-EGjF/view" target="_blank"
-                        rel="noopener noreferrer" class="btn-view">View Recording</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="event-card">
-            <img src="{{ asset('assets/images/au4.jpg') }}" alt="Follow-up Webinar September 8">
-            <div class="card-body">
-                <p class="event-date">September 8, 2025 &mdash; 2:00 pm EAT | Completed</p>
-                <h4>Follow-up Webinar: Applicant Q&amp;A Session</h4>
-                <p>
-                    This webinar was conducted to address key applicant questions and provide additional clarification
-                    to support submission readiness.
-                </p>
-                <div class="card-links">
-                    <a href="https://drive.google.com/file/d/1LQzkyAG6ITBIRZqzLK7jEiyxD45MpsVT/view" target="_blank"
-                        rel="noopener noreferrer" class="btn-view">View Recording</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="event-card">
-            <img src="{{ asset('assets/images/au5.jpg') }}" alt="Final Follow-up Webinar">
-            <div class="card-body">
-                <p class="event-date">September 23, 2025 &mdash; 2:00 pm EAT | Completed</p>
-                <h4>Final Follow-up Webinar: Submission Deadline Preparation</h4>
-                <p>
-                    This webinar focused on addressing final questions and preparing applicants
-                    for the submission deadline on September 24, 2025.
-                </p>
-            </div>
-        </div>
-
-        <div class="event-card">
-            <img src="{{ asset('assets/images/au6.jpg') }}" alt="How to Apply">
-            <div class="card-body">
-                <p class="event-date">Step-by-Step Application Guide</p>
-                <h4>Watch Our Guide on How to Apply</h4>
-                <p>Video walkthroughs available in English and French to help you complete your application.</p>
-                <div class="card-links">
-                    <a href="https://drive.google.com/file/d/1oFGoh93O1MnoB9bdBhQHaWn4mZlHu5ra/view"
-                        target="_blank" rel="noopener noreferrer" class="btn-view">
-                        How to Apply &mdash; English
-                    </a>
-                    <a href="https://drive.google.com/file/d/19bb8Gx5SICNeZKpFAP2XUPDZH9lre-9I/view"
-                        target="_blank" rel="noopener noreferrer" class="btn-view">
-                        How to Apply &mdash; French
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <div class="event-card">
-            <img src="{{ asset('assets/images/au7.jpg') }}" alt="Clarification Questions">
-            <div class="card-body">
-                <p class="event-date">Ongoing Resource</p>
-                <h4>Response to Clarification Questions</h4>
-                <p>
-                    For all clarification questions submitted, please refer to the updated
-                    Frequently Asked Questions (FAQ) page.
-                </p>
-                <div class="card-links">
-                    <a href="https://fsrp.africa/faq" target="_blank" rel="noopener noreferrer"
-                        class="btn-view">
-                        Visit FSRP FAQ Page
-                    </a>
-                </div>
-            </div>
-        </div>
-
+        @endforelse
     </section>
+
+    @if($events->hasPages())
+        <div class="pagination-wrap">
+            {{ $events->links() }}
+        </div>
+    @endif
 
     <!-- ====== FOOTER ====== -->
     <footer id="contact" class="footer" role="contentinfo">
@@ -526,17 +426,6 @@
     </footer>
 
     <script>
-        function filterEvents() {
-            const search = document.getElementById('searchInput').value.toLowerCase();
-            document.querySelectorAll('.event-card').forEach(card => {
-                card.style.display = card.innerText.toLowerCase().includes(search) ? 'flex' : 'none';
-            });
-        }
-
-        document.getElementById('searchInput').addEventListener('keyup', function(e) {
-            if (e.key === 'Enter') filterEvents();
-        });
-
         function openMobileNav() {
             const nav = document.getElementById('mobileNav');
             const overlay = document.getElementById('navOverlay');

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Activity;
 use App\Exports\MeIndicatorsManagementReportExport;
+use App\Models\FsrpComponent;
 use App\Models\Indicator;
 use App\Models\IndicatorDefinition;
 use App\Models\IndicatorLevel;
@@ -61,6 +62,8 @@ class MeIndicatorController extends Controller
             'level:id,name',
             'frequency:id,name',
             'unit:id,name,symbol',
+            'fsrpComponent:id,code,name',
+            'fsrpSubcomponent:id,code,name',
             'targets:id,indicator_id,target_value,period_start',
             'results:id,indicator_id,actual_value,period_start',
         ])->withCount('surveyResponses')->latest()->paginate(20)->withQueryString();
@@ -128,6 +131,11 @@ class MeIndicatorController extends Controller
             ->where('is_active', true)
             ->orderBy('name')
             ->get(['id', 'name']);
+        $fsrpComponents = FsrpComponent::with(['subcomponents' => fn ($query) => $query->active()->orderBy('sort_order')->orderBy('code')])
+            ->active()
+            ->orderBy('sort_order')
+            ->orderBy('code')
+            ->get();
 
         $surveyMethodologyNames = $methodologies
             ->filter(fn (IndicatorMethodology $methodology) => $this->methodologyHasSurveyConfig($methodology))
@@ -193,6 +201,7 @@ class MeIndicatorController extends Controller
             'users',
             'methodologies',
             'definitions',
+            'fsrpComponents',
             'surveyStatusByIndicatorId'
         ));
     }
@@ -218,7 +227,24 @@ class MeIndicatorController extends Controller
             'baseline_year' => $validated['baseline_year'] ?? null,
             'baseline_type' => $validated['baseline_type'] ?? 'year',
             'baseline_value' => $validated['baseline_value'] ?? null,
+            'fsrp_component_id' => $validated['fsrp_component_id'] ?? null,
+            'fsrp_subcomponent_id' => $validated['fsrp_subcomponent_id'] ?? null,
             'indicator_level_id' => $validated['indicator_level_id'] ?? null,
+            'disaggregation' => $validated['disaggregation'] ?? null,
+            'lop_target_value' => $validated['lop_target_value'] ?? null,
+            'reporting_period_target_value' => $validated['reporting_period_target_value'] ?? null,
+            'reporting_period_achievement_value' => $validated['reporting_period_achievement_value'] ?? null,
+            'reporting_period_performance_pct' => $this->resolvePerformancePercentage(
+                $validated['reporting_period_target_value'] ?? null,
+                $validated['reporting_period_achievement_value'] ?? null,
+                $validated['reporting_period_performance_pct'] ?? null
+            ),
+            'lop_performance_pct' => $this->resolvePerformancePercentage(
+                $validated['lop_target_value'] ?? null,
+                $validated['reporting_period_achievement_value'] ?? null,
+                $validated['lop_performance_pct'] ?? null
+            ),
+            'performance_remarks' => $validated['performance_remarks'] ?? null,
             'methodology' => $validated['methodology'] ?? null,
             'notes' => $validated['notes'] ?? null,
             'responsible_party' => $responsibleParty,
@@ -257,7 +283,24 @@ class MeIndicatorController extends Controller
             'baseline_year' => $validated['baseline_year'] ?? null,
             'baseline_type' => $validated['baseline_type'] ?? 'year',
             'baseline_value' => $validated['baseline_value'] ?? null,
+            'fsrp_component_id' => $validated['fsrp_component_id'] ?? null,
+            'fsrp_subcomponent_id' => $validated['fsrp_subcomponent_id'] ?? null,
             'indicator_level_id' => $validated['indicator_level_id'] ?? null,
+            'disaggregation' => $validated['disaggregation'] ?? null,
+            'lop_target_value' => $validated['lop_target_value'] ?? null,
+            'reporting_period_target_value' => $validated['reporting_period_target_value'] ?? null,
+            'reporting_period_achievement_value' => $validated['reporting_period_achievement_value'] ?? null,
+            'reporting_period_performance_pct' => $this->resolvePerformancePercentage(
+                $validated['reporting_period_target_value'] ?? null,
+                $validated['reporting_period_achievement_value'] ?? null,
+                $validated['reporting_period_performance_pct'] ?? null
+            ),
+            'lop_performance_pct' => $this->resolvePerformancePercentage(
+                $validated['lop_target_value'] ?? null,
+                $validated['reporting_period_achievement_value'] ?? null,
+                $validated['lop_performance_pct'] ?? null
+            ),
+            'performance_remarks' => $validated['performance_remarks'] ?? null,
             'methodology' => $validated['methodology'] ?? null,
             'notes' => $validated['notes'] ?? null,
             'responsible_party' => $responsibleParty,
@@ -396,7 +439,16 @@ class MeIndicatorController extends Controller
             ],
             'baseline_type' => 'nullable|in:year,month,quarter,week,day',
             'baseline_value' => 'nullable|numeric',
+            'fsrp_component_id' => 'nullable|exists:fsrp_components,id',
+            'fsrp_subcomponent_id' => 'nullable|exists:fsrp_subcomponents,id',
             'indicator_level_id' => 'nullable|exists:me_indicator_levels,id',
+            'disaggregation' => 'nullable|string|max:255',
+            'lop_target_value' => 'nullable|numeric',
+            'reporting_period_target_value' => 'nullable|numeric',
+            'reporting_period_achievement_value' => 'nullable|numeric',
+            'reporting_period_performance_pct' => 'nullable|numeric|min:0|max:999.99',
+            'lop_performance_pct' => 'nullable|numeric|min:0|max:999.99',
+            'performance_remarks' => 'nullable|string',
             'methodology' => 'nullable|string|max:255',
             'notes' => 'nullable|string',
             'responsible_user_ids' => 'nullable|array|max:6',
@@ -570,6 +622,8 @@ class MeIndicatorController extends Controller
             'results:id,indicator_id,actual_value,period_start',
             'frequency:id,name',
             'unit:id,name,symbol',
+            'fsrpComponent:id,code,name',
+            'fsrpSubcomponent:id,code,name',
         ])->get();
 
         $indicators->loadMorph('indicatorable', [
@@ -614,12 +668,28 @@ class MeIndicatorController extends Controller
                     'sub_activity_key' => $hierarchy['sub_activity_key'],
                     'sub_activity' => $hierarchy['sub_activity'],
                     'owner_type' => $hierarchy['owner_type'],
+                    'fsrp_component' => $indicator->fsrpComponent
+                        ? $indicator->fsrpComponent->code . ' - ' . $indicator->fsrpComponent->name
+                        : 'â€”',
+                    'fsrp_subcomponent' => $indicator->fsrpSubcomponent
+                        ? $indicator->fsrpSubcomponent->code . ' - ' . $indicator->fsrpSubcomponent->name
+                        : 'â€”',
                     'indicator_name' => $indicator->name,
                     'indicator_level' => $indicator->level?->name ?: '—',
                     'frequency' => $indicator->frequency?->name ?: '—',
                     'baseline_type' => $indicator->baseline_type ? ucfirst($indicator->baseline_type) : '—',
                     'baseline_period' => $indicator->baseline_year ?: '—',
                     'baseline_value' => $baselineValue,
+                    'disaggregation' => $indicator->disaggregation ?: 'â€”',
+                    'lop_target' => $this->formatMetric($indicator->lop_target_value),
+                    'reporting_period_target' => $this->formatMetric($indicator->reporting_period_target_value),
+                    'reporting_period_achievement' => $this->formatMetric($indicator->reporting_period_achievement_value),
+                    'reporting_period_performance' => $indicator->reporting_period_performance_pct !== null
+                        ? $this->formatMetric($indicator->reporting_period_performance_pct) . '%'
+                        : 'â€”',
+                    'lop_performance' => $indicator->lop_performance_pct !== null
+                        ? $this->formatMetric($indicator->lop_performance_pct) . '%'
+                        : 'â€”',
                     'responsible' => $this->formatResponsiblePartyForDisplay($indicator->responsible_party, $userNamesById),
                     'methodology' => $indicator->methodology ?: '—',
                     'primary_source_type' => $sourceType ? ucwords(str_replace('_', ' ', $sourceType)) : '—',
@@ -630,6 +700,7 @@ class MeIndicatorController extends Controller
                     'achievement' => isset($status['achievement']) ? $status['achievement'] . '%' : '—',
                     'status' => $status['status'] ?? 'Not Started',
                     'status_class' => $status['status_class'] ?? 'secondary',
+                    'performance_remarks' => $indicator->performance_remarks ?: 'N/A',
                     'notes' => $indicator->notes ?: '—',
                 ];
             })
@@ -658,11 +729,19 @@ class MeIndicatorController extends Controller
                     $row['sub_activity'] ?? '',
                     $row['indicator_name'] ?? '',
                     $row['owner_type'] ?? '',
+                    $row['fsrp_component'] ?? '',
+                    $row['fsrp_subcomponent'] ?? '',
                     $row['indicator_level'] ?? '',
                     $row['frequency'] ?? '',
                     $row['baseline_type'] ?? '',
                     $row['baseline_period'] ?? '',
                     $row['baseline_value'] ?? '',
+                    $row['disaggregation'] ?? '',
+                    $row['lop_target'] ?? '',
+                    $row['reporting_period_target'] ?? '',
+                    $row['reporting_period_achievement'] ?? '',
+                    $row['reporting_period_performance'] ?? '',
+                    $row['lop_performance'] ?? '',
                     $row['responsible'] ?? '',
                     $row['methodology'] ?? '',
                     $row['primary_source_type'] ?? '',
@@ -672,6 +751,7 @@ class MeIndicatorController extends Controller
                     $row['actual'] ?? '',
                     $row['achievement'] ?? '',
                     $row['status'] ?? '',
+                    $row['performance_remarks'] ?? '',
                     $row['notes'] ?? '',
                 ]));
 
@@ -819,6 +899,24 @@ class MeIndicatorController extends Controller
         return (string) $value;
     }
 
+    protected function resolvePerformancePercentage(mixed $target, mixed $achievement, mixed $provided): ?float
+    {
+        if ($provided !== null && $provided !== '') {
+            return round((float) $provided, 2);
+        }
+
+        if ($target === null || $target === '' || $achievement === null || $achievement === '') {
+            return null;
+        }
+
+        $target = (float) $target;
+        if ($target <= 0) {
+            return null;
+        }
+
+        return round(((float) $achievement / $target) * 100, 2);
+    }
+
     protected function methodologyHasSurveyConfig(IndicatorMethodology $methodology): bool
     {
         return MeSurvey::hasEnabledQuestions(
@@ -892,7 +990,35 @@ class MeIndicatorController extends Controller
         $statusKey = 'not_started';
         $achievement = null;
 
-        if ($latestTarget && !$latestResult) {
+        if ($indicator->reporting_period_target_value !== null || $indicator->reporting_period_achievement_value !== null) {
+            $target = $indicator->reporting_period_target_value;
+            $actual = $indicator->reporting_period_achievement_value;
+            $achievement = $indicator->reporting_period_performance_pct !== null
+                ? round((float) $indicator->reporting_period_performance_pct, 1)
+                : $this->resolvePerformancePercentage($target, $actual, null);
+
+            if ($target !== null && $actual === null) {
+                $status = 'Pending Reporting';
+                $statusClass = 'warning';
+                $statusKey = 'pending';
+            } elseif ($target === null && $actual !== null) {
+                $status = 'Reported (No Target)';
+                $statusClass = 'info';
+                $statusKey = 'reported_without_target';
+            } elseif ($achievement !== null && $achievement >= 100) {
+                $status = 'Achieved';
+                $statusClass = 'success';
+                $statusKey = 'achieved';
+            } elseif ($achievement !== null && $achievement >= 80) {
+                $status = 'On Track';
+                $statusClass = 'primary';
+                $statusKey = 'on_track';
+            } else {
+                $status = 'Behind';
+                $statusClass = 'danger';
+                $statusKey = 'behind';
+            }
+        } elseif ($latestTarget && !$latestResult) {
             $status = 'Pending Reporting';
             $statusClass = 'warning';
             $statusKey = 'pending';
@@ -936,8 +1062,8 @@ class MeIndicatorController extends Controller
             'name' => $indicator->name,
             'owner' => $owner,
             'level' => $indicator->level?->name ?: 'Unassigned',
-            'target' => $latestTarget?->target_value,
-            'actual' => $latestResult?->actual_value,
+            'target' => $indicator->reporting_period_target_value ?? $latestTarget?->target_value,
+            'actual' => $indicator->reporting_period_achievement_value ?? $latestResult?->actual_value,
             'achievement' => $achievement,
             'status' => $status,
             'status_class' => $statusClass,

@@ -17,7 +17,8 @@ class InterimFinancialReportExport implements FromArray, WithStyles, WithColumnW
         protected array $rows,
         protected array $totals,
         protected ?Program $program,
-        protected array $yearRange
+        protected array $yearRange,
+        protected ?array $ifrEvidence = null
     ) {}
 
     public function array(): array
@@ -138,6 +139,15 @@ class InterimFinancialReportExport implements FromArray, WithStyles, WithColumnW
             $totalRow[] = '';
         }
         $data[] = $totalRow;
+
+        if ($this->ifrEvidence !== null) {
+            $data[] = [];
+            $data[] = ['IFR Evidence Summary'];
+            $data[] = ['Designated Account Activity', implode(', ', $this->ifrEvidence['designated_account_activities'] ?? []) ?: 'N/A'];
+            $data[] = ['Bank Statement References', implode(', ', $this->ifrEvidence['bank_statement_references'] ?? []) ?: 'N/A'];
+            $data[] = ['Expenditures Subject to Prior Review', $this->ifrEvidence['prior_review_amount'] ?? 0, 'Records', $this->ifrEvidence['prior_review_count'] ?? 0];
+            $data[] = ['Expenditures Not Subject to Prior Review', $this->ifrEvidence['not_prior_review_amount'] ?? 0, 'Records', $this->ifrEvidence['not_prior_review_count'] ?? 0];
+        }
 
         return $data;
     }

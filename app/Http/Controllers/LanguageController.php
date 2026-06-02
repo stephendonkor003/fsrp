@@ -28,7 +28,7 @@ class LanguageController extends Controller
                 ], 400);
             }
 
-            return redirect()->back()->with('error', 'Invalid language code.');
+            return redirect()->to($this->redirectTarget($request));
         }
 
         App::setLocale($locale);
@@ -43,17 +43,40 @@ class LanguageController extends Controller
             ]);
         }
 
-        return redirect()->back()->with('success', 'Language changed to ' . $this->getLanguageName($locale) . '.');
+        return redirect()->to($this->redirectTarget($request));
+    }
+
+    protected function redirectTarget(Request $request): string
+    {
+        $target = trim((string) $request->input('redirect', ''));
+
+        if ($target !== '') {
+            $targetHost = parse_url($target, PHP_URL_HOST);
+
+            if ($targetHost === null) {
+                return url(str_starts_with($target, '/') ? $target : '/' . $target);
+            }
+
+            if ($targetHost === $request->getHost()) {
+                return $target;
+            }
+        }
+
+        $previous = url()->previous();
+
+        return $previous && ! str_contains($previous, '/language/')
+            ? $previous
+            : route('landing.index');
     }
 
     protected function getLanguageName(string $locale): string
     {
         $languages = [
             'en' => 'English',
-            'fr' => 'French',
-            'ar' => 'Arabic',
-            'pt' => 'Portuguese',
-            'es' => 'Spanish',
+            'fr' => 'Francais',
+            'ar' => 'العربية',
+            'pt' => 'Portugues',
+            'es' => 'Espanol',
             'sw' => 'Kiswahili',
         ];
 

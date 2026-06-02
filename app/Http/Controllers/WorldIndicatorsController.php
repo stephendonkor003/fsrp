@@ -212,8 +212,8 @@ class WorldIndicatorsController extends Controller
     private function resolveSettings(): WorldIndicatorSetting
     {
         return WorldIndicatorSetting::query()->firstOrCreate([], [
-            'page_title' => 'World Indicators / Performance',
-            'page_intro' => 'Compare global indicators by region and country. IMF and World Bank endpoint integration is managed from back office settings.',
+            'page_title' => 'Food Security Indicator Analytics',
+            'page_intro' => 'Compare food-security, resilience, and member-state reporting indicators by region and country. IMF and World Bank endpoint integration is managed from back office settings.',
             'is_public_enabled' => true,
             'imf_source_enabled' => true,
             'world_bank_source_enabled' => true,

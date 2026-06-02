@@ -153,6 +153,7 @@ class BudgetReportController extends Controller
         $chartData = null;
         $summary = null;
         $totals = null;
+        $ifrEvidence = null;
         $filters = $this->resolveCommitmentFilter($request, null);
         $program = null;
         $funders = collect();
@@ -376,6 +377,7 @@ class BudgetReportController extends Controller
         $chartData = null;
         $summary = null;
         $totals = null;
+        $ifrEvidence = null;
         $filters = $this->resolveCommitmentFilter($request, null);
         $program = null;
         $funders = collect();
@@ -496,6 +498,7 @@ class BudgetReportController extends Controller
                 $filters['end_date']
             );
             $summary = $this->buildIfrSummary($totals, $report, $filters['label']);
+            $ifrEvidence = $this->buildIfrEvidenceSummary($filteredDisbursements);
         }
 
         return view('budgetreport.ifr', [
@@ -506,6 +509,7 @@ class BudgetReportController extends Controller
             'summary' => $summary,
             'totals' => $totals,
             'chartData' => $chartData,
+            'ifrEvidence' => $ifrEvidence,
             'filters' => $filters,
             'query' => $request->query(),
         ]);
@@ -628,7 +632,7 @@ class BudgetReportController extends Controller
     public function exportIfrExcel(Request $request)
     {
         $data = $this->buildIfrExportData($request);
-        $export = new InterimFinancialReportExport($data['rows'], $data['totals'], $data['program'], $data['filters']['year_range']);
+        $export = new InterimFinancialReportExport($data['rows'], $data['totals'], $data['program'], $data['filters']['year_range'], $data['ifrEvidence']);
 
         return Excel::download($export, 'ifr-report-' . ($data['program']?->id ?? 'program') . '.xlsx');
     }
@@ -754,6 +758,7 @@ class BudgetReportController extends Controller
             $filters['end_date']
         );
         $summary = $this->buildIfrSummary($totals, $rows, $filters['label']);
+        $ifrEvidence = $this->buildIfrEvidenceSummary($filteredDisbursements);
 
         return [
             'program' => $program,
@@ -762,6 +767,7 @@ class BudgetReportController extends Controller
             'filters' => $filters,
             'chartData' => $chartData,
             'summary' => $summary,
+            'ifrEvidence' => $ifrEvidence,
         ];
     }
 
@@ -2048,6 +2054,35 @@ class BudgetReportController extends Controller
             'disbursed' => round($disbursed, 2),
             'variance' => $variance,
             'utilization' => $utilization,
+        ];
+    }
+
+    private function buildIfrEvidenceSummary($disbursements): array
+    {
+        $priorReview = $disbursements->filter(fn ($row) => (bool) $row->prior_review_expenditure);
+        $notPriorReview = $disbursements->reject(fn ($row) => (bool) $row->prior_review_expenditure);
+
+        $designatedAccountActivities = $disbursements
+            ->pluck('designated_account_activity')
+            ->filter()
+            ->unique()
+            ->values()
+            ->all();
+
+        $bankStatementReferences = $disbursements
+            ->pluck('bank_statement_reference')
+            ->filter()
+            ->unique()
+            ->values()
+            ->all();
+
+        return [
+            'designated_account_activities' => $designatedAccountActivities,
+            'bank_statement_references' => $bankStatementReferences,
+            'prior_review_amount' => round((float) $priorReview->sum('amount'), 2),
+            'not_prior_review_amount' => round((float) $notPriorReview->sum('amount'), 2),
+            'prior_review_count' => $priorReview->count(),
+            'not_prior_review_count' => $notPriorReview->count(),
         ];
     }
 

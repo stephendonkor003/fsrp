@@ -10,12 +10,14 @@ $app = require __DIR__ . '/../../bootstrap/app.php';
 $app->make(ConsoleKernel::class)->bootstrap();
 
 $paths = [
-    '/' => ['ATTP', 'News', 'Login'],
+    '/' => ['FSRP', 'News', 'Login'],
     '/events' => ['Events', 'Login'],
+    '/faq' => ['Frequently Asked Questions', 'Project Overview'],
     '/news' => ['News', 'Subscribe'],
     '/careers' => ['Careers', 'Login'],
     '/public/procurement' => ['Procurement', 'Login'],
     '/impact-map' => ['Impact'],
+    '/food-commodities-map' => ['Food Commodities Map', 'Approved Commodity Intelligence'],
     '/world-indicators-performance' => ['World'],
 ];
 

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('world_indicator_settings', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('page_title')->default('World Indicators / Performance');
+            $table->string('page_title')->default('Food Security Indicator Analytics');
             $table->text('page_intro')->nullable();
             $table->boolean('is_public_enabled')->default(true);
             $table->json('enabled_regions')->nullable();

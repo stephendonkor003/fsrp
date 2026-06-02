@@ -5,12 +5,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Impact Map - FSRP Africa</title>
+    <title>{{ __('public_pages.impact_page_title') }}</title>
 
     <meta name="description"
-        content="Explore FSRP's impact across Africa with our interactive map showing funding partners and projects by country and region." />
+        content="{{ __('public_pages.impact_meta_description') }}" />
     <meta name="keywords"
-        content="FSRP impact, Africa projects, funding map, regional development, FSRP partner projects" />
+        content="{{ __('public_pages.impact_meta_keywords') }}" />
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('assets/style.css') }}" />
@@ -1175,91 +1175,14 @@
 </head>
 
 <body>
-    <!-- ====== MOBILE NAV OVERLAY ====== -->
-    <div class="mobile-nav-overlay" id="navOverlay" onclick="closeMobileNav()"></div>
-
-    <!-- ====== MOBILE NAV DRAWER ====== -->
-    <nav class="mobile-nav" id="mobileNav">
-        <div class="mobile-nav-header">
-            <img src="{{ asset('assets/images/au.png') }}" alt="FSRP">
-            <button class="mobile-nav-close" onclick="closeMobileNav()" aria-label="Close menu">&times;</button>
-        </div>
-        <a href="{{ route('landing.index') }}" onclick="closeMobileNav()">{{ __('navigation.home') }}</a>
-
-        <button class="mobile-dropdown-toggle" onclick="toggleMobileDropdown(this)">
-            Programs <span class="mobile-dropdown-arrow">▾</span>
-        </button>
-        <div class="mobile-dropdown-items">
-            <a href="{{ route('events') }}" onclick="closeMobileNav()">{{ __('landing.events_webinars') }}</a>
-            <a href="{{ route('careers.index') }}" onclick="closeMobileNav()">{{ __('navigation.careers') }}</a>
-        </div>
-
-        <button class="mobile-dropdown-toggle" onclick="toggleMobileDropdown(this)">
-            Analytics <span class="mobile-dropdown-arrow">▾</span>
-        </button>
-        <div class="mobile-dropdown-items">
-            <a href="{{ route('impact.map') }}" class="active" onclick="closeMobileNav()">{{ __('navigation.impact_map') }}</a>
-            <a href="{{ route('world.indicators.performance') }}" onclick="closeMobileNav()">{{ __('navigation.world_indicators_performance') }}</a>
-        </div>
-
-        <a href="{{ route('news.index') }}" onclick="closeMobileNav()">News &amp; Updates</a>
-        <a href="#contact" onclick="closeMobileNav()">{{ __('navigation.contact') }}</a>
-        <div class="mobile-nav-actions">
-            <a href="{{ route('public.procurement.index') }}" class="btn btn-primary">{{ __('landing.policy_programs') }}</a>
-            <a href="{{ route('login') }}" class="btn btn-login">{{ __('navigation.login') }}</a>
-            <x-language-selector style="impact" />
-        </div>
-    </nav>
-
-    <!-- ====== NAVBAR ====== -->
-    <header class="navbar" role="banner">
-        <a href="{{ route('landing.index') }}" class="logo" aria-label="FSRP Home">
-            <img src="{{ asset('assets/images/au.png') }}" alt="Western and Central Africa - West Africa Food System Resilience Program (FSRP)" class="logo-sm">
-        </a>
-
-        <nav class="nav-links" aria-label="Main navigation">
-            <a href="{{ route('landing.index') }}">{{ __('navigation.home') }}</a>
-
-            <div class="has-dropdown">
-                <a href="#">Programs</a>
-                <ul class="nav-dropdown">
-                    <li><a href="{{ route('events') }}">{{ __('landing.events_webinars') }}</a></li>
-                    <li><a href="{{ route('careers.index') }}">{{ __('navigation.careers') }}</a></li>
-                </ul>
-            </div>
-
-            <div class="has-dropdown">
-                <a href="#" class="active">Analytics</a>
-                <ul class="nav-dropdown">
-                    <li><a href="{{ route('impact.map') }}" class="active">{{ __('navigation.impact_map') }}</a></li>
-                    <li><a href="{{ route('world.indicators.performance') }}">{{ __('navigation.world_indicators_performance') }}</a></li>
-                </ul>
-            </div>
-
-            <a href="{{ route('news.index') }}">News &amp; Updates</a>
-            <a href="#contact">{{ __('navigation.contact') }}</a>
-        </nav>
-
-        <div class="nav-actions">
-            <a href="{{ route('public.procurement.index') }}" class="btn btn-primary">
-                {{ __('landing.policy_programs') }}
-            </a>
-            <a href="{{ route('login') }}" class="btn btn-login">{{ __('navigation.login') }}</a>
-            <x-language-selector style="landing" />
-        </div>
-
-        <button class="hamburger-btn" id="hamburgerBtn" onclick="openMobileNav()" aria-label="Open menu" aria-expanded="false">
-            <span></span><span></span><span></span>
-        </button>
-    </header>
+    <x-public-header active="impact" language-style="impact" />
 
     <!-- Hero -->
     <section class="impact-hero">
         <div class="content">
-            <h1>FSRP Impact Analytics Dashboard</h1>
+            <h1>{{ __('public_pages.impact_hero_title') }}</h1>
             <p>
-                Comprehensive insights into funding partners, regional impact, and project distribution across Africa.
-                Powered by real-time program funding data aligned with AU Agenda 2063.
+                {{ __('public_pages.impact_hero_intro') }}
             </p>
         </div>
     </section>
@@ -1269,32 +1192,32 @@
         <div class="summary-card">
             <div class="icon">&#x1F4B0;</div>
             <div class="value">USD {{ number_format($summary['total_funding'] / 1000000, 1) }}M</div>
-            <div class="label">Total Funding</div>
+            <div class="label">{{ __('public_pages.impact_total_funding') }}</div>
         </div>
         <div class="summary-card">
             <div class="icon">&#x1F4CA;</div>
             <div class="value">{{ $summary['total_programs'] }}</div>
-            <div class="label">Active Programs</div>
+            <div class="label">{{ __('public_pages.impact_food_security_programs') }}</div>
         </div>
         <div class="summary-card">
             <div class="icon">&#x1F91D;</div>
             <div class="value">{{ $summary['total_partners'] }}</div>
-            <div class="label">Funding Partners</div>
+            <div class="label">{{ __('public_pages.impact_funding_partners') }}</div>
         </div>
         <div class="summary-card">
             <div class="icon">&#x1F30D;</div>
             <div class="value">{{ $summary['total_countries'] }}</div>
-            <div class="label">Countries Reached</div>
+            <div class="label">{{ __('public_pages.impact_member_states_tracked') }}</div>
         </div>
         <div class="summary-card">
             <div class="icon">&#x1F3DB;</div>
             <div class="value">{{ $summary['total_regions'] }}</div>
-            <div class="label">Regional Blocks</div>
+            <div class="label">{{ __('public_pages.impact_regional_blocks') }}</div>
         </div>
         <div class="summary-card">
             <div class="icon">&#x1F3AF;</div>
             <div class="value">{{ $summary['total_aspirations'] }}</div>
-            <div class="label">Agenda 2063 Aspirations</div>
+            <div class="label">{{ __('public_pages.impact_agenda_aspirations') }}</div>
         </div>
     </div>
 
@@ -1304,14 +1227,14 @@
         <!-- Filter Sidebar -->
         <aside class="filter-sidebar">
             <h3>
-                Filters
-                <span class="filter-count" id="active-filters">All</span>
+                {{ __('public_pages.impact_filters') }}
+                <span class="filter-count" id="active-filters">{{ __('public_pages.impact_all') }}</span>
             </h3>
 
             <!-- Program Scope Filter -->
             <div class="filter-section">
                 <h4>
-                    Program Scope
+                    {{ __('public_pages.impact_program_scope') }}
                     <span class="filter-count">2</span>
                 </h4>
                 <div class="filter-options">
@@ -1319,26 +1242,26 @@
                         <input type="checkbox" id="filter-continental" value="continental" class="filter-scope" checked>
                         <label for="filter-continental">
                             <span class="scope-badge continental">&#x1F30D;</span>
-                            Continental Initiatives (All 55 States)
+                            {{ __('public_pages.impact_continental_initiatives_all') }}
                         </label>
                     </div>
                     <div class="filter-checkbox targeted-filter">
                         <input type="checkbox" id="filter-targeted" value="targeted" class="filter-scope" checked>
                         <label for="filter-targeted">
                             <span class="scope-badge targeted">&#x1F3AF;</span>
-                            Targeted Programs (Specific Countries)
+                            {{ __('public_pages.impact_targeted_programs_specific') }}
                         </label>
                     </div>
                 </div>
                 <div class="scope-summary"
                     style="margin-top: 0.5rem; padding: 0.5rem; background: rgba(167, 13, 83, 0.05); border-radius: 5px; font-size: 0.8rem;">
                     <div style="display: flex; justify-content: space-between; margin-bottom: 0.3rem;">
-                        <span>Continental:</span>
-                        <strong>{{ $summary['continental_programs'] }} programs</strong>
+                        <span>{{ __('public_pages.impact_continental') }}:</span>
+                        <strong>{{ $summary['continental_programs'] }} {{ __('public_pages.impact_programs') }}</strong>
                     </div>
                     <div style="display: flex; justify-content: space-between;">
-                        <span>Targeted:</span>
-                        <strong>{{ $summary['targeted_programs'] }} programs</strong>
+                        <span>{{ __('public_pages.impact_targeted') }}:</span>
+                        <strong>{{ $summary['targeted_programs'] }} {{ __('public_pages.impact_programs') }}</strong>
                     </div>
                 </div>
             </div>
@@ -1346,12 +1269,12 @@
             <!-- Funding Partners Filter -->
             <div class="filter-section">
                 <h4>
-                    Funding Partners
+                    {{ __('public_pages.impact_funding_partners') }}
                     <span class="filter-count">{{ count($filterOptions['funders']) }}</span>
                 </h4>
                 <div class="filter-actions">
-                    <button class="filter-action-btn" onclick="selectAll('funder')">All</button>
-                    <button class="filter-action-btn" onclick="deselectAll('funder')">None</button>
+                    <button class="filter-action-btn" onclick="selectAll('funder')">{{ __('public_pages.impact_all') }}</button>
+                    <button class="filter-action-btn" onclick="deselectAll('funder')">{{ __('public_pages.impact_none') }}</button>
                 </div>
                 <div class="filter-options">
                     @foreach ($filterOptions['funders'] as $funder)
@@ -1367,12 +1290,12 @@
             <!-- Regional Blocks Filter -->
             <div class="filter-section">
                 <h4>
-                    Regional Blocks
+                    {{ __('public_pages.impact_regional_blocks') }}
                     <span class="filter-count">{{ count($filterOptions['regions']) }}</span>
                 </h4>
                 <div class="filter-actions">
-                    <button class="filter-action-btn" onclick="selectAll('region')">All</button>
-                    <button class="filter-action-btn" onclick="deselectAll('region')">None</button>
+                    <button class="filter-action-btn" onclick="selectAll('region')">{{ __('public_pages.impact_all') }}</button>
+                    <button class="filter-action-btn" onclick="deselectAll('region')">{{ __('public_pages.impact_none') }}</button>
                 </div>
                 <div class="filter-options">
                     @foreach ($filterOptions['regions'] as $region)
@@ -1389,12 +1312,12 @@
             <!-- Aspirations Filter -->
             <div class="filter-section">
                 <h4>
-                    Agenda 2063 Aspirations
+                    {{ __('public_pages.impact_agenda_2063_aspirations') }}
                     <span class="filter-count">{{ count($filterOptions['aspirations']) }}</span>
                 </h4>
                 <div class="filter-actions">
-                    <button class="filter-action-btn" onclick="selectAll('aspiration')">All</button>
-                    <button class="filter-action-btn" onclick="deselectAll('aspiration')">None</button>
+                    <button class="filter-action-btn" onclick="selectAll('aspiration')">{{ __('public_pages.impact_all') }}</button>
+                    <button class="filter-action-btn" onclick="deselectAll('aspiration')">{{ __('public_pages.impact_none') }}</button>
                 </div>
                 <div class="filter-options">
                     @foreach ($filterOptions['aspirations'] as $aspiration)
@@ -1408,16 +1331,16 @@
                 </div>
             </div>
 
-            <button class="filter-reset" onclick="resetFilters()">Reset All Filters</button>
+            <button class="filter-reset" onclick="resetFilters()">{{ __('public_pages.impact_reset_all_filters') }}</button>
 
             <!-- Download Section -->
             <div class="download-section">
-                <h4>Download Reports</h4>
+                <h4>{{ __('public_pages.impact_member_state_reports') }}</h4>
                 <a href="{{ route('impact.download.pdf') }}" class="download-btn pdf" id="download-pdf">
-                    <span>&#x1F4C4;</span> Download PDF Report
+                    <span>&#x1F4C4;</span> {{ __('public_pages.impact_download_pdf') }}
                 </a>
                 <a href="{{ route('impact.download.excel') }}" class="download-btn excel" id="download-excel">
-                    <span>&#x1F4CA;</span> Download Excel/CSV
+                    <span>&#x1F4CA;</span> {{ __('public_pages.impact_download_data') }}
                 </a>
             </div>
         </aside>
@@ -1426,29 +1349,28 @@
         <div class="content-area">
             <div class="tabs">
                 <div class="tab-buttons">
-                    <button class="tab-button active" data-tab="map">Interactive Map</button>
-                    <button class="tab-button" data-tab="treaties">Treaties</button>
-                    <button class="tab-button" data-tab="partners">Funding Partners</button>
-                    <button class="tab-button" data-tab="regions">Regional Analysis</button>
-                    <button class="tab-button" data-tab="agenda">Agenda 2063</button>
-                    <button class="tab-button" data-tab="trends">Trends & Charts</button>
-                    <button class="tab-button" data-tab="request">Request Information</button>
+                    <button class="tab-button active" data-tab="map">{{ __('public_pages.impact_tab_map') }}</button>
+                    <button class="tab-button" data-tab="treaties">{{ __('public_pages.impact_tab_treaties') }}</button>
+                    <button class="tab-button" data-tab="partners">{{ __('public_pages.impact_tab_partners') }}</button>
+                    <button class="tab-button" data-tab="regions">{{ __('public_pages.impact_tab_regions') }}</button>
+                    <button class="tab-button" data-tab="agenda">{{ __('public_pages.impact_tab_agenda') }}</button>
+                    <button class="tab-button" data-tab="trends">{{ __('public_pages.impact_tab_trends') }}</button>
+                    <button class="tab-button" data-tab="request">{{ __('public_pages.impact_tab_request') }}</button>
                 </div>
 
                 <!-- Map Tab -->
                 <div class="tab-content active" id="map-tab">
-                    <h2 style="color: var(--wine); margin-bottom: 1rem;">Africa Impact Map</h2>
+                    <h2 style="color: var(--wine); margin-bottom: 1rem;">{{ __('public_pages.impact_africa_map_title') }}</h2>
                     <p style="margin-bottom: 1.5rem; color: #666;">
-                        Learn more about how the FSRP - Western and Central Africa - West Africa Food System Resilience Program (FSRP) is transforming the African
-                        continent.
+                        {{ __('public_pages.impact_africa_map_intro') }}
                         @if ($summary['continental_programs'] > 0)
-                            <span class="continental-badge">{{ $summary['continental_programs'] }} Continental
-                                Initiative(s)</span>
+                            <span class="continental-badge">{{ $summary['continental_programs'] }}
+                                {{ __('public_pages.impact_continental_initiatives') }}</span>
                         @endif
                     </p>
                     <div id="africa-map" class="africa-map-canvas"></div>
                     <p id="africa-map-status" style="margin: 0.75rem 0 0; color: #666; font-size: 0.9rem;">
-                        Loading Africa shapefiles...
+                        {{ __('public_pages.impact_loading_map') }}
                     </p>
                     <div class="map-legend">
                         <span class="map-legend-item"><span class="map-legend-swatch"
@@ -1467,16 +1389,16 @@
 
                     <!-- Top Countries Table with DataTable -->
                     @if (count($fundingByCountry) > 0)
-                        <h3 style="color: var(--wine); margin: 2rem 0 1rem;">Top Beneficiary Countries</h3>
+                        <h3 style="color: var(--wine); margin: 2rem 0 1rem;">{{ __('public_pages.impact_top_beneficiary_countries') }}</h3>
                         <div class="table-responsive" style="background: #fff; border-radius: 12px; padding: 1rem;">
                             <table id="countriesTable" class="table table-striped table-hover" style="width: 100%;">
                                 <thead style="background: var(--wine); color: #fff;">
                                     <tr>
-                                        <th>Country</th>
-                                        <th>Direct Funding (USD)</th>
-                                        <th>Continental Share (USD)</th>
-                                        <th>Programs</th>
-                                        <th>Regions</th>
+                                        <th>{{ __('public_pages.impact_country') }}</th>
+                                        <th>{{ __('public_pages.impact_direct_funding') }}</th>
+                                        <th>{{ __('public_pages.impact_continental_share') }}</th>
+                                        <th>{{ __('public_pages.impact_programs') }}</th>
+                                        <th>{{ __('public_pages.impact_regions') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -1844,6 +1766,7 @@
                 <h4>{{ __('landing.footer_links_title') }}</h4>
                 <a href="{{ route('landing.index') }}">{{ __('landing.footer_link_home') }}</a>
                 <a href="{{ route('impact.map') }}">{{ __('navigation.impact_map') }}</a>
+                <a href="{{ route('food-security.commodities') }}">{{ __('navigation.food_commodities_map') }}</a>
                 <a href="{{ route('world.indicators.performance') }}">{{ __('navigation.world_indicators_performance') }}</a>
                 <a href="{{ route('careers.index') }}">{{ __('navigation.careers') }}</a>
                 <a href="#contact">{{ __('navigation.contact') }}</a>
@@ -1856,7 +1779,7 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <p>Supporting African Union policy coordination, governance reform, and evidence-based decision-making across the continent.</p>
+            <p>{{ __('public_pages.impact_footer_bottom') }}</p>
         </div>
     </footer>
 
@@ -1879,6 +1802,9 @@
         const summary = @json($summary);
         const shapeFiles = @json($shapeFiles);
         const treatiesData = @json($treatiesData ?? []);
+        const impactI18n = {
+            all: @json(__('public_pages.impact_all')),
+        };
 
         // Initialize maps (using local Africa shapefiles)
         const map = L.map('africa-map', {
@@ -3293,7 +3219,7 @@
             const totalFilters = funders.length + regions.length + aspirations.length + scopes.length;
             const totalAvailable = document.querySelectorAll(
                 '.filter-funder, .filter-region, .filter-aspiration, .filter-scope').length;
-            document.getElementById('active-filters').textContent = totalFilters === totalAvailable ? 'All' :
+            document.getElementById('active-filters').textContent = totalFilters === totalAvailable ? impactI18n.all :
                 `${totalFilters}`;
 
             // Update download links with filters
@@ -3478,7 +3404,7 @@
                     pageLength: 10,
                     lengthMenu: [
                         [10, 25, 50, -1],
-                        [10, 25, 50, "All"]
+                        [10, 25, 50, impactI18n.all]
                     ],
                     order: [
                         [1, 'desc']

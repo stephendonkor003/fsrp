@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
 
 <head>
     <meta charset="UTF-8">
-    <title>Open Procurements | FSRP Africa</title>
+    <title>{{ __('public_pages.procurement_page_title') }}</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Explore open procurement opportunities and apply digitally on FSRP Africa.">
+    <meta name="description" content="{{ __('public_pages.procurement_meta_description') }}">
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/style.css">
@@ -171,37 +171,15 @@
             ->shuffle()
             ->values();
     @endphp
-
-    <header class="navbar">
-        <div class="logo">
-
-            <img src="{{ asset('assets/images/au.png') }}" alt="" class="logo logo-sm">
-
-        </div>
-        <nav class="nav-links">
-            <a href="{{ route('landing.index') }}">Home</a>
-            <a href="#annoucements">Annoucements</a>
-            <a href="{{ route('events') }}">Events / Webinars</a>
-            {{-- <a href="#customization">Customization</a> --}}
-            <a href="#contact">Contact</a>
-            <a href="{{ route('careers.index') }}">Career</a>
-        </nav>
-
-        <div class="nav-actions">
-            <a href="{{ route('login') }}" class="btn btn-login">Login</a>
-            <a href="{{ route('public.procurement.index') }}" class="btn btn-primary">Call for Proposals</a>
-
-        </div>
-    </header>
+<x-public-header active="procurement" language-style="procurement" />
 
 
 
     <section class="events-header">
         <div class="header-content">
-            <h1>Open Procurement Opportunities</h1>
+            <h1>{{ __('public_pages.procurement_hero_title') }}</h1>
             <p>
-                Browse available procurement calls and submit your application
-                digitally through the FSRP platform.
+                {{ __('public_pages.procurement_hero_intro') }}
             </p>
         </div>
     </section>
@@ -210,8 +188,8 @@
     <br>
 
     <div class="filter-bar">
-        <input type="text" id="searchInput" placeholder="Search procurement by keyword...">
-        <button onclick="filterProcurements()">Initiate Procurement Search</button>
+        <input type="text" id="searchInput" placeholder="{{ __('public_pages.procurement_search_placeholder') }}">
+        <button onclick="filterProcurements()">{{ __('public_pages.procurement_search_button') }}</button>
     </div>
 
 
@@ -224,7 +202,7 @@
                     $image = $procurementImages[$loop->index % $procurementImages->count()];
                 @endphp
 
-                <img src="{{ asset('assets/images/' . $image->getFilename()) }}" alt="Procurement Image">
+                <img src="{{ asset('assets/images/' . $image->getFilename()) }}" alt="{{ __('public_pages.procurement_image_alt') }}">
 
                 <div class="card-body">
                     <h4>{{ $procurement->title }}</h4>
@@ -234,14 +212,14 @@
                     </p>
 
                     <a href="{{ route('public.procurement.show', $procurement->slug) }}" class="btn-view">
-                        View Details & Apply
+                        {{ __('public_pages.procurement_view_details_apply') }}
                     </a>
                 </div>
             </div>
 
         @empty
             <p style="grid-column:1/-1;text-align:center;font-weight:600;">
-                No open procurements at the moment.
+                {{ __('public_pages.procurement_empty') }}
             </p>
         @endforelse
 
@@ -263,40 +241,7 @@
         }
     </script>
 
-    <footer id="contact" class="footer">
-        <div class="footer-content">
-
-            <div class="footer-logo">
-                <h3>FSRP<span> Administration</span></h3>
-                <p>
-                    Western and Central Africa - West Africa Food System Resilience Program (FSRP) ? supporting African Union
-                    institutions through centralized governance, policy coordination,
-                    and strategic oversight of programs and funded initiatives.
-                </p>
-            </div>
-
-            <div class="footer-links">
-                <h4>Quick Links</h4>
-                <a href="#">Home</a>
-                <a href="#process">Institutional Process Flow</a>
-                <a href="#customization">Centralized Oversight</a>
-                <a href="#contact">Contact</a>
-            </div>
-
-            <div class="footer-contact">
-                <h4>Contact</h4>
-                <p>Email: fsrpinfo@africanunion.org</p>
-                <p>&copy; 2026 Western and Central Africa - West Africa Food System Resilience Program (FSRP)</p>
-            </div>
-
-        </div>
-
-        <p style="margin-top: 10px; font-weight: 600; text-align: center;">
-            Supporting African Union policy coordination, governance reform,
-            and evidence-based decision-making across the continent.
-        </p>
-
-    </footer>
+    <x-public-footer />
 
 
     <script src="assets/script.js"></script>

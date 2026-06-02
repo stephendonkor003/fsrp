@@ -12,9 +12,14 @@
                 </p>
             </div>
 
-            <a href="{{ route('procurement.plans.create') }}" class="btn btn-primary btn-sm">
-                <i class="feather-plus me-1"></i> New Plan
-            </a>
+            <div class="d-flex gap-2">
+                <a href="{{ route('procurement.plans.compliance-dashboard') }}" class="btn btn-outline-primary btn-sm">
+                    <i class="feather-activity me-1"></i> Compliance Dashboard
+                </a>
+                <a href="{{ route('procurement.plans.create') }}" class="btn btn-primary btn-sm">
+                    <i class="feather-plus me-1"></i> New Plan
+                </a>
+            </div>
         </div>
 
         {{-- ================= STATS CARDS ================= --}}
@@ -98,8 +103,11 @@
                             <th class="ps-4">Code</th>
                             <th>Title</th>
                             <th>Activity</th>
+                            <th>FSRP</th>
                             <th>Method</th>
                             <th class="text-center">Stage</th>
+                            <th class="text-center">STEP</th>
+                            <th class="text-center">WB Review</th>
                             <th class="text-center">Launched</th>
                             <th>Start Date</th>
                             <th>End Date</th>
@@ -127,6 +135,14 @@
                                     @endif
                                 </td>
                                 <td>
+                                    @if($plan->fsrpComponent)
+                                        <div class="fw-semibold">{{ $plan->fsrpComponent->code }}</div>
+                                        <small class="text-muted">{{ $plan->fsrpSubcomponent?->code ?: 'No subcomponent' }}</small>
+                                    @else
+                                        <span class="text-muted">â€”</span>
+                                    @endif
+                                </td>
+                                <td>
                                     @if($plan->methodPlanned)
                                         <span class="badge bg-info">{{ Str::limit($plan->methodPlanned->method_name, 15) }}</span>
                                     @else
@@ -138,6 +154,34 @@
                                         <span class="badge bg-secondary">{{ $plan->stage->stage_name }}</span>
                                     @else
                                         <span class="text-muted">—</span>
+                                    @endif
+                                </td>
+                                <td class="text-center">
+                                    @php
+                                        $stepStatus = $plan->step_plan_status ?: 'not_uploaded';
+                                        $stepLabel = ucwords(str_replace('_', ' ', $stepStatus));
+                                    @endphp
+                                    <span class="badge bg-light text-dark">{{ $stepLabel }}</span>
+                                    @if($plan->step_plan_id)
+                                        <div class="small text-muted">{{ $plan->step_plan_id }}</div>
+                                    @endif
+                                </td>
+                                <td class="text-center">
+                                    @php
+                                        $wbStatus = $plan->world_bank_no_objection_status ?: 'pending';
+                                        $wbLabel = ucwords(str_replace('_', ' ', $wbStatus));
+                                        $wbClass = match ($wbStatus) {
+                                            'cleared' => 'bg-success',
+                                            'objected' => 'bg-danger',
+                                            'needs_revision' => 'bg-warning text-dark',
+                                            'submitted' => 'bg-info',
+                                            'not_required' => 'bg-secondary',
+                                            default => 'bg-light text-dark',
+                                        };
+                                    @endphp
+                                    <span class="badge {{ $wbClass }}">{{ $wbLabel }}</span>
+                                    @if($plan->prior_review_required)
+                                        <div class="small text-muted">Prior review</div>
                                     @endif
                                 </td>
                                 <td class="text-center">

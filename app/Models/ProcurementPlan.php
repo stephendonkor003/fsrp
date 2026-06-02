@@ -18,11 +18,23 @@ class ProcurementPlan extends BaseModel
         'sub_activity_id',
         'method_planned_id',
         'program_plan_id',
+        'fsrp_component_id',
+        'fsrp_subcomponent_id',
         'geographic_id',
         'stage_id',
         'status_id',
         'step_stage_id',
         'step_approval_id',
+        'ppsd_reference',
+        'step_plan_id',
+        'step_plan_status',
+        'step_last_uploaded_at',
+        'prior_review_required',
+        'world_bank_no_objection_status',
+        'world_bank_no_objection_date',
+        'procurement_risk_level',
+        'contract_log_reference',
+        'procurement_record_notes',
         'is_launched',
         'launched_at',
         'estimated_start_date',
@@ -40,6 +52,9 @@ class ProcurementPlan extends BaseModel
     protected $casts = [
         'is_code_auto_generated' => 'boolean',
         'is_launched' => 'boolean',
+        'prior_review_required' => 'boolean',
+        'step_last_uploaded_at' => 'date',
+        'world_bank_no_objection_date' => 'date',
         'launched_at' => 'datetime',
         'estimated_start_date' => 'date',
         'estimated_end_date' => 'date',
@@ -70,6 +85,16 @@ class ProcurementPlan extends BaseModel
     public function programPlan(): BelongsTo
     {
         return $this->belongsTo(ProcurementProgramPlan::class, 'program_plan_id');
+    }
+
+    public function fsrpComponent(): BelongsTo
+    {
+        return $this->belongsTo(FsrpComponent::class, 'fsrp_component_id');
+    }
+
+    public function fsrpSubcomponent(): BelongsTo
+    {
+        return $this->belongsTo(FsrpSubcomponent::class, 'fsrp_subcomponent_id');
     }
 
     public function geographic(): BelongsTo

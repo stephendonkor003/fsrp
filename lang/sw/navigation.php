@@ -16,5 +16,6 @@ return [
     'process' => 'Mtiririko wa Mfumo',
     'customization' => 'Ubinafsishaji',
     'impact_map' => 'Ramani ya Athari',
+    'food_commodities_map' => 'Ramani ya Bidhaa za Chakula',
     'world_indicators_performance' => 'World Indicators / Performance',
 ];

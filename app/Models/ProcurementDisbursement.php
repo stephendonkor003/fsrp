@@ -24,6 +24,11 @@ class ProcurementDisbursement extends BaseModel
         'amount',
         'currency',
         'payment_method',
+        'designated_account_activity',
+        'bank_statement_reference',
+        'bank_statement_file_path',
+        'prior_review_expenditure',
+        'ifr_notes',
         'transfer_reference',
         'status',
         'recipient_confirmation_status',
@@ -37,6 +42,7 @@ class ProcurementDisbursement extends BaseModel
 
     protected $casts = [
         'amount' => 'decimal:2',
+        'prior_review_expenditure' => 'boolean',
         'paid_at' => 'datetime',
         'recipient_confirmed_at' => 'datetime',
     ];

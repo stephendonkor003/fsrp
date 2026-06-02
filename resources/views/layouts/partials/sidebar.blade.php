@@ -58,6 +58,8 @@
         'news.approve',
         'questions.view',
         'questions.respond',
+        'commodity_data.review',
+        'commodity_data.approve',
     ];
     $canSeeNewsCommunicationSidebar = $sidebarUser
         && collect($newsCommunicationSidebarPermissions)->contains(
@@ -1420,7 +1422,7 @@
 
                 {{-- ================= COMMUNICATIONS ================= --}}
                 @canany(['communications.view', 'communications.respond', 'news.manage', 'news.approve', 'questions.view', 'questions.respond',
-                    'national_data.review', 'national_data.approve'])
+                    'national_data.review', 'national_data.approve', 'commodity_data.review', 'commodity_data.approve'])
                     <li class="nxl-item nxl-caption">
                         <label>Country Engagement</label>
                     </li>
@@ -1450,6 +1452,13 @@
                         <li class="nxl-item">
                             <a href="{{ route('system.national-data-reviews.index') }}" class="nxl-link">
                                 <i class="feather-check-square me-2"></i> National Data Reviews
+                            </a>
+                        </li>
+                    @endcan
+                    @can('commodity_data.review')
+                        <li class="nxl-item">
+                            <a href="{{ route('system.commodity-trend-reviews.index') }}" class="nxl-link">
+                                <i class="feather-package me-2"></i> Food Commodity Reviews
                             </a>
                         </li>
                     @endcan

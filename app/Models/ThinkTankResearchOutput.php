@@ -11,6 +11,8 @@ class ThinkTankResearchOutput extends BaseModel
     protected $fillable = [
         'consortium_id',
         'think_tank_member_id',
+        'fsrp_component_id',
+        'fsrp_subcomponent_id',
         'title',
         'output_type',
         'published_on',
@@ -44,5 +46,15 @@ class ThinkTankResearchOutput extends BaseModel
     public function submitter(): BelongsTo
     {
         return $this->belongsTo(User::class, 'submitted_by');
+    }
+
+    public function fsrpComponent(): BelongsTo
+    {
+        return $this->belongsTo(FsrpComponent::class, 'fsrp_component_id');
+    }
+
+    public function fsrpSubcomponent(): BelongsTo
+    {
+        return $this->belongsTo(FsrpSubcomponent::class, 'fsrp_subcomponent_id');
     }
 }

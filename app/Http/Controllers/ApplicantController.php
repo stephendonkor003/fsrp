@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ThinkDataset;
+use App\Models\NewsPost;
 
 class ApplicantController extends Controller
 {
@@ -160,9 +161,27 @@ class ApplicantController extends Controller
         return view('applicants.faq');
 
     }
-    public function events()
+    public function events(Request $request)
     {
-        return view('events');
+        $query = NewsPost::published()
+            ->with('attachments')
+            ->where('category', 'events');
+
+        if ($request->filled('q')) {
+            $search = '%' . trim((string) $request->input('q')) . '%';
+            $query->where(function ($builder) use ($search) {
+                $builder->where('title', 'like', $search)
+                    ->orWhere('excerpt', 'like', $search)
+                    ->orWhere('body', 'like', $search);
+            });
+        }
+
+        $events = $query
+            ->orderByDesc('published_at')
+            ->paginate(9)
+            ->withQueryString();
+
+        return view('events', compact('events'));
 
     }
 

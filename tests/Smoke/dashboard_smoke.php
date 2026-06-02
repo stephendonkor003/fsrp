@@ -49,7 +49,7 @@ if ($response->getStatusCode() !== 200) {
     exit(1);
 }
 
-foreach (['Consortium Operations', 'Think Tank Management'] as $needle) {
+foreach (['Consortium Operations', 'FSRP Partner Portal Oversight'] as $needle) {
     if (! str_contains((string) $content, $needle)) {
         fwrite(STDERR, "Consortium response is missing expected text: {$needle}\n");
         exit(1);
@@ -67,7 +67,7 @@ if ($response->getStatusCode() !== 200) {
     exit(1);
 }
 
-foreach (['ATTP AI Guide Settings', 'Configuration'] as $needle) {
+foreach (['FSRP AI Guide Settings', 'Configuration'] as $needle) {
     if (! str_contains((string) $content, $needle)) {
         fwrite(STDERR, "AI Guide response is missing expected text: {$needle}\n");
         exit(1);
@@ -78,6 +78,7 @@ $systemPaths = [
     '/system/audit',
     '/system/communications',
     '/system/national-data-reviews',
+    '/system/commodity-trend-reviews',
     '/system/permissions',
     '/system/roles',
     '/system/users',

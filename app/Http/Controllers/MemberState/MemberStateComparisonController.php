@@ -192,6 +192,7 @@ class MemberStateComparisonController extends Controller
             ->selectRaw('SUM(COALESCE(production_volume, 0)) as total_production_volume')
             ->selectRaw('SUM(COALESCE(export_volume, 0)) as total_export_volume')
             ->whereIn('member_state_id', $stateIds)
+            ->where('review_status', 'approved')
             ->whereBetween('recorded_on', [$from, $to]);
 
         if ($selectedCommodityIds->isNotEmpty()) {
@@ -210,6 +211,7 @@ class MemberStateComparisonController extends Controller
             ->selectRaw('COUNT(*) as data_points')
             ->selectRaw('SUM(COALESCE(export_value_usd, 0)) as total_export_value')
             ->whereIn('member_state_id', $stateIds)
+            ->where('review_status', 'approved')
             ->whereBetween('recorded_on', [$from, $to]);
 
         if ($selectedCommodityIds->isNotEmpty()) {

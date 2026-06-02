@@ -16,7 +16,6 @@ use App\Models\ThinkTankResearchOutput;
 use App\Models\User;
 use App\Models\UserLoginOtp;
 use Database\Seeders\ConsortiumOperationsPermissionsSeeder;
-use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Foundation\Testing\Concerns\InteractsWithExceptionHandling;
 use Illuminate\Foundation\Testing\Concerns\InteractsWithAuthentication;
 use Illuminate\Foundation\Testing\Concerns\MakesHttpRequests;
@@ -29,10 +28,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
-require __DIR__ . '/../../vendor/autoload.php';
-
-$app = require __DIR__ . '/../../bootstrap/app.php';
-$app->make(Kernel::class)->bootstrap();
+$app = require __DIR__ . '/bootstrap.php';
 
 class ThinkTankPortalSmoke
 {
@@ -72,7 +68,7 @@ class ThinkTankPortalSmoke
             $this->asThinkTank($data['thinkTankUser'])
                 ->get('/think-tank/dashboard')
                 ->assertOk()
-                ->assertSee('Think Tank Report Search')
+                ->assertSee('FSRP Partner Report Search')
                 ->assertSee('Run Search')
                 ->assertSee('Download Report');
 
@@ -202,7 +198,7 @@ class ThinkTankPortalSmoke
             $this->asAdmin($data['adminUser'])
                 ->get(route('consortium-operations.show', $data['consortium']))
                 ->assertOk()
-                ->assertSee('Think Tank Portal Oversight')
+                ->assertSee('FSRP Partner Portal Oversight')
                 ->assertDontSee('Partner Runtime Overview')
                 ->assertSee($procurement->title)
                 ->assertSee('Research Submitted');
@@ -219,7 +215,7 @@ class ThinkTankPortalSmoke
             $this->asAdmin($data['adminUser'])
                 ->get(route('think-tanks-admin.directory'))
                 ->assertOk()
-                ->assertSee('System Think Tank Database')
+                ->assertSee('FSRP Partner Directory')
                 ->assertSee('Linked to System DB')
                 ->assertSee($data['member']->name);
 
@@ -279,7 +275,7 @@ class ThinkTankPortalSmoke
             $this->asAdmin($data['adminUser'])
                 ->get(route('think-tank.dashboard', ['think_tank_member_id' => $data['member']->id]))
                 ->assertOk()
-                ->assertSee('Think Tank Report Search')
+                ->assertSee('FSRP Partner Report Search')
                 ->assertSee('Graphs and Analysis')
                 ->assertSee($data['member']->name);
 
