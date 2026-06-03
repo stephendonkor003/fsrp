@@ -644,13 +644,19 @@ html {
 
 .hero.video-active .overlay {
     z-index: 5;
-    background: rgba(0, 0, 0, 0.18);
+    background: linear-gradient(
+        135deg,
+        rgba(0, 77, 46, 0.66) 0%,
+        rgba(0, 0, 0, 0.58) 100%
+    );
 }
 
 .hero.video-active .hero-content {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
+    z-index: 6;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    text-shadow: 0 3px 18px rgba(0, 0, 0, 0.45);
 }
 
 .overlay {

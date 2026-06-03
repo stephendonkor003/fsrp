@@ -204,6 +204,10 @@ const heroSlides = [
         subtitle: "Support early warning, digital advisory services, food crisis prevention, and program coordination across participating countries."
     },
     {
+        title: "Food Security Information\nAt Everyone's Fingertips",
+        subtitle: "Make timely food security information available to everyone, from decision-makers to field teams, through one accessible FSRP knowledge and reporting platform."
+    },
+    {
         title: "Resilient Production\nAnd Value Chains",
         subtitle: "Track investments that improve the productive base, adaptive capacity, priority landscapes, and strategic food system value chains."
     },
