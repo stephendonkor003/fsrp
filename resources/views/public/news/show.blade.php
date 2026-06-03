@@ -3,8 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $post->title }} | FSRP News</title>
-    <meta name="description" content="{{ $post->excerpt ?: \Illuminate\Support\Str::limit(strip_tags($post->body), 160) }}">
+    @php
+        $seoDescription = $post->excerpt ?: \Illuminate\Support\Str::limit(strip_tags($post->body), 160);
+        $seoImage = $post->cover_image_path ? asset('storage/' . $post->cover_image_path) : asset('assets/images/fsrp/water-food-resilience-2.jpg');
+    @endphp
+    <title>{{ $post->title }} | FSRP Eastern and Southern Africa News</title>
+    <meta name="description" content="{{ $seoDescription }}">
+    <meta name="keywords" content="FSRP news, {{ $post->title }}, Food System Resilience Program, Eastern and Southern Africa, food security, resilience implementation">
+    <meta name="author" content="{{ $post->creator?->name ?? 'FSRP Communications' }}">
+    <link rel="canonical" href="{{ route('news.show', $post) }}">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="{{ $post->title }}">
+    <meta property="og:description" content="{{ $seoDescription }}">
+    <meta property="og:image" content="{{ $seoImage }}">
+    <meta property="og:url" content="{{ route('news.show', $post) }}">
+    <meta property="og:site_name" content="FSRP Eastern and Southern Africa">
+    @if($post->published_at)
+        <meta property="article:published_time" content="{{ $post->published_at->toIso8601String() }}">
+    @endif
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $post->title }}">
+    <meta name="twitter:description" content="{{ $seoDescription }}">
+    <meta name="twitter:image" content="{{ $seoImage }}">
     <link rel="icon" href="{{ asset('assets/images/au.png') }}" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('assets/style.css') }}">
@@ -295,7 +315,7 @@
     <div class="footer-content">
         <div class="footer-logo">
             <h3>FSRP<span> · Administration</span></h3>
-            <p>Western and Central Africa - West Africa Food System Resilience Program (FSRP) — supporting African Union institutions through centralized governance, policy coordination, and strategic oversight of programs and funded initiatives.</p>
+            <p>Food System Resilience Program (FSRP) for Eastern and Southern Africa - supporting food-security preparedness, regional market coordination, public communication, and accountable implementation.</p>
         </div>
         <div class="footer-links">
             <h4>Quick Links</h4>
@@ -307,11 +327,11 @@
         <div class="footer-contact">
             <h4>Contact</h4>
             <p>Email: fsrpinfo@africanunion.org</p>
-            <p>&copy; 2026 Western and Central Africa - West Africa Food System Resilience Program (FSRP)</p>
+            <p>&copy; 2026 Food System Resilience Program (FSRP) for Eastern and Southern Africa</p>
         </div>
     </div>
     <div class="footer-bottom">
-        <p>Supporting African Union policy coordination, governance reform, and evidence-based decision-making across the continent.</p>
+        <p>Supporting food-system resilience coordination, member-state reporting, and evidence-based implementation across Eastern and Southern Africa.</p>
     </div>
 </footer>
 

@@ -193,7 +193,7 @@
     {{-- Header --}}
     <div class="header">
         <h1>{{ $title ?? 'FSRP Impact Report' }}</h1>
-        <p>Western and Central Africa - West Africa Food System Resilience Program (FSRP) - Program Funding Impact Analysis</p>
+        <p>Food System Resilience Program (FSRP) for Eastern and Southern Africa - Program Funding Impact Analysis</p>
         <p>Generated: {{ $generated_at }}</p>
     </div>
 
@@ -223,7 +223,7 @@
         @if($summary['continental_programs'] > 0)
         <div class="highlight-box">
             <strong>{{ $summary['continental_programs'] }} Continental Initiative(s)</strong> -
-            Programs designed to benefit all 55 AU member states across the continent.
+            Programs designed to benefit participating countries across Eastern and Southern Africa.
         </div>
         @endif
     </div>
@@ -407,7 +407,7 @@
     <div class="footer">
         <table style="width: 100%;">
             <tr>
-                <td>Western and Central Africa - West Africa Food System Resilience Program (FSRP) - Impact Analytics Report</td>
+                <td>Food System Resilience Program (FSRP) for Eastern and Southern Africa - Impact Analytics Report</td>
                 <td style="text-align: center;">Confidential</td>
                 <td style="text-align: right;">{{ $generated_at }}</td>
             </tr>

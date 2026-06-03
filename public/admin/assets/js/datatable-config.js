@@ -67,7 +67,7 @@ const dataTableConfig = {
                         return {
                             columns: [
                                 {
-                                    text: 'Western and Central Africa - West Africa Food System Resilience Program (FSRP)',
+                                    text: 'Food System Resilience Program (FSRP) for Eastern and Southern Africa',
                                     alignment: 'left',
                                     fontSize: 8,
                                     margin: [40, 0]

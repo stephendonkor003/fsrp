@@ -2,8 +2,8 @@
 
 return [
     // Meta
-    'page_title' => 'FSRP - West Africa Food System Resilience Program Administrative Portal',
-    'meta_description' => 'The FSRP administrative portal supports coordination, procurement, finance, monitoring, reporting, and implementation oversight for the West Africa Food System Resilience Program.',
+    'page_title' => 'FSRP - Food System Resilience Program for Eastern and Southern Africa Administrative Portal',
+    'meta_description' => 'The FSRP administrative portal supports coordination, procurement, finance, monitoring, reporting, and implementation oversight for the Food System Resilience Program for Eastern and Southern Africa.',
     // Navigation
     'announcements' => 'Anúncios',
     'events_webinars' => 'Eventos / Webinários',
@@ -47,7 +47,7 @@ return [
     'countries_item6_desc' => 'Decision-makers can see implementation progress, country contributions, evidence, and results indicators in one place.',
     // Grants Announcement
     'grants_title' => 'Anúncio de Subsídios e Prêmios FSRP',
-    'grants_subtitle' => 'A Plataforma Africana de FSRP Partner (FSRP) tem o prazer de anunciar oficialmente a concessão de subsídios no âmbito do Edital de Propostas da FSRP.',
+    'grants_subtitle' => 'O Food System Resilience Program (FSRP) para a Africa Oriental e Austral anuncia oficialmente a concessao de subvencoes no ambito da chamada de propostas do FSRP.',
     'download_en' => 'Baixe o documento oficial de Anúncio de Subsídios e Prêmios FSRP em inglês.',
     'download_fr' => 'Baixe o documento oficial de Anúncio de Subsídios e Prêmios FSRP em francês.',
     'download_ar' => 'Baixe o documento oficial de Anúncio de Subsídios e Prêmios FSRP em árabe.',
@@ -65,7 +65,7 @@ return [
     'governance_item4' => 'Results monitoring for food security preparedness and food system resilience',
     'governance_item5' => 'Evidence, safeguards, approvals, and audit trails in one controlled workspace',
     // Footer
-    'footer_description' => 'Western and Central Africa - West Africa Food System Resilience Program (FSRP) - administrative coordination, fiduciary oversight, monitoring, reporting, and implementation support.',
+    'footer_description' => 'Food System Resilience Program (FSRP) for Eastern and Southern Africa - administrative coordination, fiduciary oversight, monitoring, reporting, and implementation support.',
     'footer_links_title' => 'Links Rápidos',
     'footer_link_home' => 'Início',
     'footer_link_process' => 'Administrative Workflow',
@@ -73,12 +73,12 @@ return [
     'footer_link_oversight' => 'Program Oversight',
     'footer_contact_title' => 'Contato',
     'footer_email' => 'E-mail: fsrpinfo@africanunion.org',
-    'footer_copyright' => 'Copyright :year Western and Central Africa - West Africa Food System Resilience Program (FSRP)',
+    'footer_copyright' => 'Copyright :year Food System Resilience Program (FSRP) for Eastern and Southern Africa',
     // Contact Section
     'contact_email' => 'E-mail',
     'contact_info' => 'info@fsrp.africa',
 
     // Legacy Footer
-    'footer_tagline' => 'Administrative coordination for food system resilience across West Africa.',
+    'footer_tagline' => 'Administrative coordination for food system resilience across Eastern and Southern Africa.',
     'quick_links' => 'Links Rápidos',
 ];

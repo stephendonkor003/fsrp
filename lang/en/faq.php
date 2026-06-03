@@ -15,7 +15,7 @@ return [
                 ],
                 [
                     'q' => 'Who benefits from the project?',
-                    'a' => 'Direct users include the African Union Commission, regional bodies, member states, FSRP partners, implementing teams, and back-office reviewers. The wider benefit is stronger food system resilience and evidence-based decision-making for citizens across the continent.',
+                    'a' => 'Direct users include the African Union Commission, regional bodies, member states, FSRP partners, implementing teams, and back-office reviewers. The wider benefit is stronger food system resilience and evidence-based decision-making for citizens across Eastern and Southern Africa.',
                 ],
                 [
                     'q' => 'How does the portal support end-to-end operations?',

@@ -834,7 +834,7 @@
                                                 </div>
                                                 <div class="tt-field full">
                                                     <label for="opp_title">Opportunity title</label>
-                                                    <input id="opp_title" name="title" value="{{ old('title') }}" placeholder="Consultancy for policy research and stakeholder validation" required>
+                                                    <input id="opp_title" name="title" value="{{ old('title') }}" placeholder="Consultancy for food-system resilience and stakeholder validation" required>
                                                 </div>
                                                 <div class="tt-field">
                                                     <label for="reference_no">Reference number</label>

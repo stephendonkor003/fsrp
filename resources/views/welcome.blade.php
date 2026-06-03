@@ -10,12 +10,12 @@
     <title>{{ __('landing.page_title') }}</title>
 
     <meta name="description"
-        content="The FSRP administrative portal supports coordination, procurement, finance, monitoring, reporting, and implementation oversight for the West Africa Food System Resilience Program." />
+        content="The FSRP administrative portal supports coordination, procurement, finance, monitoring, reporting, and implementation oversight for the Food System Resilience Program for Eastern and Southern Africa." />
 
     <meta name="keywords"
-        content="FSRP, West Africa Food System Resilience Program, food security preparedness, food system resilience, regional food markets, digital advisory services, agriculture procurement, program management, World Bank" />
+        content="FSRP, Food System Resilience Program for Eastern and Southern Africa, food security preparedness, food system resilience, regional food markets, digital advisory services, agriculture procurement, program management, World Bank" />
 
-    <meta name="author" content="Western and Central Africa - West Africa Food System Resilience Program (FSRP)" />
+    <meta name="author" content="Food System Resilience Program (FSRP) for Eastern and Southern Africa" />
     <meta name="robots" content="index, follow" />
     <meta name="language" content="en" />
     <meta name="theme-color" content="#006B3F" />
@@ -25,20 +25,19 @@
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="FSRP Administrative Portal - West Africa Food System Resilience Program" />
+    <meta property="og:title" content="FSRP Administrative Portal - Food System Resilience Program for Eastern and Southern Africa" />
     <meta property="og:description"
-        content="Administrative coordination, fiduciary oversight, procurement, monitoring, and reporting for the West Africa Food System Resilience Program." />
+        content="Administrative coordination, fiduciary oversight, procurement, monitoring, and reporting for the Food System Resilience Program for Eastern and Southern Africa." />
     <meta property="og:image" content="https://fsrp.africa/assets/images/au3.jpg" />
     <meta property="og:url" content="https://fsrp.africa/" />
     <meta property="og:site_name" content="FSRP" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="FSRP Administrative Portal - West Africa Food System Resilience Program" />
+    <meta name="twitter:title" content="FSRP Administrative Portal - Food System Resilience Program for Eastern and Southern Africa" />
     <meta name="twitter:description"
         content="A controlled workspace for FSRP planning, procurement, finance, monitoring, reporting, and audit readiness." />
     <meta name="twitter:image" content="https://fsrp.africa/assets/images/au.png" />
-    <meta name="twitter:site" content="@FSRP_WestAfrica" />
 
     <!-- Canonical URL -->
     <link rel="canonical" href="https://fsrp.africa/" />
@@ -55,19 +54,15 @@
     {
       "@@context": "https://schema.org",
       "@type": "Organization",
-      "name": "Western and Central Africa - West Africa Food System Resilience Program (FSRP)",
+      "name": "Food System Resilience Program (FSRP) for Eastern and Southern Africa",
       "alternateName": "FSRP",
       "url": "https://fsrp.africa",
       "logo": "https://fsrp.africa/assets/images/au3.jpg",
       "description": "FSRP administrative portal for coordinating implementation, procurement, finance, monitoring, reporting, and oversight for food system resilience activities in participating countries.",
       "foundingLocation": {
         "@type": "Place",
-        "name": "Africa"
-      },
-      "sameAs": [
-        "https://www.linkedin.com/company/fsrp-west-africa",
-        "https://twitter.com/FSRP_WestAfrica"
-      ]
+        "name": "Eastern and Southern Africa"
+      }
     }
     </script>
 </head>

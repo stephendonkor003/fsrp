@@ -4,7 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    @php
+        $worldIndicatorSeoDescription = $settings->page_intro ?: 'Explore food-security, resilience, and member-state reporting indicators through map overlays, side-by-side charts, and detailed data sheets for Eastern and Southern Africa.';
+    @endphp
     <title>{{ $settings->page_title }}</title>
+    <meta name="description" content="{{ $worldIndicatorSeoDescription }}">
+    <meta name="keywords" content="FSRP indicators, food security indicators, World Bank indicators, Eastern and Southern Africa, resilience analytics, member-state reporting, Food System Resilience Program">
+    <meta name="author" content="Food System Resilience Program (FSRP) for Eastern and Southern Africa">
+    <link rel="canonical" href="{{ route('world.indicators.performance') }}">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="{{ $settings->page_title }}">
+    <meta property="og:description" content="{{ $worldIndicatorSeoDescription }}">
+    <meta property="og:image" content="{{ asset('assets/images/fsrp/water-food-resilience-2.jpg') }}">
+    <meta property="og:url" content="{{ route('world.indicators.performance') }}">
+    <meta property="og:site_name" content="FSRP Eastern and Southern Africa">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $settings->page_title }}">
+    <meta name="twitter:description" content="{{ $worldIndicatorSeoDescription }}">
+    <meta name="twitter:image" content="{{ asset('assets/images/fsrp/water-food-resilience-2.jpg') }}">
     <link rel="stylesheet" href="{{ asset('assets/style.css') }}">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <style>
@@ -275,7 +292,7 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <p>Supporting African Union policy coordination, governance reform, and evidence-based decision-making across the continent.</p>
+            <p>Supporting food-system resilience coordination, member-state reporting, and evidence-based implementation across Eastern and Southern Africa.</p>
         </div>
     </footer>
 

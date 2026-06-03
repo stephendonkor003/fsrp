@@ -1,6 +1,6 @@
 <svg viewBox="0 0 220 56" xmlns="http://www.w3.org/2000/svg" {{ $attributes }} role="img" aria-labelledby="fsrp-logo-title fsrp-logo-desc">
     <title id="fsrp-logo-title">FSRP</title>
-    <desc id="fsrp-logo-desc">Western and Central Africa - West Africa Food System Resilience Program</desc>
+    <desc id="fsrp-logo-desc">Food System Resilience Program for Eastern and Southern Africa</desc>
     <rect width="220" height="56" rx="10" fill="#0F766E" />
     <path d="M17 38C17 25.85 26.85 16 39 16H49V26H39C32.37 26 27 31.37 27 38H17Z" fill="#FACC15" />
     <path d="M27 38C27 31.37 32.37 26 39 26H49V38H27Z" fill="#22C55E" />

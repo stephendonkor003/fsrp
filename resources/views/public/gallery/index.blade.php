@@ -3,8 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gallery | FSRP</title>
-    <meta name="description" content="Approved FSRP public gallery featuring images and videos from program events, field visits, trainings, and implementation activities.">
+    <title>Gallery | FSRP Eastern and Southern Africa</title>
+    <meta name="description" content="Approved FSRP public gallery featuring images and videos from food-system resilience events, field visits, trainings, and implementation activities across Eastern and Southern Africa.">
+    <meta name="keywords" content="FSRP gallery, Food System Resilience Program, Eastern and Southern Africa, food security photos, resilience field visits, FSRP events, implementation activities">
+    <meta name="author" content="Food System Resilience Program (FSRP) for Eastern and Southern Africa">
+    <link rel="canonical" href="{{ route('gallery.index') }}">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Gallery | FSRP Eastern and Southern Africa">
+    <meta property="og:description" content="Approved FSRP images and videos from events, field visits, trainings, and implementation activities across Eastern and Southern Africa.">
+    <meta property="og:image" content="{{ asset('assets/images/fsrp/water-food-resilience-2.jpg') }}">
+    <meta property="og:url" content="{{ route('gallery.index') }}">
+    <meta property="og:site_name" content="FSRP Eastern and Southern Africa">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Gallery | FSRP Eastern and Southern Africa">
+    <meta name="twitter:description" content="Approved FSRP images and videos from events, field visits, trainings, and implementation activities across Eastern and Southern Africa.">
+    <meta name="twitter:image" content="{{ asset('assets/images/fsrp/water-food-resilience-2.jpg') }}">
     <link rel="icon" href="{{ asset('assets/images/au.png') }}" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('assets/style.css') }}">
@@ -262,7 +275,7 @@
     <div class="footer-content">
         <div class="footer-logo">
             <h3>FSRP<span> &middot; Administration</span></h3>
-            <p>Western and Central Africa - West Africa Food System Resilience Program (FSRP) - supporting program coordination, public communication, and evidence-based implementation.</p>
+            <p>Food System Resilience Program (FSRP) for Eastern and Southern Africa - supporting program coordination, public communication, and evidence-based implementation.</p>
         </div>
         <div class="footer-links">
             <h4>Quick Links</h4>
@@ -274,7 +287,7 @@
         <div class="footer-contact">
             <h4>Contact</h4>
             <p>Email: fsrpinfo@africanunion.org</p>
-            <p>&copy; 2026 Western and Central Africa - West Africa Food System Resilience Program (FSRP)</p>
+            <p>&copy; 2026 Food System Resilience Program (FSRP) for Eastern and Southern Africa</p>
         </div>
     </div>
     <div class="footer-bottom">

@@ -4,13 +4,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Careers at FSRP – Join Africa’s Procurement Transformation</title>
+    <title>Careers at FSRP - Join Food System Resilience Work</title>
 
     {{-- SEO --}}
     <meta name="description"
-        content="Explore open career opportunities at FSRP and be part of Africa’s digital procurement transformation.">
-    <meta name="keywords" content="FSRP careers, vacancies, procurement jobs, Africa, technology, digital procurement">
+        content="Explore open career opportunities at FSRP and support food-system resilience across Eastern and Southern Africa.">
+    <meta name="keywords" content="FSRP careers, vacancies, food security, food system resilience, Eastern Africa, Southern Africa">
     <meta name="author" content="FSRP Team">
+    <link rel="canonical" href="{{ route('careers.index') }}">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Careers at FSRP - Food System Resilience Work">
+    <meta property="og:description" content="Explore open career opportunities at FSRP and support food-system resilience across Eastern and Southern Africa.">
+    <meta property="og:image" content="{{ asset('assets/images/fsrp/water-food-resilience-1.jpg') }}">
+    <meta property="og:url" content="{{ route('careers.index') }}">
+    <meta property="og:site_name" content="FSRP Eastern and Southern Africa">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Careers at FSRP - Food System Resilience Work">
+    <meta name="twitter:description" content="Explore open career opportunities at FSRP and support food-system resilience across Eastern and Southern Africa.">
+    <meta name="twitter:image" content="{{ asset('assets/images/fsrp/water-food-resilience-1.jpg') }}">
 
     {{-- Fonts --}}
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">

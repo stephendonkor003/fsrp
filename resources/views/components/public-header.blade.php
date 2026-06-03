@@ -51,7 +51,7 @@
 
 <header class="navbar public-site-header" role="banner">
     <a href="{{ route('landing.index') }}" class="logo" aria-label="FSRP Home">
-        <img src="{{ asset('assets/images/au.png') }}" alt="Western and Central Africa - West Africa Food System Resilience Program (FSRP)" class="logo-sm">
+        <img src="{{ asset('assets/images/au.png') }}" alt="Food System Resilience Program (FSRP) for Eastern and Southern Africa" class="logo-sm">
     </a>
 
     <nav class="nav-links" aria-label="Main navigation">

@@ -6,6 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ __('faq.page_title') }}</title>
     <meta name="description" content="{{ __('faq.meta_description') }}">
+    <meta name="keywords" content="FSRP FAQ, Food System Resilience Program, Eastern and Southern Africa, food security questions, procurement FAQ, safeguards FAQ, monitoring and reporting">
+    <meta name="author" content="Food System Resilience Program (FSRP) for Eastern and Southern Africa">
+    <link rel="canonical" href="{{ route('applicants.faq') }}">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="{{ __('faq.page_title') }}">
+    <meta property="og:description" content="{{ __('faq.meta_description') }}">
+    <meta property="og:image" content="{{ asset('assets/images/fsrp/water-food-resilience-2.jpg') }}">
+    <meta property="og:url" content="{{ route('applicants.faq') }}">
+    <meta property="og:site_name" content="FSRP Eastern and Southern Africa">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ __('faq.page_title') }}">
+    <meta name="twitter:description" content="{{ __('faq.meta_description') }}">
+    <meta name="twitter:image" content="{{ asset('assets/images/fsrp/water-food-resilience-2.jpg') }}">
     <link rel="icon" href="{{ asset('assets/images/au.png') }}" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('assets/style.css') }}">

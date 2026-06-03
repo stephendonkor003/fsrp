@@ -24,7 +24,7 @@
                             <div class="col-md-8">
                                 <label class="form-label fw-semibold">Name <span class="text-danger">*</span></label>
                                 <input type="text" name="name" class="form-control @error('name') is-invalid @enderror"
-                                    value="{{ old('name') }}" placeholder="e.g. Economic Community of West African States"
+                                    value="{{ old('name') }}" placeholder="e.g. Intergovernmental Authority on Development"
                                     required>
                                 @error('name')
                                     <div class="invalid-feedback">{{ $message }}</div>

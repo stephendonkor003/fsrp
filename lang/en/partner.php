@@ -124,12 +124,12 @@ return [
 
     // Email Translations
     'email' => [
-        'welcome_subject' => 'Welcome to the Western and Central Africa - West Africa Food System Resilience Program (FSRP) - Partner Portal',
+        'welcome_subject' => 'Welcome to the Food System Resilience Program (FSRP) for Eastern and Southern Africa - Partner Portal',
         'welcome_title' => 'Welcome to the Partner Portal',
         'portal_access' => 'Your Portal Access Credentials',
         'dear' => 'Dear',
-        'greeting_line_1' => 'We are delighted to welcome you as a valued funding partner of the Western and Central Africa - West Africa Food System Resilience Program (FSRP).',
-        'greeting_line_2' => 'Your partnership with :organization is instrumental in advancing evidence-based policymaking across Africa.',
+        'greeting_line_1' => 'We are delighted to welcome you as a valued funding partner of the Food System Resilience Program (FSRP) for Eastern and Southern Africa.',
+        'greeting_line_2' => 'Your partnership with :organization is instrumental in advancing food-system resilience across Eastern and Southern Africa.',
         'credentials_title' => 'Your Login Credentials',
         'portal_url' => 'Portal URL',
         'username' => 'Username',
@@ -143,9 +143,9 @@ return [
         'support_line' => 'If you have any questions or need assistance, please contact us at',
         'closing' => 'We look forward to continuing our partnership and achieving great impact together.',
         'signature_line_1' => 'Best regards',
-        'signature_line_2' => 'Western and Central Africa - West Africa Food System Resilience Program (FSRP) Team',
+        'signature_line_2' => 'Food System Resilience Program (FSRP) for Eastern and Southern Africa Team',
         'signature_line_3' => 'African Union Commission',
-        'footer' => 'Western and Central Africa - West Africa Food System Resilience Program (FSRP) — African Union Commission',
+        'footer' => 'Food System Resilience Program (FSRP) for Eastern and Southern Africa - African Union Commission',
     ],
 
     // Requests

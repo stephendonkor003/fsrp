@@ -3,12 +3,25 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Careers at FSRP – Join Africa’s Procurement Transformation</title>
+    <title>Careers at FSRP - Join Food System Resilience Work</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     {{-- SEO --}}
     <meta name="description"
-        content="Explore career opportunities at FSRP and join Africa’s digital procurement transformation.">
+        content="Explore career opportunities at FSRP and support food-system resilience across Eastern and Southern Africa.">
+    <meta name="keywords" content="FSRP careers, Food System Resilience Program jobs, Eastern and Southern Africa, food security careers, resilience program vacancies, implementation jobs">
+    <meta name="author" content="Food System Resilience Program (FSRP) for Eastern and Southern Africa">
+    <link rel="canonical" href="{{ route('careers.index') }}">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Careers at FSRP - Food System Resilience Work">
+    <meta property="og:description" content="Explore career opportunities at FSRP and support food-system resilience across Eastern and Southern Africa.">
+    <meta property="og:image" content="{{ asset('assets/images/fsrp/water-food-resilience-1.jpg') }}">
+    <meta property="og:url" content="{{ route('careers.index') }}">
+    <meta property="og:site_name" content="FSRP Eastern and Southern Africa">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Careers at FSRP - Food System Resilience Work">
+    <meta name="twitter:description" content="Explore career opportunities at FSRP and support food-system resilience across Eastern and Southern Africa.">
+    <meta name="twitter:image" content="{{ asset('assets/images/fsrp/water-food-resilience-1.jpg') }}">
 
     {{-- Google Font --}}
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
@@ -277,8 +290,8 @@
         <div class="career-hero-content">
             <h1>Build Your Career With FSRP</h1>
             <p>
-                Join a mission-driven team strengthening African policy research,
-                evidence-based decision-making, and continental collaboration.
+                Join a mission-driven team strengthening food-security preparedness,
+                resilient production systems, regional markets, and implementation accountability.
             </p>
         </div>
     </section>
@@ -403,9 +416,8 @@
             <div class="footer-logo">
                 <h3>FSRP<span> · Administration</span></h3>
                 <p>
-                    Western and Central Africa - West Africa Food System Resilience Program (FSRP) — supporting African Union
-                    institutions through centralized governance, policy coordination,
-                    and strategic oversight of programs and funded initiatives.
+                    Food System Resilience Program (FSRP) for Eastern and Southern Africa - supporting food-security
+                    preparedness, regional market coordination, public communication, and accountable implementation.
                 </p>
             </div>
 
@@ -426,7 +438,7 @@
         </div>
 
         <div class="footer-bottom">
-            <p>Supporting African Union policy coordination, governance reform, and evidence-based decision-making across the continent.</p>
+            <p>Supporting food-system resilience coordination, member-state reporting, and evidence-based implementation across Eastern and Southern Africa.</p>
         </div>
 
     </footer>

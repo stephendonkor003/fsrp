@@ -4,7 +4,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>African Union - FSRP Partner Application</title>
+    <title>FSRP Call for Proposals | Food System Resilience Program for Eastern and Southern Africa</title>
+    <meta name="description" content="Apply for FSRP call-for-proposals opportunities supporting food-security preparedness, resilient production systems, regional markets, safeguards, and implementation accountability across Eastern and Southern Africa.">
+    <meta name="keywords" content="FSRP call for proposals, Food System Resilience Program, Eastern and Southern Africa, food security grants, resilience partners, regional markets, safeguards, implementation support">
+    <meta name="author" content="Food System Resilience Program (FSRP) for Eastern and Southern Africa">
+    <link rel="canonical" href="{{ route('applicants.create') }}">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="FSRP Call for Proposals | Eastern and Southern Africa">
+    <meta property="og:description" content="Apply for FSRP opportunities supporting food-system resilience, regional market coordination, safeguards, and implementation accountability.">
+    <meta property="og:image" content="{{ asset('assets/images/fsrp/water-food-resilience-1.jpg') }}">
+    <meta property="og:url" content="{{ route('applicants.create') }}">
+    <meta property="og:site_name" content="FSRP Eastern and Southern Africa">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="FSRP Call for Proposals | Eastern and Southern Africa">
+    <meta name="twitter:description" content="Apply for FSRP opportunities supporting food-system resilience, regional market coordination, safeguards, and implementation accountability.">
+    <meta name="twitter:image" content="{{ asset('assets/images/fsrp/water-food-resilience-1.jpg') }}">
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
@@ -153,15 +167,15 @@
     @endif
 
     <header class="au-header text-center">
-        <h2>Call for Proposals: Strengthening African Policy Research and Regional Collaboration</h2>
+        <h2>Call for Proposals: Strengthening Food System Resilience in Eastern and Southern Africa</h2>
     </header>
 
     <div class="container my-5">
 
         <div class="card shadow-sm p-4">
             <h3 class="mb-4">Application Form</h3>
-            <p>The Western and Central Africa - West Africa Food System Resilience Program (FSRP) aims to establish a sustainable platform to strengthen Africa’s
-                capacity for effective policy research and evidence-based policymaking on cross-boundary priorities.
+            <p>The Food System Resilience Program (FSRP) for Eastern and Southern Africa aims to establish a sustainable platform to strengthen Africa’s
+                capacity for food-security preparedness, resilient production, regional market coordination, and evidence-based implementation.
             </p>
 
             <p>Funded by the World Bank and implemented by the African Union Commission, the platform seeks to support
@@ -177,11 +191,11 @@
             <div class="accordion-item">
                 <button class="accordion-header">Section 1: Eligibility Criteria</button>
                 <div class="accordion-content">
-                    <p>Eligible applicants must be registered African FSRP partners engaged in public policy research.
+                    <p>Eligible applicants must be registered African FSRP partners engaged in food-system resilience implementation.
                         Applications must be submitted as part of a consortium of FSRP partners. Each consortium must:
 
                         <li> Be led by a designated lead FSRP partner.</li>
-                        <li> Include representation from at least two sub-regions across the continent.</li>
+                        <li> Include representation from at least two sub-regions across Eastern and Southern Africa.</li>
                         <li> Demonstrate experience working in at least four of the six priority themes of the
                             platform.</li>
                         <li> Propose activities aligned with FSRP objectives on research, engagement, capacity
@@ -214,12 +228,12 @@
             </div>
 
             <div class="accordion-item">
-                <button class="accordion-header">Section 4: How to Apply for the Western and Central Africa - West Africa Food System Resilience Program (FSRP) Project Call
+                <button class="accordion-header">Section 4: How to Apply for the Food System Resilience Program (FSRP) for Eastern and Southern Africa Project Call
                     for Proposals:</button>
                 <div class="accordion-content">
                     <p>
                         This page provides step-by-step guidance for FSRP partner consortia interested in applying for
-                        funding through the Western and Central Africa - West Africa Food System Resilience Program (FSRP) Project (FSRP). Please read the eligibility
+                        funding through the Food System Resilience Program (FSRP) for Eastern and Southern Africa Project (FSRP). Please read the eligibility
                         criteria carefully and follow the instructions for registration and application submission.
                     </p>
                     <p>1. Eligibility Criteria</p>
@@ -231,7 +245,7 @@
 
                         <li> Geographic Registration: All participating FSRP partners must be legally registered and
                             based in
-                            continental Africa.</li>
+                            Eastern and Southern Africa.</li>
 
                         <li> Policy Coverage: The consortium must demonstrate prior or ongoing experience in at least
                             four of the six FSRP priority themes:
@@ -254,13 +268,13 @@
                             tanks, with one designated as the lead applicant.
                         <li>Geographic Registration: All participating FSRP partners must be legally registered and based
                             in
-                            continental Africa.
+                            Eastern and Southern Africa.
                         <li> Policy Coverage: The consortium must demonstrate prior or ongoing experience in at least
                             four
                             of the six FSRP priority themes:
-                            <p>1. Economic transformation and governance</p>
-                            <p>2. Climate change</p>
-                            <p>3. Regional trade</p>
+                            <p>1. Digital advisory services and early warning</p>
+                            <p>2. Productive-base resilience and climate-smart agriculture</p>
+                            <p>3. Regional markets, trade, and value chains</p>
                         </li>
                     </p>
 
@@ -268,9 +282,9 @@
                 </div>
             </div>
             <p>
-            <h2>How to Apply for the Western and Central Africa - West Africa Food System Resilience Program (FSRP) Project Call for Proposals</h2>
+            <h2>How to Apply for the Food System Resilience Program (FSRP) for Eastern and Southern Africa Project Call for Proposals</h2>
             <p>This page provides step-by-step guidance for FSRP partner consortia interested in applying for funding
-                through the Western and Central Africa - West Africa Food System Resilience Program (FSRP) Project (FSRP). Please read the eligibility criteria carefully
+                through the Food System Resilience Program (FSRP) for Eastern and Southern Africa Project (FSRP). Please read the eligibility criteria carefully
                 and follow the instructions for registration and application submission.
             </p>
 
@@ -282,20 +296,20 @@
             <p> Consortium Structure: Applications must be submitted by a consortium of 3 to 5 African FSRP partners,
                 with one designated as the lead applicant.</p>
             <li>Geographic Registration: All participating FSRP partners must be legally registered and based in
-                continental Africa.</li>
+                Eastern and Southern Africa.</li>
             <li> Policy Coverage: The consortium must demonstrate prior or ongoing experience in at least four of the
                 six FSRP priority themes:</li>
-            <li>1. Economic transformation and governance</li>
-            <li>2. Climate change</li>
-            <li>3. Regional trade</li>
+            <li>1. Digital advisory services and early warning</li>
+            <li>2. Productive-base resilience and climate-smart agriculture</li>
+            <li>3. Regional markets, trade, and value chains</li>
             <li> 4. Food security</li>
             <li> 5. Human capital</li>
-            <li> 6. Digitalization</li>
+            <li> 6. Monitoring, Evaluation, Learning, and Reporting</li>
             </p>
 
             <p>Strategic Alignment: Proposed activities must directly contribute to the FSRP's objectives of
                 generating high-quality research, supporting regional policy development, promoting institutional
-                capacity building, and increasing the representation of women in policy research.</p>
+                capacity building, and advancing inclusive participation and measurable food-system resilience results.</p>
 
             <h3>2. Application Documents</h3>
 
@@ -472,7 +486,7 @@
                                 more</span>
                             <select name="country" class="form-select select2">
                                 <option value="">-- Select Country --</option>
-                                @foreach (['Algeria', 'Angola', 'Benin', 'Botswana', 'Burkina Faso', 'Burundi', 'Cabo Verde', 'Cameroon', 'Central African Republic', 'Chad', 'Comoros', 'Congo (Brazzaville)', 'Congo (Kinshasa)', "Côte d'Ivoire", 'Djibouti', 'Egypt', 'Equatorial Guinea', 'Eritrea', 'Eswatini', 'Ethiopia', 'Gabon', 'Gambia', 'Ghana', 'Guinea', 'Guinea-Bissau', 'Kenya', 'Lesotho', 'Liberia', 'Libya', 'Madagascar', 'Malawi', 'Mali', 'Mauritania', 'Mauritius', 'Morocco', 'Mozambique', 'Namibia', 'Niger', 'Nigeria', 'Rwanda', 'Sao Tome and Principe', 'Senegal', 'Seychelles', 'Sierra Leone', 'Somalia', 'South Africa', 'South Sudan', 'Sudan', 'Tanzania', 'Togo', 'Tunisia', 'Uganda', 'Zambia', 'Zimbabwe'] as $country)
+                                @foreach (['Angola', 'Botswana', 'Burundi', 'Comoros', 'Djibouti', 'Eritrea', 'Eswatini', 'Ethiopia', 'Kenya', 'Lesotho', 'Madagascar', 'Malawi', 'Mauritius', 'Mozambique', 'Namibia', 'Rwanda', 'Seychelles', 'Somalia', 'South Africa', 'South Sudan', 'Sudan', 'Tanzania', 'Uganda', 'Zambia', 'Zimbabwe'] as $country)
                                     <option value="{{ $country }}"
                                         {{ request('country') == $country ? 'selected' : '' }}>
                                         {{ $country }}
@@ -562,7 +576,7 @@
                             <span class="read-more" data-bs-toggle="modal" data-bs-target="#tipSubRegion">Read
                                 more</span>
                             <select name="sub_region[]" class="form-select select2" multiple>
-                                @foreach (['West Africa', 'East Africa', 'Central Africa', 'North Africa', 'Southern Africa'] as $region)
+                                @foreach (['East Africa', 'Southern Africa'] as $region)
                                     <option value="{{ $region }}"
                                         {{ collect(request('sub_region'))->contains($region) ? 'selected' : '' }}>
                                         {{ $region }}
@@ -613,14 +627,14 @@
                                 more</span>
                             <select id="focusAreasSelect" name="focus_areas[]" class="form-select select2" multiple
                                 required>
-                                @foreach (['Economic Transformation and Governance', 'Climate Change', 'Regional Trade', 'Food Security', 'Human Capital Development', 'Digitalization'] as $area)
+                                @foreach (['Digital Advisory Services and Early Warning', 'Productive-Base Resilience and Climate-Smart Agriculture', 'Regional Markets, Trade, and Value Chains', 'Emergency Response Readiness', 'Safeguards, Stakeholder Engagement, and Grievance Redress', 'Monitoring, Evaluation, Learning, and Reporting'] as $area)
                                     <option value="{{ $area }}"
                                         {{ collect(old('focus_areas', request('focus_areas', [])))->contains($area) ? 'selected' : '' }}>
                                         {{ $area }}
                                     </option>
                                 @endforeach
                             </select>
-                            <small class="text-danger d-none" id="focusAreaError">Please select at least 5 focus
+                            <small class="text-danger d-none" id="focusAreaError">Please select at least 4 focus
                                 areas.</small>
                         </div>
 
@@ -824,11 +838,11 @@
                                 more</span>
                             <select name="consortium_region" class="form-select select2">
                                 <option value="">-- Select Region --</option>
-                                <option>West Africa</option>
+                                
                                 <option>East Africa</option>
-                                <option>Central Africa</option>
+                                
                                 <option>Southern Africa</option>
-                                <option>North Africa</option>
+                                
                             </select>
                         </div>
                         <!-- Region Tip Modal -->
@@ -842,13 +856,11 @@
                                             data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body" style="padding: 1.5rem;">
-                                        Choose the <strong>African region</strong> in which the consortium primarily
+                                        Choose the <strong>FSRP region</strong> in which the consortium primarily
                                         operates or is registered.
                                         <br><br>
-                                        The five recognized AU regions are: West Africa, East Africa, Central
-                                        Africa,
-                                        Southern Africa, and North Africa. Select the one that best represents your
-                                        geographic base or coordination area.
+                                        Select East Africa or Southern Africa based on the geographic base, coordination
+                                        area, or primary implementation reach of the proposed activities.
                                     </div>
                                     <div class="modal-footer" style="background-color: #007144; color: #fff;">
                                         <small class="me-auto">Your selected region will help align your consortium
@@ -1014,7 +1026,7 @@
             const currentStage = $('.form-stage.active');
             let isValid = true;
 
-            // Custom check: Focus Areas selection (must select at least 5)
+            // Custom check: Focus Areas selection (must select at least 4)
             if (currentStage.find('#focusAreasSelect').length) {
                 const selectedOptions = $('#focusAreasSelect').val() || [];
                 if (selectedOptions.length < 4) {
@@ -1022,7 +1034,7 @@
                     $('#focusAreasSelect').addClass('is-invalid');
                     if (!$('#focusAreaError').length) {
                         $('#focusAreasSelect').after(
-                            '<small class="text-danger" id="focusAreaError">Please select at least 5 focus areas.</small>'
+                            '<small class="text-danger" id="focusAreaError">Please select at least 4 focus areas.</small>'
                         );
                     }
                 } else {

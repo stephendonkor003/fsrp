@@ -6,6 +6,19 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ __('public_pages.treaties_page_title') }}</title>
     <meta name="description" content="{{ __('public_pages.treaties_meta_description') }}">
+    <meta name="keywords" content="FSRP policy commitments, Food System Resilience Program, Eastern and Southern Africa, member-state commitments, regional coordination, signatures, ratifications">
+    <meta name="author" content="Food System Resilience Program (FSRP) for Eastern and Southern Africa">
+    <link rel="canonical" href="{{ route('impact.treaties.information') }}">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="{{ __('public_pages.treaties_page_title') }}">
+    <meta property="og:description" content="{{ __('public_pages.treaties_meta_description') }}">
+    <meta property="og:image" content="{{ asset('assets/images/fsrp/water-food-resilience-1.jpg') }}">
+    <meta property="og:url" content="{{ route('impact.treaties.information') }}">
+    <meta property="og:site_name" content="FSRP Eastern and Southern Africa">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ __('public_pages.treaties_page_title') }}">
+    <meta name="twitter:description" content="{{ __('public_pages.treaties_meta_description') }}">
+    <meta name="twitter:image" content="{{ asset('assets/images/fsrp/water-food-resilience-1.jpg') }}">
     <link rel="icon" href="{{ asset('assets/images/au.png') }}" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('assets/style.css') }}">

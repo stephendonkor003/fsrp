@@ -3,10 +3,27 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>{{ $procurement->title }} | FSRP</title>
+    @php
+        $procurementSeoDescription = __('public_pages.procurement_apply_meta_description', ['title' => $procurement->title]);
+        $procurementSeoImage = asset('assets/images/fsrp/water-food-resilience-3.jpg');
+    @endphp
+    <title>{{ $procurement->title }} | FSRP Eastern and Southern Africa Procurement</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="{{ __('public_pages.procurement_apply_meta_description', ['title' => $procurement->title]) }}">
+    <meta name="description" content="{{ $procurementSeoDescription }}">
+    <meta name="keywords" content="{{ $procurement->title }}, FSRP procurement, Food System Resilience Program, Eastern and Southern Africa, food security tender, vendor opportunity">
+    <meta name="author" content="Food System Resilience Program (FSRP) for Eastern and Southern Africa">
+    <link rel="canonical" href="{{ route('public.procurement.show', $procurement) }}">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="{{ $procurement->title }}">
+    <meta property="og:description" content="{{ $procurementSeoDescription }}">
+    <meta property="og:image" content="{{ $procurementSeoImage }}">
+    <meta property="og:url" content="{{ route('public.procurement.show', $procurement) }}">
+    <meta property="og:site_name" content="FSRP Eastern and Southern Africa">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $procurement->title }}">
+    <meta name="twitter:description" content="{{ $procurementSeoDescription }}">
+    <meta name="twitter:image" content="{{ $procurementSeoImage }}">
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/style.css">

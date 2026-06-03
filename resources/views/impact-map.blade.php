@@ -11,6 +11,18 @@
         content="{{ __('public_pages.impact_meta_description') }}" />
     <meta name="keywords"
         content="{{ __('public_pages.impact_meta_keywords') }}" />
+    <meta name="author" content="Food System Resilience Program (FSRP) for Eastern and Southern Africa" />
+    <link rel="canonical" href="{{ route('impact.map') }}" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="{{ __('public_pages.impact_page_title') }}" />
+    <meta property="og:description" content="{{ __('public_pages.impact_meta_description') }}" />
+    <meta property="og:image" content="{{ asset('assets/images/fsrp/water-food-resilience-1.jpg') }}" />
+    <meta property="og:url" content="{{ route('impact.map') }}" />
+    <meta property="og:site_name" content="FSRP Eastern and Southern Africa" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="{{ __('public_pages.impact_page_title') }}" />
+    <meta name="twitter:description" content="{{ __('public_pages.impact_meta_description') }}" />
+    <meta name="twitter:image" content="{{ asset('assets/images/fsrp/water-food-resilience-1.jpg') }}" />
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('assets/style.css') }}" />
@@ -1374,17 +1386,9 @@
                     </p>
                     <div class="map-legend">
                         <span class="map-legend-item"><span class="map-legend-swatch"
-                                style="background:#2e7d32;"></span>West Africa</span>
-                        <span class="map-legend-item"><span class="map-legend-swatch"
                                 style="background:#1565c0;"></span>East Africa</span>
                         <span class="map-legend-item"><span class="map-legend-swatch"
-                                style="background:#ef6c00;"></span>Central Africa</span>
-                        <span class="map-legend-item"><span class="map-legend-swatch"
-                                style="background:#b7791f;"></span>North Africa</span>
-                        <span class="map-legend-item"><span class="map-legend-swatch"
                                 style="background:#0f766e;"></span>Southern Africa</span>
-                        <span class="map-legend-item"><span class="map-legend-swatch"
-                                style="background:#7d2d3d;"></span>Islands</span>
                     </div>
 
                     <!-- Top Countries Table with DataTable -->
@@ -1430,20 +1434,20 @@
                     @endif
                 </div>
 
-                <!-- Treaties Tab -->
+                <!-- Policy Commitments Tab -->
                 <div class="tab-content" id="treaties-tab">
-                    <h2 style="color: var(--wine); margin-bottom: 0.75rem;">African Union Treaties</h2>
+                    <h2 style="color: var(--wine); margin-bottom: 0.75rem;">Policy Commitments</h2>
                     <p style="margin-bottom: 0.9rem; color: #4b5563; line-height: 1.7;">
-                        The African Union treaty framework guides continental cooperation, legal harmonization,
-                        ratification milestones, and formal submission of treaty instruments by member states.
+                        Policy commitment tracking helps FSRP teams understand country-level signatures,
+                        ratification milestones, and formal instrument submissions relevant to regional coordination.
                     </p>
                     <p style="margin-bottom: 1.4rem; color: #6b7280; line-height: 1.7;">
-                        Open the dedicated treaties information page to explore treaty-by-treaty status filters,
-                        member-state status indicators on the Africa map, and the full status dataset in a searchable table.
+                        Open the dedicated policy commitments page to explore commitment-by-commitment status filters,
+                        member-state status indicators on the map, and the full status dataset in a searchable table.
                     </p>
                     <a href="{{ route('impact.treaties.information') }}" class="filter-reset"
                         style="display:inline-flex; width:auto; padding:0.72rem 1.25rem; text-decoration:none;">
-                        View Treaties Information
+                        View Policy Commitments
                     </a>
                 </div>
 
@@ -2624,7 +2628,7 @@
                         <div class="value">${countrySafe}</div>
                     </div>
                     <div class="treaty-detail-card">
-                        <div class="label">Treaties With Activity</div>
+                        <div class="label">Policy Commitments With Activity</div>
                         <div class="value">${rows.length}</div>
                     </div>
                     <div class="treaty-detail-card">
@@ -2708,7 +2712,7 @@
             const countryName = layer._countryName || 'Country';
             const treatyStatus = getTreatyStatusForCountry(countryName);
             const selectedTreaty = getSelectedTreaty();
-            const treatyTitle = selectedTreaty ? selectedTreaty.title : 'Combined Treaties View';
+            const treatyTitle = selectedTreaty ? selectedTreaty.title : 'Combined Policy Commitments View';
             const safeCountryName = escapeHtml(countryName);
             const safeTreatyId = selectedTreaty ? escapeHtml(toTreatyId(selectedTreaty.id)) : '';
 
@@ -2963,7 +2967,7 @@
             }
 
             if (!treatyShapeCache.length) {
-                setTreatiesMapStatus('Treaties map is waiting for Africa map data...');
+                setTreatiesMapStatus('Policy commitments map is waiting for Africa map data...');
                 return;
             }
 
@@ -2983,7 +2987,7 @@
                 });
             }
 
-            setTreatiesMapStatus('Treaties map loaded.');
+            setTreatiesMapStatus('Policy commitments map loaded.');
         }
 
         function loadAfricaShapefiles() {
@@ -3102,7 +3106,7 @@
                             initializeTreatiesLayersIfNeeded();
                         } else {
                             setTreatiesMapStatus(
-                                `Treaties layer is ready. ${failed.length} map file(s) were skipped due to read errors.`);
+                                `Policy commitments layer is ready. ${failed.length} map file(s) were skipped due to read errors.`);
                         }
                     }
                 } else {
@@ -3111,7 +3115,7 @@
                         if (isTreatiesTabActive()) {
                             initializeTreatiesLayersIfNeeded();
                         } else {
-                            setTreatiesMapStatus('Treaties layer is ready. Open the Treaties tab to initialize.');
+                            setTreatiesMapStatus('Policy commitments layer is ready. Open the Policy Commitments tab to initialize.');
                         }
                     }
                 }

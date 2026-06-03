@@ -6,11 +6,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#006B3F" />
 
-    <title>Events & Webinars | FSRP – Western and Central Africa - West Africa Food System Resilience Program (FSRP)</title>
+    <title>Events & Webinars | FSRP - Food System Resilience Program for Eastern and Southern Africa</title>
 
-    <meta name="description" content="Engage with African Union institutions and policy leaders through FSRP-hosted webinars and strategic events on governance, development, and policy innovation." />
+    <meta name="description" content="Engage with FSRP webinars and events on food-security preparedness, resilient production, regional markets, safeguards, procurement, and program implementation across Eastern and Southern Africa." />
+    <meta name="keywords" content="FSRP events, FSRP webinars, Food System Resilience Program, Eastern and Southern Africa, food security events, regional markets, resilience implementation">
     <meta name="author" content="FSRP Secretariat" />
     <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="{{ route('events') }}" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Events & Webinars | FSRP Eastern and Southern Africa" />
+    <meta property="og:description" content="Engage with FSRP webinars and events on food-security preparedness, resilient production, regional markets, safeguards, procurement, and program implementation across Eastern and Southern Africa." />
+    <meta property="og:image" content="{{ asset('assets/images/fsrp/water-food-resilience-3.jpg') }}" />
+    <meta property="og:url" content="{{ route('events') }}" />
+    <meta property="og:site_name" content="FSRP Eastern and Southern Africa" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Events & Webinars | FSRP Eastern and Southern Africa" />
+    <meta name="twitter:description" content="Engage with FSRP webinars and events on food-security preparedness, resilient production, regional markets, safeguards, procurement, and program implementation across Eastern and Southern Africa." />
+    <meta name="twitter:image" content="{{ asset('assets/images/fsrp/water-food-resilience-3.jpg') }}" />
 
     <link rel="icon" href="{{ asset('assets/images/au3.jpg') }}" type="image/png" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
@@ -319,9 +331,9 @@
         <div class="hero-inner">
             <h1>Webinars &amp; Strategic Events</h1>
             <p>
-                Engage with African Union institutions, policy leaders, and FSRP partners through
-                FSRP-hosted webinars and strategic events focused on governance, development,
-                policy innovation, and evidence-based decision-making across Africa.
+                Engage with FSRP implementation teams, member states, and partners through webinars
+                and strategic events focused on food-security preparedness, resilient production,
+                regional markets, safeguards, procurement, and evidence-based decision-making.
             </p>
         </div>
     </section>
@@ -398,9 +410,8 @@
             <div class="footer-logo">
                 <h3>FSRP<span> Administration</span></h3>
                 <p>
-                    Western and Central Africa - West Africa Food System Resilience Program (FSRP) &mdash; supporting African Union
-                    institutions through centralized governance, policy coordination,
-                    and strategic oversight of programs and funded initiatives.
+                    Food System Resilience Program (FSRP) for Eastern and Southern Africa - supporting food-security
+                    preparedness, regional market coordination, public communication, and accountable implementation.
                 </p>
             </div>
 
@@ -416,12 +427,12 @@
             <div class="footer-contact">
                 <h4>Contact</h4>
                 <p>Email: fsrpinfo@africanunion.org</p>
-                <p>&copy; {{ date('Y') }} Western and Central Africa - West Africa Food System Resilience Program (FSRP)</p>
+                <p>&copy; {{ date('Y') }} Food System Resilience Program (FSRP) for Eastern and Southern Africa</p>
             </div>
         </div>
 
         <div class="footer-bottom">
-            <p>Supporting African Union policy coordination, governance reform, and evidence-based decision-making across the continent.</p>
+            <p>Supporting food-system resilience coordination, member-state reporting, and evidence-based implementation across Eastern and Southern Africa.</p>
         </div>
     </footer>
 

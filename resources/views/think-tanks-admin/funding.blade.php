@@ -148,7 +148,7 @@
                 <h5 class="source-title mb-2">{{ $source['subActivity']?->name ?? 'Funding to FSRP Partners' }}</h5>
                 <div class="source-path">
                     {{ $source['subActivity']?->activity?->project?->project_id ?? 'PROG00001-02' }}
-                    - {{ $source['subActivity']?->activity?->project?->name ?? 'COMPONENT 2: Strengthen the quality, relevance, and uptake of policy research on priority issues' }}
+                    - {{ $source['subActivity']?->activity?->project?->name ?? 'COMPONENT 2: Strengthen productive-base resilience and uptake of food-system resilience practices' }}
                     / {{ $source['subActivity']?->activity?->name ?? 'Sub-Component: Finance high-quality research on priority issues and support FSRP partners capacity building' }}
                 </div>
             </div>

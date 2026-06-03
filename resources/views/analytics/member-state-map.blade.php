@@ -7,6 +7,19 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $page['title'] }} - FSRP</title>
     <meta name="description" content="{{ $page['intro'] }}">
+    <meta name="keywords" content="FSRP commodities map, food commodities, food security analytics, Eastern and Southern Africa, member-state reporting, commodity trends, Food System Resilience Program">
+    <meta name="author" content="Food System Resilience Program (FSRP) for Eastern and Southern Africa">
+    <link rel="canonical" href="{{ route('food-security.commodities') }}">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="{{ $page['title'] }} - FSRP Eastern and Southern Africa">
+    <meta property="og:description" content="{{ $page['intro'] }}">
+    <meta property="og:image" content="{{ asset('assets/images/fsrp/water-food-resilience-2.jpg') }}">
+    <meta property="og:url" content="{{ route('food-security.commodities') }}">
+    <meta property="og:site_name" content="FSRP Eastern and Southern Africa">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $page['title'] }} - FSRP Eastern and Southern Africa">
+    <meta name="twitter:description" content="{{ $page['intro'] }}">
+    <meta name="twitter:image" content="{{ asset('assets/images/fsrp/water-food-resilience-2.jpg') }}">
     <link rel="stylesheet" href="{{ asset('assets/style.css') }}">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <style>

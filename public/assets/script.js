@@ -196,8 +196,8 @@
 // Hero rotating headline + subtitle
 const heroSlides = [
     {
-        title: "West Africa Food System\nResilience Program",
-        subtitle: "An administrative portal for coordinating implementation, fiduciary controls, procurement, monitoring, and reporting for FSRP."
+        title: "Food System Resilience Program\nEastern & Southern Africa",
+        subtitle: "An administrative portal for coordinating FSRP implementation, fiduciary controls, procurement, monitoring, and reporting across Eastern and Southern Africa."
     },
     {
         title: "Preparedness Against\nFood Insecurity",

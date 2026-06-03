@@ -392,7 +392,7 @@
         <div class="brand-inner">
             <img src="{{ asset('assets/images/au.png') }}" alt="FSRP Logo" class="brand-logo">
             <div class="brand-title">FSRP <span>Portal</span></div>
-            <div class="brand-sub">Administrative Portal for the West Africa Food System Resilience Program</div>
+            <div class="brand-sub">Administrative Portal for the Food System Resilience Program for Eastern and Southern Africa</div>
 
             <div class="sec-badges">
                 <div class="sec-badge">

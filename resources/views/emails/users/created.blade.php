@@ -3,7 +3,7 @@
 
 Hello {{ $user->name ?? 'User' }},
 
-An account has been created for you on the Western and Central Africa - West Africa Food System Resilience Program (FSRP) system.
+An account has been created for you on the Food System Resilience Program (FSRP) for Eastern and Southern Africa system.
 
 @component('mail::panel')
 Email: {{ $user->email }}
