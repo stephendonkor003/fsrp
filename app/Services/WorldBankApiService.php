@@ -11,6 +11,7 @@ class WorldBankApiService
     private const MAX_PAGES = 500;
 
     private string $baseUrl;
+    private bool $verifySsl;
 
     public function __construct()
     {
@@ -21,6 +22,7 @@ class WorldBankApiService
                 : 'https://api.worldbank.org/v2',
             '/'
         );
+        $this->verifySsl = filter_var(config('services.world_bank.verify_ssl', false), FILTER_VALIDATE_BOOLEAN);
     }
 
     public function getTopics(): array
@@ -112,10 +114,15 @@ class WorldBankApiService
     {
         $url = $this->baseUrl . '/' . ltrim($path, '/');
 
-        $response = Http::acceptJson()
+        $request = Http::acceptJson()
             ->timeout(60)
-            ->retry(3, 700)
-            ->get($url, $query);
+            ->retry(3, 700);
+
+        if (!$this->verifySsl) {
+            $request = $request->withoutVerifying();
+        }
+
+        $response = $request->get($url, $query);
 
         if (!$response->successful()) {
             throw new RuntimeException(
@@ -132,4 +139,3 @@ class WorldBankApiService
         return $json;
     }
 }
-

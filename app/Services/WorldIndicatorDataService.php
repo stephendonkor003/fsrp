@@ -20,6 +20,106 @@ class WorldIndicatorDataService
         'SL.UEM.TOTL.ZS',
     ];
 
+    private const DEFAULT_WORLD_BANK_TOPICS = [
+        ['id' => 9001, 'name' => 'FSRP Core Indicators'],
+        ['id' => 1, 'name' => 'Agriculture and Rural Development'],
+        ['id' => 3, 'name' => 'Economy and Growth'],
+        ['id' => 6, 'name' => 'Environment'],
+        ['id' => 8, 'name' => 'Health'],
+    ];
+
+    private const DEFAULT_WORLD_BANK_INDICATORS = [
+        [
+            'id' => 'SP.POP.TOTL',
+            'name' => 'Population, total',
+            'unit' => 'Number',
+            'topics' => [9001],
+        ],
+        [
+            'id' => 'NY.GDP.MKTP.CD',
+            'name' => 'GDP, current US$',
+            'unit' => 'Current US$',
+            'topics' => [9001, 3],
+        ],
+        [
+            'id' => 'NY.GDP.PCAP.CD',
+            'name' => 'GDP per capita, current US$',
+            'unit' => 'Current US$',
+            'topics' => [9001, 3],
+        ],
+        [
+            'id' => 'SL.UEM.TOTL.ZS',
+            'name' => 'Unemployment, total (% of total labor force)',
+            'unit' => 'Percent',
+            'topics' => [9001, 3],
+        ],
+        [
+            'id' => 'AG.PRD.FOOD.XD',
+            'name' => 'Food production index',
+            'unit' => 'Index',
+            'topics' => [9001, 1],
+        ],
+        [
+            'id' => 'AG.LND.AGRI.ZS',
+            'name' => 'Agricultural land (% of land area)',
+            'unit' => 'Percent',
+            'topics' => [9001, 1],
+        ],
+        [
+            'id' => 'NV.AGR.TOTL.ZS',
+            'name' => 'Agriculture, forestry, and fishing, value added (% of GDP)',
+            'unit' => 'Percent',
+            'topics' => [9001, 1, 3],
+        ],
+        [
+            'id' => 'SN.ITK.DEFC.ZS',
+            'name' => 'Prevalence of undernourishment (% of population)',
+            'unit' => 'Percent',
+            'topics' => [9001, 8],
+        ],
+        [
+            'id' => 'EG.ELC.ACCS.ZS',
+            'name' => 'Access to electricity (% of population)',
+            'unit' => 'Percent',
+            'topics' => [9001, 6],
+        ],
+        [
+            'id' => 'EN.ATM.CO2E.PC',
+            'name' => 'CO2 emissions (metric tons per capita)',
+            'unit' => 'Metric tons per capita',
+            'topics' => [9001, 6],
+        ],
+    ];
+
+    private const DEFAULT_FSRP_COUNTRIES = [
+        ['iso2' => 'AO', 'iso3' => 'AGO', 'name' => 'Angola'],
+        ['iso2' => 'BW', 'iso3' => 'BWA', 'name' => 'Botswana'],
+        ['iso2' => 'BI', 'iso3' => 'BDI', 'name' => 'Burundi'],
+        ['iso2' => 'KM', 'iso3' => 'COM', 'name' => 'Comoros'],
+        ['iso2' => 'CD', 'iso3' => 'COD', 'name' => 'Democratic Republic of the Congo'],
+        ['iso2' => 'DJ', 'iso3' => 'DJI', 'name' => 'Djibouti'],
+        ['iso2' => 'ER', 'iso3' => 'ERI', 'name' => 'Eritrea'],
+        ['iso2' => 'SZ', 'iso3' => 'SWZ', 'name' => 'Eswatini'],
+        ['iso2' => 'ET', 'iso3' => 'ETH', 'name' => 'Ethiopia'],
+        ['iso2' => 'KE', 'iso3' => 'KEN', 'name' => 'Kenya'],
+        ['iso2' => 'LS', 'iso3' => 'LSO', 'name' => 'Lesotho'],
+        ['iso2' => 'MG', 'iso3' => 'MDG', 'name' => 'Madagascar'],
+        ['iso2' => 'MW', 'iso3' => 'MWI', 'name' => 'Malawi'],
+        ['iso2' => 'MU', 'iso3' => 'MUS', 'name' => 'Mauritius'],
+        ['iso2' => 'MZ', 'iso3' => 'MOZ', 'name' => 'Mozambique'],
+        ['iso2' => 'NA', 'iso3' => 'NAM', 'name' => 'Namibia'],
+        ['iso2' => 'RW', 'iso3' => 'RWA', 'name' => 'Rwanda'],
+        ['iso2' => 'SC', 'iso3' => 'SYC', 'name' => 'Seychelles'],
+        ['iso2' => 'SO', 'iso3' => 'SOM', 'name' => 'Somalia'],
+        ['iso2' => 'ZA', 'iso3' => 'ZAF', 'name' => 'South Africa'],
+        ['iso2' => 'SS', 'iso3' => 'SSD', 'name' => 'South Sudan'],
+        ['iso2' => 'SD', 'iso3' => 'SDN', 'name' => 'Sudan'],
+        ['iso2' => 'TZ', 'iso3' => 'TZA', 'name' => 'Tanzania'],
+        ['iso2' => 'UG', 'iso3' => 'UGA', 'name' => 'Uganda'],
+        ['iso2' => 'ZM', 'iso3' => 'ZMB', 'name' => 'Zambia'],
+        ['iso2' => 'ZW', 'iso3' => 'ZWE', 'name' => 'Zimbabwe'],
+    ];
+
     public function __construct(protected WorldBankObservationSyncService $worldBankObservationSyncService)
     {
     }
@@ -63,10 +163,14 @@ class WorldIndicatorDataService
      */
     public function getWorldBankTopics(): array
     {
+        if (!WorldBankTopic::query()->exists() || !WorldBankIndicator::query()->exists()) {
+            return $this->fallbackWorldBankTopics();
+        }
+
         return WorldBankTopic::query()
             ->withCount('indicators')
-            ->orderBy('wb_topic_id')
             ->get(['id', 'wb_topic_id', 'name'])
+            ->sortBy(fn (WorldBankTopic $topic): int => $topic->wb_topic_id === 9001 ? 0 : (int) $topic->wb_topic_id)
             ->map(function (WorldBankTopic $topic): array {
                 return [
                     'id' => $topic->wb_topic_id,
@@ -83,6 +187,10 @@ class WorldIndicatorDataService
      */
     public function getWorldBankIndicators(?int $topicId = null, ?string $search = null, int $limit = 500): array
     {
+        if (!WorldBankIndicator::query()->exists()) {
+            return $this->fallbackWorldBankIndicators($topicId, $search, $limit);
+        }
+
         $query = WorldBankIndicator::query()
             ->with('topics:id,wb_topic_id,name')
             ->orderBy('name')
@@ -126,6 +234,10 @@ class WorldIndicatorDataService
      */
     public function getWorldBankCountries(?string $search = null): array
     {
+        if (!WorldBankCountry::query()->where('is_aggregate', false)->exists()) {
+            return $this->fallbackWorldBankCountries($search);
+        }
+
         $query = WorldBankCountry::query()
             ->where('is_aggregate', false)
             ->whereNotNull('iso2_code')
@@ -157,7 +269,7 @@ class WorldIndicatorDataService
      */
     public function getWorldBankContinents(): array
     {
-        return WorldBankCountry::query()
+        $continents = WorldBankCountry::query()
             ->where('is_aggregate', false)
             ->whereNotNull('continent')
             ->where('continent', '!=', '')
@@ -166,6 +278,8 @@ class WorldIndicatorDataService
             ->pluck('continent')
             ->values()
             ->all();
+
+        return $continents ?: ['Africa'];
     }
 
     /**
@@ -184,6 +298,7 @@ class WorldIndicatorDataService
     ): array {
         $mode = in_array($compareMode, ['country', 'continent'], true) ? $compareMode : 'country';
         [$yearFrom, $yearTo] = $this->normalizeYearRange($yearFrom, $yearTo);
+        $this->ensureDefaultWorldBankCatalog();
 
         $indicator = WorldBankIndicator::query()
             ->with('topics:id,wb_topic_id,name')
@@ -199,6 +314,155 @@ class WorldIndicatorDataService
         return $mode === 'continent'
             ? $this->buildContinentComparison($indicator, $continents, $yearFrom, $yearTo, $aggregation)
             : $this->buildCountryComparison($indicator, $countries, $yearFrom, $yearTo);
+    }
+
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    private function fallbackWorldBankTopics(): array
+    {
+        $indicatorCounts = [];
+
+        foreach (self::DEFAULT_WORLD_BANK_INDICATORS as $indicator) {
+            foreach ($indicator['topics'] as $topicId) {
+                $indicatorCounts[$topicId] = ($indicatorCounts[$topicId] ?? 0) + 1;
+            }
+        }
+
+        return collect(self::DEFAULT_WORLD_BANK_TOPICS)
+            ->map(function (array $topic) use ($indicatorCounts): array {
+                return [
+                    'id' => $topic['id'],
+                    'name' => $topic['name'],
+                    'indicator_count' => $indicatorCounts[$topic['id']] ?? 0,
+                ];
+            })
+            ->values()
+            ->all();
+    }
+
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    private function fallbackWorldBankIndicators(?int $topicId = null, ?string $search = null, int $limit = 500): array
+    {
+        $topicNames = collect(self::DEFAULT_WORLD_BANK_TOPICS)
+            ->mapWithKeys(fn (array $topic): array => [$topic['id'] => $topic['name']])
+            ->all();
+        $searchTerm = Str::lower(trim((string) $search));
+
+        return collect(self::DEFAULT_WORLD_BANK_INDICATORS)
+            ->filter(function (array $indicator) use ($topicId): bool {
+                return $topicId === null || $topicId <= 0 || in_array($topicId, $indicator['topics'], true);
+            })
+            ->filter(function (array $indicator) use ($searchTerm): bool {
+                if ($searchTerm === '') {
+                    return true;
+                }
+
+                return str_contains(Str::lower($indicator['id']), $searchTerm)
+                    || str_contains(Str::lower($indicator['name']), $searchTerm);
+            })
+            ->take(max(1, min($limit, 2000)))
+            ->map(function (array $indicator) use ($topicNames): array {
+                return [
+                    'id' => $indicator['id'],
+                    'name' => $indicator['name'],
+                    'unit' => $indicator['unit'],
+                    'topics' => collect($indicator['topics'])
+                        ->map(fn (int $topicId): array => [
+                            'id' => $topicId,
+                            'name' => $topicNames[$topicId] ?? 'FSRP Indicators',
+                        ])
+                        ->values()
+                        ->all(),
+                ];
+            })
+            ->values()
+            ->all();
+    }
+
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    private function fallbackWorldBankCountries(?string $search = null): array
+    {
+        $searchTerm = Str::lower(trim((string) $search));
+
+        return collect(self::DEFAULT_FSRP_COUNTRIES)
+            ->filter(function (array $country) use ($searchTerm): bool {
+                return $searchTerm === '' || str_contains(Str::lower($country['name']), $searchTerm);
+            })
+            ->map(fn (array $country): array => [
+                'iso2' => $country['iso2'],
+                'iso3' => $country['iso3'],
+                'name' => $country['name'],
+                'continent' => 'Africa',
+                'region' => 'Eastern and Southern Africa',
+            ])
+            ->values()
+            ->all();
+    }
+
+    private function ensureDefaultWorldBankCatalog(): void
+    {
+        if (WorldBankIndicator::query()->whereIn('wb_indicator_id', array_column(self::DEFAULT_WORLD_BANK_INDICATORS, 'id'))->count() === count(self::DEFAULT_WORLD_BANK_INDICATORS)
+            && WorldBankCountry::query()->whereIn('iso2_code', array_column(self::DEFAULT_FSRP_COUNTRIES, 'iso2'))->count() === count(self::DEFAULT_FSRP_COUNTRIES)) {
+            return;
+        }
+
+        DB::transaction(function (): void {
+            $topicModels = [];
+
+            foreach (self::DEFAULT_WORLD_BANK_TOPICS as $topic) {
+                $topicModels[$topic['id']] = WorldBankTopic::query()->updateOrCreate(
+                    ['wb_topic_id' => $topic['id']],
+                    [
+                        'name' => $topic['name'],
+                        'source_note' => 'Default FSRP Eastern and Southern Africa indicator group.',
+                        'metadata' => ['fsrp_default' => true],
+                    ]
+                );
+            }
+
+            foreach (self::DEFAULT_WORLD_BANK_INDICATORS as $indicatorRow) {
+                $indicator = WorldBankIndicator::query()->updateOrCreate(
+                    ['wb_indicator_id' => $indicatorRow['id']],
+                    [
+                        'name' => $indicatorRow['name'],
+                        'unit' => $indicatorRow['unit'],
+                        'source_note' => 'Default FSRP indicator from the World Bank Indicators API.',
+                        'source_name' => 'World Development Indicators',
+                        'metadata' => ['fsrp_default' => true],
+                    ]
+                );
+
+                foreach ($indicatorRow['topics'] as $topicId) {
+                    if (!isset($topicModels[$topicId])) {
+                        continue;
+                    }
+
+                    DB::table('world_bank_indicator_topic')->insertOrIgnore([
+                        'world_bank_indicator_id' => $indicator->id,
+                        'world_bank_topic_id' => $topicModels[$topicId]->id,
+                    ]);
+                }
+            }
+
+            foreach (self::DEFAULT_FSRP_COUNTRIES as $country) {
+                WorldBankCountry::query()->updateOrCreate(
+                    ['wb_country_id' => $country['iso3']],
+                    [
+                        'iso2_code' => $country['iso2'],
+                        'name' => $country['name'],
+                        'region' => 'Eastern and Southern Africa',
+                        'admin_region' => 'Eastern and Southern Africa',
+                        'continent' => 'Africa',
+                        'is_aggregate' => false,
+                    ]
+                );
+            }
+        });
     }
 
     /**

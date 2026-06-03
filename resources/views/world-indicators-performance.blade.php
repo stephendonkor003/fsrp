@@ -476,6 +476,12 @@
             'South Africa', 'South Sudan', 'Sudan', 'Swaziland', 'Eswatini', 'Tanzania',
             'Uganda', 'Zambia', 'Zimbabwe'
         ].map((name) => normalizeCountryName(name)));
+        const fsrpCountryPalette = [
+            '#006B3F', '#009A44', '#65a30d', '#84cc16', '#15803d', '#0f766e', '#0891b2',
+            '#2563eb', '#4f46e5', '#7c3aed', '#a21caf', '#be123c', '#dc2626', '#ea580c',
+            '#d97706', '#ca8a04', '#854d0e', '#64748b', '#475569', '#16a34a', '#0284c7',
+            '#9333ea', '#c026d3', '#e11d48', '#f97316', '#14b8a6', '#22c55e'
+        ];
 
         const map = L.map('worldMap', { center: [-8, 30], zoom: 4, minZoom: 3, maxZoom: 9, worldCopyJump: false });
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap contributors' }).addTo(map);
@@ -723,6 +729,14 @@
             const country = state.countryByIso2.get(normalizeIso2(iso2));
             return country?.name || fallbackName || normalizeIso2(iso2);
         }
+        function getCountryFillColor(iso2, countryName = '') {
+            const key = normalizeIso2(iso2) || normalizeCountryName(countryName) || 'fsrp';
+            let hash = 0;
+            for (let index = 0; index < key.length; index++) {
+                hash = ((hash * 31) + key.charCodeAt(index)) >>> 0;
+            }
+            return fsrpCountryPalette[hash % fsrpCountryPalette.length];
+        }
         function syncMapSelectionLabel() {
             const count = state.selectedCountryIso2Set.size;
             mapSelectionLabel.textContent = count
@@ -870,12 +884,14 @@
                 const fillColor = getChoroplethColor(value, state.mapRange.min, state.mapRange.max, visibleRange.min, visibleRange.max);
                 const isSelected = iso2 && selectedIso2.has(iso2);
                 const isCompared = comparedIso2.has(iso2);
-                const selectedFill = value === null ? '#009A44' : fillColor;
+                const hasValue = value !== null && value !== undefined && Number.isFinite(Number(value));
+                const countryFill = getCountryFillColor(iso2, layer.__countryName || '');
+                const selectedFill = hasValue ? fillColor : countryFill;
                 layer.setStyle({
                     color: isSelected ? '#f59e0b' : (isCompared ? '#a16207' : '#334155'),
                     weight: isSelected ? 2.4 : (isCompared ? 1.6 : 0.9),
-                    fillColor: isSelected ? selectedFill : fillColor,
-                    fillOpacity: isSelected ? 0.88 : (value === null ? 0.22 : (inWindow ? 0.78 : 0.25)),
+                    fillColor: isSelected ? selectedFill : (hasValue ? fillColor : countryFill),
+                    fillOpacity: isSelected ? 0.88 : (hasValue ? (inWindow ? 0.78 : 0.25) : 0.58),
                 });
                 const valueLabel = value === null ? 'No data' : formatValue(value);
                 const filtered = value !== null && !inWindow ? ' (outside slider range)' : '';
@@ -2001,9 +2017,6 @@
                 state.mapRange = { min: null, max: null };
                 state.mapIndicatorMeta = { label: 'Indicator', unit: '' };
                 state.mapVisibleRangePercent = { min: 0, max: 100 };
-                state.selectedCountryIso2 = null;
-                state.selectedCountryName = null;
-                state.selectedCountryIso2Set.clear();
                 mapRangeMinSlider.value = '0';
                 mapRangeMaxSlider.value = '100';
                 state.mapComparePayloadByContinent = new Map();

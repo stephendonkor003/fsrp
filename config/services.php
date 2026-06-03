@@ -63,6 +63,7 @@ return [
 
     'world_bank' => [
         'base_url' => env('WORLD_BANK_API_BASE_URL', 'https://api.worldbank.org/v2'),
+        'verify_ssl' => env('WORLD_BANK_VERIFY_SSL', false),
     ],
 
 ];
