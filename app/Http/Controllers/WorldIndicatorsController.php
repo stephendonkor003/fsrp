@@ -14,6 +14,35 @@ use Illuminate\Validation\Rule;
 
 class WorldIndicatorsController extends Controller
 {
+    private const FSRP_FOCUS_SHAPE_COUNTRIES = [
+        'Angola',
+        'Botswana',
+        'Burundi',
+        'Comoros',
+        'Democratic Republic of the Congo',
+        'Djibouti',
+        'Eritrea',
+        'Ethiopia',
+        'Kenya',
+        'Lesotho',
+        'Madagascar',
+        'Malawi',
+        'Mauritius',
+        'Mozambique',
+        'Namibia',
+        'Rwanda',
+        'Seychelles',
+        'Somalia',
+        'South Africa',
+        'South Sudan',
+        'Sudan',
+        'Swaziland',
+        'Tanzania',
+        'Uganda',
+        'Zambia',
+        'Zimbabwe',
+    ];
+
     protected WorldShapeService $worldShapeService;
 
     protected WorldIndicatorDataService $worldIndicatorDataService;
@@ -43,14 +72,18 @@ class WorldIndicatorsController extends Controller
             ->all();
 
         if (empty($enabledRegions)) {
-            $enabledRegions = $availableRegions;
+            $enabledRegions = in_array('Africa', $availableRegions, true)
+                ? ['Africa']
+                : $availableRegions;
         }
 
         $defaultRegion = in_array((string) $settings->default_region, $enabledRegions, true)
             ? (string) $settings->default_region
             : ($enabledRegions[0] ?? null);
 
-        $shapeFilesByRegion = $this->worldShapeService->getShapeFilesByRegion($enabledRegions);
+        $shapeFilesByRegion = $this->focusShapeFilesForFsrp(
+            $this->worldShapeService->getShapeFilesByRegion($enabledRegions)
+        );
         $countriesByRegion = $this->worldShapeService->getCountriesByRegion($shapeFilesByRegion);
         $regionLabels = $this->worldShapeService->getRegionLabels($enabledRegions);
 
@@ -213,10 +246,36 @@ class WorldIndicatorsController extends Controller
     {
         return WorldIndicatorSetting::query()->firstOrCreate([], [
             'page_title' => 'Food Security Indicator Analytics',
-            'page_intro' => 'Compare food-security, resilience, and member-state reporting indicators by region and country. IMF and World Bank endpoint integration is managed from back office settings.',
+            'page_intro' => 'Compare FSRP food-system resilience, macroeconomic, agriculture, and member-state indicators for Eastern and Southern Africa using IMF and World Bank sources.',
             'is_public_enabled' => true,
             'imf_source_enabled' => true,
             'world_bank_source_enabled' => true,
+            'enabled_regions' => ['Africa'],
+            'default_region' => 'Africa',
         ]);
+    }
+
+    /**
+     * @param array<string, array<int, string>> $shapeFilesByRegion
+     * @return array<string, array<int, string>>
+     */
+    private function focusShapeFilesForFsrp(array $shapeFilesByRegion): array
+    {
+        $focusCountries = array_flip(self::FSRP_FOCUS_SHAPE_COUNTRIES);
+
+        foreach ($shapeFilesByRegion as $region => $shapeFiles) {
+            if ($region !== 'Africa') {
+                continue;
+            }
+
+            $shapeFilesByRegion[$region] = array_values(array_filter($shapeFiles, function (string $shapeFile) use ($focusCountries): bool {
+                $path = parse_url($shapeFile, PHP_URL_PATH) ?: $shapeFile;
+                $countryName = rawurldecode((string) pathinfo($path, PATHINFO_FILENAME));
+
+                return isset($focusCountries[$countryName]);
+            }));
+        }
+
+        return $shapeFilesByRegion;
     }
 }

@@ -28,8 +28,11 @@ class WorldBankCatalogSeeder extends Seeder
             $defaultIndicators = [
                 'SP.POP.TOTL',
                 'NY.GDP.MKTP.CD',
+                'NY.GDP.PCAP.CD',
                 'SL.UEM.TOTL.ZS',
+                'AG.PRD.FOOD.XD',
                 'AG.LND.AGRI.ZS',
+                'NV.AGR.TOTL.ZS',
                 'EN.ATM.CO2E.PC',
             ];
 

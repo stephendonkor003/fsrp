@@ -51,6 +51,7 @@
         .controls label { display:block; margin-bottom:.22rem; font-size:.7rem; letter-spacing:.05em; font-weight:700; text-transform:uppercase; color:var(--muted); }
         .controls select,.controls input,.controls button { width:100%; border:1px solid #cfd8e6; border-radius:8px; padding:.43rem .48rem; background:#fff; color:var(--ink); font-size:.85rem; }
         .controls button { border:0; font-weight:700; cursor:pointer; }
+        .controls select[multiple] { min-height:132px; }
         .slider-readout { margin-top:.25rem; font-size:.72rem; color:#475569; }
         .controls .btn-primary { background:linear-gradient(120deg,var(--au-green),var(--au-green-light)); color:#fff; }
         .btn-secondary { background:#e8eef8; color:#0f172a; }
@@ -189,6 +190,7 @@
                 <div><label for="mapIndicatorSelect">Map Indicator</label><select id="mapIndicatorSelect"><option value="">Select indicator</option></select></div>
                 <div><label for="mapYearInput">Map Year</label><input id="mapYearInput" type="number" min="1960" max="{{ now()->year }}" step="1"></div>
                 <div><label for="mapYearSlider">Year Slider</label><input id="mapYearSlider" type="range" min="1960" max="{{ now()->year }}" step="1"></div>
+                <div class="span-2"><label for="mapCountriesSelect">FSRP Map Countries</label><select id="mapCountriesSelect" multiple size="7"></select><div class="slider-readout" id="mapSelectionLabel">No FSRP countries selected</div></div>
                 <div class="span-2"><label for="mapContinentsSelect">Geo Compare Continents (2+)</label><select id="mapContinentsSelect" multiple size="6"></select></div>
                 <div><label for="mapRangeMinSlider">Color Range Min %</label><input id="mapRangeMinSlider" type="range" min="0" max="100" step="1" value="0"></div>
                 <div><label for="mapRangeMaxSlider">Color Range Max %</label><input id="mapRangeMaxSlider" type="range" min="0" max="100" step="1" value="100"><div class="slider-readout" id="mapRangeLabel">Visible range: 0% - 100%</div></div>
@@ -349,6 +351,8 @@
         const mapIndicatorSelect = document.getElementById('mapIndicatorSelect');
         const mapYearInput = document.getElementById('mapYearInput');
         const mapYearSlider = document.getElementById('mapYearSlider');
+        const mapCountriesSelect = document.getElementById('mapCountriesSelect');
+        const mapSelectionLabel = document.getElementById('mapSelectionLabel');
         const mapContinentsSelect = document.getElementById('mapContinentsSelect');
         const mapRangeMinSlider = document.getElementById('mapRangeMinSlider');
         const mapRangeMaxSlider = document.getElementById('mapRangeMaxSlider');
@@ -435,6 +439,7 @@
             mapVisibleRangePercent: { min: 0, max: 100 },
             selectedCountryIso2: null,
             selectedCountryName: null,
+            selectedCountryIso2Set: new Set(),
             comparePayload: null,
             snapshotPayload: null,
             compareVisibleRangePercent: { min: 0, max: 100 },
@@ -460,7 +465,19 @@
             'united states of america': 'US', 'iran': 'IR', 'bahamas': 'BS', 'venezuela': 'VE'
         };
 
-        const map = L.map('worldMap', { center: [18, 0], zoom: 2, minZoom: 2, maxZoom: 9, worldCopyJump: true });
+        const fsrpFocusIso2 = new Set([
+            'AO', 'BW', 'BI', 'KM', 'CD', 'DJ', 'ER', 'ET', 'KE', 'LS', 'MG', 'MW', 'MU',
+            'MZ', 'NA', 'RW', 'SC', 'SO', 'ZA', 'SS', 'SD', 'SZ', 'TZ', 'UG', 'ZM', 'ZW'
+        ]);
+        const fsrpFocusCountryNames = new Set([
+            'Angola', 'Botswana', 'Burundi', 'Comoros', 'Democratic Republic of the Congo',
+            'Djibouti', 'Eritrea', 'Ethiopia', 'Kenya', 'Lesotho', 'Madagascar', 'Malawi',
+            'Mauritius', 'Mozambique', 'Namibia', 'Rwanda', 'Seychelles', 'Somalia',
+            'South Africa', 'South Sudan', 'Sudan', 'Swaziland', 'Eswatini', 'Tanzania',
+            'Uganda', 'Zambia', 'Zimbabwe'
+        ].map((name) => normalizeCountryName(name)));
+
+        const map = L.map('worldMap', { center: [-8, 30], zoom: 4, minZoom: 3, maxZoom: 9, worldCopyJump: false });
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap contributors' }).addTo(map);
 
         function syncNavbarOffset() {
@@ -689,6 +706,44 @@
         }
 
         function resolveIso2ByName(countryName) { return state.countryByNormName.get(normalizeCountryName(countryName)) || null; }
+        function normalizeIso2(value) { return String(value || '').trim().toUpperCase(); }
+        function isFsrpFocusIso2(iso2) { return fsrpFocusIso2.has(normalizeIso2(iso2)); }
+        function isFsrpFocusCountryName(countryName) {
+            const iso2 = resolveIso2ByName(countryName);
+            return (iso2 && isFsrpFocusIso2(iso2)) || fsrpFocusCountryNames.has(normalizeCountryName(countryName));
+        }
+        function isFsrpFocusRegion(region) {
+            const label = regionLabels[region] || region;
+            return normalizeRegionMatch(label) === 'africa' || normalizeRegionMatch(region) === 'africa';
+        }
+        function getShapeFileCountryName(shapeFile) {
+            return decodeURIComponent((String(shapeFile || '').split('/').pop() || '').replace(/\.shp$/i, ''));
+        }
+        function getCountryLabelForIso2(iso2, fallbackName = '') {
+            const country = state.countryByIso2.get(normalizeIso2(iso2));
+            return country?.name || fallbackName || normalizeIso2(iso2);
+        }
+        function syncMapSelectionLabel() {
+            const count = state.selectedCountryIso2Set.size;
+            mapSelectionLabel.textContent = count
+                ? `${count} Eastern and Southern Africa ${count === 1 ? 'country' : 'countries'} selected`
+                : 'No FSRP countries selected';
+        }
+        function syncMapCountrySelectFromState() {
+            if (!mapCountriesSelect) return;
+            Array.from(mapCountriesSelect.options).forEach((option) => {
+                option.selected = state.selectedCountryIso2Set.has(normalizeIso2(option.value));
+            });
+            syncMapSelectionLabel();
+        }
+        function syncMapSelectionFromSelect() {
+            state.selectedCountryIso2Set = new Set(getSelectedValues(mapCountriesSelect).map(normalizeIso2).filter(Boolean));
+            syncMapSelectionLabel();
+            refreshMapStyles();
+        }
+        function getSelectedMapCountryIso2Codes() {
+            return Array.from(state.selectedCountryIso2Set).filter((iso2) => Array.from(mapCountriesSelect.options).some((option) => normalizeIso2(option.value) === iso2));
+        }
         function resolveIso2FromFeature(feature, fallbackCountryName = '') {
             const props = feature?.properties || {};
             const iso2Candidates = [props.ISO_A2, props.iso_a2, props.ISO2, props.iso2, props.WB_A2, props.wb_a2, props.CNTR_ID];
@@ -806,23 +861,26 @@
 
         function refreshMapStyles() {
             const comparedIso2 = new Set(getSelectedValues(compareCountriesSelect).map((v) => String(v).toUpperCase()));
+            const selectedIso2 = new Set(state.selectedCountryIso2Set);
             const visibleRange = getCurrentMapValueWindow();
             state.featureLayers.forEach((layer) => {
                 const iso2 = String(layer.__countryIso2 || '').toUpperCase();
                 const value = getMapValueForLayer(layer);
                 const inWindow = valueIsInWindow(value, visibleRange.min, visibleRange.max);
                 const fillColor = getChoroplethColor(value, state.mapRange.min, state.mapRange.max, visibleRange.min, visibleRange.max);
-                const isSelected = state.selectedCountryIso2 && iso2 && state.selectedCountryIso2 === iso2;
+                const isSelected = iso2 && selectedIso2.has(iso2);
                 const isCompared = comparedIso2.has(iso2);
+                const selectedFill = value === null ? '#009A44' : fillColor;
                 layer.setStyle({
-                    color: isSelected ? '#92400e' : (isCompared ? '#a16207' : '#334155'),
-                    weight: isSelected ? 2.2 : (isCompared ? 1.6 : 0.9),
-                    fillColor,
-                    fillOpacity: value === null ? 0.2 : (inWindow ? 0.78 : 0.25),
+                    color: isSelected ? '#f59e0b' : (isCompared ? '#a16207' : '#334155'),
+                    weight: isSelected ? 2.4 : (isCompared ? 1.6 : 0.9),
+                    fillColor: isSelected ? selectedFill : fillColor,
+                    fillOpacity: isSelected ? 0.88 : (value === null ? 0.22 : (inWindow ? 0.78 : 0.25)),
                 });
                 const valueLabel = value === null ? 'No data' : formatValue(value);
                 const filtered = value !== null && !inWindow ? ' (outside slider range)' : '';
-                layer.bindTooltip(`${escapeHtml(layer.__countryName || 'Unknown')}<br><strong>${escapeHtml(valueLabel + filtered)}</strong>`, { direction: 'auto', sticky: true });
+                const selectedLabel = isSelected ? '<br><span>FSRP selected</span>' : '';
+                layer.bindTooltip(`${escapeHtml(layer.__countryName || 'Unknown')}<br><strong>${escapeHtml(valueLabel + filtered)}</strong>${selectedLabel}`, { direction: 'auto', sticky: true });
             });
         }
 
@@ -873,14 +931,35 @@
         }
 
         function applyRegionCountries(regions) {
-            const mergedCountries = regions.flatMap((region) => countriesByRegion[region] || []);
+            const focusRegionSelected = regions.some((region) => isFsrpFocusRegion(region));
+            const mergedCountries = regions
+                .flatMap((region) => countriesByRegion[region] || [])
+                .filter((countryName) => !focusRegionSelected || isFsrpFocusCountryName(countryName));
             countrySelect.innerHTML = '<option value="">Select a country</option>';
-            Array.from(new Set(mergedCountries)).sort().forEach((countryName) => {
+            if (mapCountriesSelect) mapCountriesSelect.innerHTML = '';
+            const uniqueCountries = Array.from(new Set(mergedCountries)).sort();
+            uniqueCountries.forEach((countryName) => {
                 const option = document.createElement('option');
                 option.value = countryName;
                 option.textContent = countryName;
                 countrySelect.appendChild(option);
+
+                const iso2 = resolveIso2ByName(countryName);
+                if (iso2 && mapCountriesSelect) {
+                    const mapOption = document.createElement('option');
+                    mapOption.value = normalizeIso2(iso2);
+                    mapOption.textContent = `${getCountryLabelForIso2(iso2, countryName)} (${normalizeIso2(iso2)})`;
+                    mapOption.dataset.countryName = countryName;
+                    mapCountriesSelect.appendChild(mapOption);
+                }
             });
+            if (focusRegionSelected && !state.selectedCountryIso2Set.size && mapCountriesSelect) {
+                state.selectedCountryIso2Set = new Set(Array.from(mapCountriesSelect.options).map((option) => normalizeIso2(option.value)));
+            } else if (mapCountriesSelect) {
+                const availableIso2 = new Set(Array.from(mapCountriesSelect.options).map((option) => normalizeIso2(option.value)));
+                state.selectedCountryIso2Set = new Set(Array.from(state.selectedCountryIso2Set).filter((iso2) => availableIso2.has(iso2)));
+            }
+            syncMapCountrySelectFromState();
         }
 
         function normalizeRegionMatch(value) {
@@ -904,8 +983,14 @@
             const uniqueRegions = Array.from(new Set((regions || []).filter((region) => String(region || '').trim() !== '')));
             clearMapLayers();
             applyRegionCountries(uniqueRegions);
-            setMapStatus(`Loading shapefiles for ${statusLabel}...`);
-            const shapeFiles = uniqueRegions.flatMap((region) => shapeFilesByRegion[region] || []);
+            const focusRegionSelected = uniqueRegions.some((region) => isFsrpFocusRegion(region));
+            setMapStatus(`Loading ${focusRegionSelected ? 'Eastern and Southern Africa focus' : statusLabel} shapefiles...`);
+            const shapeFiles = uniqueRegions.flatMap((region) => {
+                const files = shapeFilesByRegion[region] || [];
+                return isFsrpFocusRegion(region)
+                    ? files.filter((shapeFile) => isFsrpFocusCountryName(getShapeFileCountryName(shapeFile)))
+                    : files;
+            });
             if (!shapeFiles.length) { setMapStatus('No shapefiles found for selected region(s).', true); return; }
             let loadedCount = 0; let failedCount = 0; let lastError = null;
             for (const shapeFile of shapeFiles) {
@@ -939,7 +1024,8 @@
             refreshMapStyles();
             const boundsLayer = L.featureGroup(state.activeLayers);
             if (boundsLayer.getBounds().isValid()) map.fitBounds(boundsLayer.getBounds(), { padding: [20, 20] });
-            setMapStatus(failedCount ? `Loaded ${loadedCount} shapefiles. ${failedCount} failed.` : `Loaded ${loadedCount} shapefiles successfully.`);
+            const focusLabel = focusRegionSelected ? ' for the FSRP Eastern and Southern Africa focus' : '';
+            setMapStatus(failedCount ? `Loaded ${loadedCount} shapefiles${focusLabel}. ${failedCount} failed.` : `Loaded ${loadedCount} shapefiles${focusLabel} successfully.`);
         }
 
         async function loadRegion(region) {
@@ -963,7 +1049,8 @@
         }
 
         function getIso2CodesForRegion(region) {
-            const countryNames = countriesByRegion[region] || [];
+            const countryNames = (countriesByRegion[region] || [])
+                .filter((name) => !isFsrpFocusRegion(region) || isFsrpFocusCountryName(name));
             const iso2Codes = countryNames.map((name) => resolveIso2ByName(name)).filter(Boolean).map((iso2) => String(iso2).toUpperCase());
             return Array.from(new Set(iso2Codes));
         }
@@ -992,6 +1079,7 @@
             const indicatorId = String(mapIndicatorSelect.value || '').trim();
             const region = String(regionSelect.value || '').trim();
             const selectedContinents = getSelectedValues(mapContinentsSelect);
+            const selectedMapCountries = getSelectedMapCountryIso2Codes();
             const year = parseInt(mapYearInput.value || '', 10);
             if (!indicatorId) { setMapStatus('Select a map indicator first.', true); return; }
             if (!Number.isFinite(year)) { setMapStatus('Provide a valid map year.', true); return; }
@@ -1014,9 +1102,12 @@
                     countryCodes = getIso2CodesForContinents(selectedContinents);
                     sourceLabel = `Geo Intelligence Map (${selectedContinents.join(' vs ')})`;
                 } else {
-                    countryCodes = getIso2CodesForRegion(region);
+                    countryCodes = selectedMapCountries.length ? selectedMapCountries : getIso2CodesForRegion(region);
+                    sourceLabel = selectedMapCountries.length
+                        ? `Geo Intelligence Map (${selectedMapCountries.length} selected FSRP countries)`
+                        : 'Geo Intelligence Map (FSRP Eastern and Southern Africa)';
                 }
-                if (countryCodes.length < 2) { setMapStatus('Not enough mapped countries for this map view.', true); return; }
+                if (countryCodes.length < 1) { setMapStatus('No mapped countries for this map view.', true); return; }
                 setMapStatus('Loading map values from World Bank endpoint...');
                 const payload = await fetchComparisonPayload({ indicatorId, compareMode: 'country', countries: countryCodes, continents: [], yearFrom: year, yearTo: year, aggregation: 'avg' });
                 applyMapValuesFromPayload(payload, year, sourceLabel);
@@ -1196,9 +1287,12 @@
             const iso2 = iso2Hint || resolveIso2ByName(countryName);
             state.selectedCountryName = countryName;
             state.selectedCountryIso2 = iso2 || null;
+            if (iso2) {
+                state.selectedCountryIso2Set.add(normalizeIso2(iso2));
+                syncMapCountrySelectFromState();
+            }
             snapshotCountry.textContent = countryName;
             snapshotHint.textContent = 'Loading source metrics...';
-            refreshMapStyles();
 
             if (countrySelect.value !== countryName) {
                 const existingOption = Array.from(countrySelect.options).find((option) => option.value === countryName);
@@ -1215,6 +1309,7 @@
                 const targetOption = Array.from(compareCountriesSelect.options).find((option) => option.value === iso2);
                 if (targetOption) targetOption.selected = true;
             }
+            refreshMapStyles();
 
             showLoadingModal('Loading country profile metrics...');
             try {
@@ -1906,11 +2001,15 @@
                 state.mapRange = { min: null, max: null };
                 state.mapIndicatorMeta = { label: 'Indicator', unit: '' };
                 state.mapVisibleRangePercent = { min: 0, max: 100 };
+                state.selectedCountryIso2 = null;
+                state.selectedCountryName = null;
+                state.selectedCountryIso2Set.clear();
                 mapRangeMinSlider.value = '0';
                 mapRangeMaxSlider.value = '100';
                 state.mapComparePayloadByContinent = new Map();
                 state.mapCompareContext = null;
                 renderMapRangeLabel();
+                syncMapCountrySelectFromState();
                 refreshMapStyles();
                 renderMapLegend('Indicator', '', null, null);
                 mapTopTableBody.innerHTML = '<tr><td colspan="3">Overlay cleared.</td></tr>';
@@ -1919,6 +2018,12 @@
                 mapCompareCountryTableBody.innerHTML = '<tr><td colspan="3">No map comparison loaded yet.</td></tr>';
                 mapCompareGlobalTableBody.innerHTML = '<tr><td colspan="2">No global comparison loaded yet.</td></tr>';
                 setMapStatus('Map overlay cleared.');
+            });
+            mapCountriesSelect.addEventListener('change', () => {
+                syncMapSelectionFromSelect();
+                if (mapIndicatorSelect.value) {
+                    setMapStatus('Country selection updated. Apply the map overlay to refresh indicator values for this selection.');
+                }
             });
             countrySelect.addEventListener('change', async () => { const countryName = String(countrySelect.value || '').trim(); if (countryName) await selectCountry(countryName, resolveIso2ByName(countryName), false); });
             runSnapshotBtn.addEventListener('click', runSnapshotTrend);

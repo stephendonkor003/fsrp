@@ -57,4 +57,12 @@ return [
         'timeout' => (int) env('THREEPAP_CHECKER_TIMEOUT', 20),
     ],
 
+    'imf' => [
+        'datamapper_base_url' => env('IMF_DATAMAPPER_BASE_URL', 'https://www.imf.org/external/datamapper/api/v1'),
+    ],
+
+    'world_bank' => [
+        'base_url' => env('WORLD_BANK_API_BASE_URL', 'https://api.worldbank.org/v2'),
+    ],
+
 ];

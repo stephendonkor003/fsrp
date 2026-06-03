@@ -32,6 +32,7 @@ class DatabaseSeeder extends Seeder
             FsrpTaxonomySeeder::class,
             FsrpEventNewsSeeder::class,
             FsrpGalleryMediaSeeder::class,
+            WorldIndicatorsSeeder::class,
             MasterAdminSeeder::class,
         ]);
     }
