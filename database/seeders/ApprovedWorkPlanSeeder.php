@@ -64,7 +64,7 @@ class ApprovedWorkPlanSeeder extends Seeder
                     'status' => 'approved',
                     'description' => 'Seeded AWP linked to an approved budget commitment.',
                     'expected_outputs' => 'Implementation outputs aligned to the approved budget commitment.',
-                    'implementation_notes' => 'Controlled by the ATTP Secretariat.',
+                    'implementation_notes' => 'Controlled by the FSRP Program Coordination Unit.',
                     'approved_at' => now(),
                 ]
             );

@@ -32,24 +32,24 @@ class ProgramPlanSheetSeeder extends Seeder
 
         $plans = [
             [
-                'name' => 'My 2063 Procurement Plan',
-                'description' => 'Flagship plan covering continental digitalization, transport, and climate resilience procurements.'
+                'name' => 'FSRP Food Security Procurement Plan',
+                'description' => 'Procurement plan for food security, market access, and resilience activities in Eastern and Southern Africa.'
             ],
             [
-                'name' => 'African Digital Procurement Bedrock',
-                'description' => 'Implementation of pan-African digital infrastructure and procurement platforms.'
+                'name' => 'FSRP Digital Early Warning Plan',
+                'description' => 'Digital systems for food security monitoring, early warning, and program coordination.'
             ],
             [
-                'name' => 'Continental Transport Plan',
-                'description' => 'Procurements for multimodal transport corridors and logistics hubs.'
+                'name' => 'FSRP Regional Market Access Plan',
+                'description' => 'Procurements supporting regional trade corridors, aggregation, storage, and logistics.'
             ],
             [
-                'name' => 'Climate Resilience Procurement Plan',
-                'description' => 'Climate adaptation procurements for water, energy, and early-warning systems.'
+                'name' => 'FSRP Climate Resilience Procurement Plan',
+                'description' => 'Climate adaptation procurements for water management, climate services, and resilient production.'
             ],
             [
-                'name' => 'Health & Security Procurement Plan',
-                'description' => 'Medical, vaccines, and security supply procurements supporting public health pillars.'
+                'name' => 'FSRP Capacity Strengthening Procurement Plan',
+                'description' => 'Training, technical assistance, and safeguards procurements supporting FSRP delivery.'
             ],
         ];
 
@@ -64,10 +64,10 @@ class ProgramPlanSheetSeeder extends Seeder
             );
 
             $baseBudget = match ($planData['name']) {
-                'My 2063 Procurement Plan' => 1200000,
-                'African Digital Procurement Bedrock' => 900000,
-                'Continental Transport Plan' => 750000,
-                'Climate Resilience Procurement Plan' => 950000,
+                'FSRP Food Security Procurement Plan' => 1200000,
+                'FSRP Digital Early Warning Plan' => 900000,
+                'FSRP Regional Market Access Plan' => 750000,
+                'FSRP Climate Resilience Procurement Plan' => 950000,
                 default => 800000,
             };
 

@@ -99,9 +99,8 @@ class RolePermissionSeeder extends Seeder
 
         // Member State Focal Point
         $this->syncRolePermissionsByNames('Member State Focal Point', [
-            'member_state.treaties.view',
-            'member_state.treaties.update',
-            'member_state.treaties.documents.download',
+            'communications.view',
+            'questions.view',
         ]);
     }
 

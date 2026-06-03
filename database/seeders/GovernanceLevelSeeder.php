@@ -10,13 +10,12 @@ class GovernanceLevelSeeder extends Seeder
     public function run(): void
     {
         $levels = [
-            ['key' => 'organ', 'name' => 'Organ', 'sort_order' => 1, 'description' => 'AU institution'],
-            ['key' => 'commission', 'name' => 'Commission', 'sort_order' => 2, 'description' => 'Executive/secretariat'],
-            ['key' => 'department', 'name' => 'Department', 'sort_order' => 3, 'description' => 'Policy cluster'],
-            ['key' => 'directorate', 'name' => 'Directorate', 'sort_order' => 4, 'description' => 'Technical policy unit'],
-            ['key' => 'division_unit', 'name' => 'Division / Unit', 'sort_order' => 5, 'description' => 'Operational staff'],
-            ['key' => 'consortia', 'name' => 'Consortia', 'sort_order' => 6, 'description' => 'Consortia groupings'],
-            ['key' => 'think_tanks', 'name' => 'Think Tanks', 'sort_order' => 7, 'description' => 'Think tank entities'],
+            ['key' => 'program', 'name' => 'FSRP Program', 'sort_order' => 1, 'description' => 'Overall Food System Resilience Program governance'],
+            ['key' => 'regional_coordination', 'name' => 'Regional Coordination Unit', 'sort_order' => 2, 'description' => 'Eastern and Southern Africa regional coordination'],
+            ['key' => 'component', 'name' => 'Program Component', 'sort_order' => 3, 'description' => 'FSRP technical component'],
+            ['key' => 'national_piu', 'name' => 'National Project Implementation Unit', 'sort_order' => 4, 'description' => 'Country implementation and fiduciary unit'],
+            ['key' => 'implementing_partner', 'name' => 'Implementing Partner', 'sort_order' => 5, 'description' => 'Delivery partner or consortium'],
+            ['key' => 'field_site', 'name' => 'Field Site / Community', 'sort_order' => 6, 'description' => 'Local implementation area'],
         ];
 
         foreach ($levels as $level) {

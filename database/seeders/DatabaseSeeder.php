@@ -10,7 +10,7 @@ class DatabaseSeeder extends Seeder
      * Seed a fresh FSRP administrative portal baseline.
      *
      * This intentionally avoids old demo/legacy imports and only creates
-     * the access-control catalog needed for a clean installation.
+     * the access-control, AU master-data, and FSRP public-content baseline.
      */
 
     public function run(): void
@@ -20,8 +20,13 @@ class DatabaseSeeder extends Seeder
             PermissionSeeder::class,
             RolePermissionSeeder::class,
             AuMasterDataPermissionsSeeder::class,
+            AuAgenda2063Seeder::class,
+            AuFlagshipProjectSeeder::class,
+            AuMemberStateSeeder::class,
+            AuRegionalBlockSeeder::class,
             PartnerPortalPermissionsSeeder::class,
-            ConsortiumOperationsPermissionsSeeder::class,
+            FundingPartnerSeeder::class,
+            AssignPartnerPermissionsSeeder::class,
             HrGovernancePermissionsSeeder::class,
             ProcurementPermissionsSeeder::class,
             FsrpTaxonomySeeder::class,

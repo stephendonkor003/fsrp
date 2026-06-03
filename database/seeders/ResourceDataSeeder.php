@@ -28,7 +28,7 @@ class ResourceDataSeeder extends Seeder
             'Software Licensing',
             'Consultancy Services',
             'Travel & Per Diem',
-            'Security & Compliance',
+            'Safeguards & Compliance',
             'Telecom Services',
             'Facility Management',
             'Communications & Outreach',
@@ -58,26 +58,26 @@ class ResourceDataSeeder extends Seeder
         });
 
         $resourceTemplates = [
-            'Satellite Connectivity Package',
-            'Data Analytics Platform',
-            'Eco-safe Vehicle Fleet',
-            'Field Research Kits',
+            'Climate-Smart Seed Package',
+            'Food Security Data Platform',
+            'Regional Coordination Vehicle',
+            'Field Monitoring Kits',
             'Capacity Building Workshop',
-            'Field Hospital Setup',
-            'Digital Authentication Licenses',
-            'Governance Reporting Suite',
-            'Solar Energy Array',
-            'Water Treatment Units',
+            'Food Safety Testing Kit',
+            'Digital Advisory Licenses',
+            'Resilience Reporting Suite',
+            'Solar Irrigation Package',
+            'Community Grain Storage Units',
             'Climate Monitoring Sensors',
-            'Security Surveillance System',
-            'Public Engagement Campaign',
+            'Safeguards Field Monitoring Kit',
+            'Public Awareness Campaign',
             'Logistics Coordination Hub',
-            'Legal Review Panel',
-            'Cloud Storage Tier',
-            'Renewable Energy Certificates',
-            'AI Translation Engine',
-            'Remote Training Studio',
-            'Data Center Backup'
+            'Fiduciary Review Panel',
+            'Cloud Data Repository',
+            'Farmer Training Materials',
+            'Translation and Localization Support',
+            'Remote Extension Training Studio',
+            'Backup Power Package'
         ];
 
         $resources = collect($resourceTemplates)->map(function ($name, $index) use ($categories, $createdBy) {

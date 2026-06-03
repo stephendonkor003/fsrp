@@ -28,14 +28,14 @@ class ProcurementStructureSeeder extends Seeder
             ?? User::query()->value('id');
 
         $sectors = collect([
-            'Infrastructure & Connectivity',
+            'Food Security & Resilience',
             'Climate Resilience',
-            'Health & Social',
-            'Digital Transformation',
-            'Energy Access',
-            'Education & Skills',
-            'Agriculture & Food Security',
-            'Governance & Peace'
+            'Regional Market Access',
+            'Climate-Smart Agriculture',
+            'Seed Systems',
+            'Water & Irrigation',
+            'Monitoring & Evaluation',
+            'Safeguards & Inclusion'
         ])->map(function ($name) {
             return Sector::updateOrCreate(
                 ['name' => $name],
@@ -44,16 +44,16 @@ class ProcurementStructureSeeder extends Seeder
         })->values();
 
         $programNames = [
-            'Continental Connectivity Initiative',
-            'African Clean Energy Program',
-            'Unified Health Resilience Agenda',
-            'Digital Skills Accelerator',
-            'Green Agriculture Corridors',
-            'Youth Entrepreneurship Booster',
-            'Regional Education Pathways',
-            'Governance & Peacebuilding Platform',
-            'Climate Smart Infrastructure Program',
-            'Water Security & Sanitation Program',
+            'FSRP Food Security and Resilience Program',
+            'Climate-Smart Production Support',
+            'Regional Food Market Integration',
+            'Digital Early Warning and Data Systems',
+            'Seed Systems and Input Access',
+            'Irrigation and Water Management',
+            'Post-Harvest Loss Reduction',
+            'Nutrition-Sensitive Value Chains',
+            'Safeguards and Community Engagement',
+            'Program Coordination and Learning',
         ];
 
         $programs = collect($programNames)->map(function ($name, $index) use ($sectors, $createdBy) {
@@ -75,12 +75,12 @@ class ProcurementStructureSeeder extends Seeder
         })->values();
 
         $projectNames = [
-            'Regional transport spine upgrade',
-            'Continental fiber backbone rollout',
+            'Food security response coordination',
+            'Regional market information rollout',
             'Climate early warning modernization',
-            'Pan-African vaccine logistics hub',
-            'Digital literacy labs',
-            'Renewable irrigation expansion',
+            'Seed multiplication and certification support',
+            'Digital extension and advisory services',
+            'Solar irrigation expansion',
         ];
 
         $projects = collect($projectNames)->map(function ($projectName, $index) use ($programs, $createdBy) {

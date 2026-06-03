@@ -15,13 +15,13 @@ class PermissionSeeder extends Seeder
             ['name' => 'users.manage', 'module' => 'system', 'description' => 'Manage system users'],
             ['name' => 'roles.manage', 'module' => 'system', 'description' => 'Manage roles and role settings'],
             ['name' => 'permissions.manage', 'module' => 'system', 'description' => 'Manage permission catalog and assignments'],
-            ['name' => 'communications.view', 'module' => 'system', 'description' => 'View member-state communications submitted to AU'],
+            ['name' => 'communications.view', 'module' => 'system', 'description' => 'View member-state communications submitted to FSRP'],
             ['name' => 'communications.respond', 'module' => 'system', 'description' => 'Respond to member-state communications and send official feedback'],
             ['name' => 'news.manage', 'module' => 'communications', 'description' => 'Create and manage FSRP news posts and downloadable attachments'],
             ['name' => 'news.approve', 'module' => 'communications', 'description' => 'Approve and publish FSRP news posts'],
             ['name' => 'gallery.manage', 'module' => 'communications', 'description' => 'Upload and manage public gallery images and videos'],
             ['name' => 'gallery.approve', 'module' => 'communications', 'description' => 'Approve and publish public gallery media'],
-            ['name' => 'questions.view', 'module' => 'system', 'description' => 'View member-state questions submitted to AU'],
+            ['name' => 'questions.view', 'module' => 'system', 'description' => 'View member-state questions submitted to FSRP'],
             ['name' => 'questions.respond', 'module' => 'system', 'description' => 'Respond to member-state questions and send official feedback'],
             ['name' => 'national_data.review', 'module' => 'system', 'description' => 'View and review member-state national data submissions'],
             ['name' => 'national_data.approve', 'module' => 'system', 'description' => 'Approve, reject, or request revisions for member-state national data'],
@@ -166,17 +166,6 @@ class PermissionSeeder extends Seeder
 
             // System Audit
             ['name' => 'system.audit.view', 'module' => 'system', 'description' => 'View system activity audit logs'],
-
-            // Treaties & Agreements
-            ['name' => 'treaties.view', 'module' => 'AU Master Data', 'description' => 'View treaties and agreements'],
-            ['name' => 'treaties.create', 'module' => 'AU Master Data', 'description' => 'Create treaties and agreements'],
-            ['name' => 'treaties.edit', 'module' => 'AU Master Data', 'description' => 'Edit treaties and member-state status'],
-            ['name' => 'treaties.delete', 'module' => 'AU Master Data', 'description' => 'Delete treaties and agreements'],
-
-            // Member State Treaty Portal (strict RBAC)
-            ['name' => 'member_state.treaties.view', 'module' => 'Member State Portal', 'description' => 'View own member-state treaties workspace'],
-            ['name' => 'member_state.treaties.update', 'module' => 'Member State Portal', 'description' => 'Sign, ratify, and submit original treaty documents'],
-            ['name' => 'member_state.treaties.documents.download', 'module' => 'Member State Portal', 'description' => 'Download own treaty status documents and treaty supporting documents'],
         ];
 
         foreach ($permissions as $permission) {
@@ -188,5 +177,18 @@ class PermissionSeeder extends Seeder
                 ]
             );
         }
+
+        Permission::whereIn('name', [
+            'treaties.view',
+            'treaties.create',
+            'treaties.edit',
+            'treaties.delete',
+            'member_state.treaties.view',
+            'member_state.treaties.update',
+            'member_state.treaties.documents.download',
+        ])->get()->each(function (Permission $permission) {
+            $permission->roles()->detach();
+            $permission->delete();
+        });
     }
 }

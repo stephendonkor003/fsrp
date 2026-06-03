@@ -13,14 +13,13 @@ class GovernanceReportingLineSeeder extends Seeder
         $nodes = GovernanceNode::pluck('id', 'name');
 
         $lines = [
-            ['child' => 'African Union Commission', 'parent' => 'Assembly', 'type' => 'primary'],
-            ['child' => 'Department of Health', 'parent' => 'African Union Commission', 'type' => 'primary'],
-            ['child' => 'Department of Trade', 'parent' => 'African Union Commission', 'type' => 'primary'],
-            ['child' => 'Directorate of Governance', 'parent' => 'Department of Health', 'type' => 'primary'],
-            ['child' => 'Directorate of Elections', 'parent' => 'Department of Trade', 'type' => 'primary'],
-            ['child' => 'Program Operations Unit', 'parent' => 'Directorate of Governance', 'type' => 'primary'],
-            ['child' => 'Consortia Alpha', 'parent' => 'African Union Commission', 'type' => 'dotted'],
-            ['child' => 'Think Tank A', 'parent' => 'Consortia Alpha', 'type' => 'dotted'],
+            ['child' => 'FSRP Regional Coordination Unit', 'parent' => 'Food System Resilience Program', 'type' => 'primary'],
+            ['child' => 'Food Security and Resilience Component', 'parent' => 'FSRP Regional Coordination Unit', 'type' => 'primary'],
+            ['child' => 'Climate-Smart Agriculture Component', 'parent' => 'FSRP Regional Coordination Unit', 'type' => 'primary'],
+            ['child' => 'Member State PIU - Eastern Africa', 'parent' => 'Food Security and Resilience Component', 'type' => 'primary'],
+            ['child' => 'Member State PIU - Southern Africa', 'parent' => 'Climate-Smart Agriculture Component', 'type' => 'primary'],
+            ['child' => 'Regional Implementation Partner', 'parent' => 'FSRP Regional Coordination Unit', 'type' => 'dotted'],
+            ['child' => 'Priority Value Chain Field Site', 'parent' => 'Regional Implementation Partner', 'type' => 'dotted'],
         ];
 
         foreach ($lines as $line) {
