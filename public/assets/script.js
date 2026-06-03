@@ -1,5 +1,6 @@
 // Background slider (only runs when .slide elements exist)
 (function () {
+    var hero = document.querySelector('.hero');
     var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
     if (!slides.length) return;
 
@@ -8,60 +9,111 @@
     }));
     var timer = null;
     var slideDelay = 6000;
+    var videoFallbackDelay = 18000;
+
+    function stopTimer() {
+        if (timer) {
+            clearTimeout(timer);
+            timer = null;
+        }
+    }
+
+    function updateHeroVideoState(slide) {
+        if (!hero) return;
+        hero.classList.toggle('video-active', !!(slide && slide.querySelector('video')));
+    }
 
     function resetSlideVideo(slide) {
         var video = slide.querySelector('video');
         if (!video) return;
 
         video.pause();
-        video.currentTime = 0;
+        try {
+            video.currentTime = 0;
+        } catch (error) {}
     }
 
-    function playActiveVideo(slide) {
-        var video = slide.querySelector('video');
-        if (!video) return;
+    function startActiveSlide(slide) {
+        updateHeroVideoState(slide);
 
-        video.play().catch(function () {});
+        var video = slide.querySelector('video');
+        if (!video) {
+            restartTimer(slideDelay);
+            return;
+        }
+
+        stopTimer();
+        video.muted = true;
+        video.setAttribute('playsinline', '');
+        video.preload = 'auto';
+
+        if (video.readyState < 2) {
+            video.load();
+        }
+
+        restartTimer(videoFallbackDelay);
+
+        var playPromise = video.play();
+        if (playPromise && typeof playPromise.catch === 'function') {
+            playPromise.catch(function () {
+                restartTimer(videoFallbackDelay);
+            });
+        }
     }
 
     function setSlide(nextIndex) {
+        stopTimer();
         slides[index].classList.remove('active');
         resetSlideVideo(slides[index]);
 
         index = (nextIndex + slides.length) % slides.length;
         slides[index].classList.add('active');
-        playActiveVideo(slides[index]);
+        startActiveSlide(slides[index]);
     }
 
-    function restartTimer() {
-        if (timer) clearInterval(timer);
-        timer = setInterval(function () {
+    function restartTimer(delay) {
+        stopTimer();
+        timer = setTimeout(function () {
             setSlide(index + 1);
-        }, slideDelay);
+        }, delay || slideDelay);
     }
 
     slides.forEach(function (slide, slideIndex) {
         var video = slide.querySelector('video');
         if (!video) return;
 
+        video.addEventListener('loadstart', function () {
+            if (slides[index] === slide) {
+                stopTimer();
+            }
+        });
+
+        video.addEventListener('canplay', function () {
+            if (slides[index] === slide && video.paused && !video.ended) {
+                video.play().catch(function () {
+                    restartTimer(videoFallbackDelay);
+                });
+            }
+        });
+
         video.addEventListener('play', function () {
-            if (timer) clearInterval(timer);
+            if (slides[index] === slide) {
+                stopTimer();
+            }
         });
 
         video.addEventListener('pause', function () {
             if (slides[index] === slide && !video.ended) {
-                restartTimer();
+                restartTimer(videoFallbackDelay);
             }
         });
 
         video.addEventListener('ended', function () {
             setSlide(slideIndex + 1);
-            restartTimer();
         });
     });
 
-    playActiveVideo(slides[index]);
-    restartTimer();
+    startActiveSlide(slides[index]);
 })();
 
 // Country impact image sliders

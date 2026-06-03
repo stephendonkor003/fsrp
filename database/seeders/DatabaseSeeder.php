@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
             ProcurementPermissionsSeeder::class,
             FsrpTaxonomySeeder::class,
             FsrpEventNewsSeeder::class,
+            FsrpGalleryMediaSeeder::class,
             MasterAdminSeeder::class,
         ]);
     }

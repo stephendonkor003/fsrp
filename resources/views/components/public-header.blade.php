@@ -39,6 +39,7 @@
     </div>
 
     <a href="{{ route('news.index') }}" class="{{ $active === 'news' ? 'active' : '' }}" onclick="closeMobileNav()">{{ __('public_pages.news_updates') }}</a>
+    <a href="{{ route('gallery.index') }}" class="{{ $active === 'gallery' ? 'active' : '' }}" onclick="closeMobileNav()">{{ __('public_pages.gallery') }}</a>
     <a href="{{ $contactHref }}" onclick="closeMobileNav()">{{ __('navigation.contact') }}</a>
 
     <div class="mobile-nav-actions">
@@ -74,6 +75,7 @@
         </div>
 
         <a href="{{ route('news.index') }}" class="{{ $active === 'news' ? 'active' : '' }}">{{ __('public_pages.news_updates') }}</a>
+        <a href="{{ route('gallery.index') }}" class="{{ $active === 'gallery' ? 'active' : '' }}">{{ __('public_pages.gallery') }}</a>
         <a href="{{ $contactHref }}">{{ __('navigation.contact') }}</a>
     </nav>
 

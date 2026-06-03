@@ -6,6 +6,7 @@ return [
     'food_security_analytics' => 'Food Security Analytics',
     'events_webinars' => 'Events / Webinars',
     'news_updates' => 'News & Updates',
+    'gallery' => 'Gallery',
     'policy_programs_research' => 'Policy Programs & Research',
     'administrative_portal' => 'Administrative Portal',
     'treaties_page_title' => 'Treaties Information | FSRP Impact',

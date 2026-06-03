@@ -81,6 +81,8 @@ class RolePermissionSeeder extends Seeder
             'communications.respond',
             'news.manage',
             'news.approve',
+            'gallery.manage',
+            'gallery.approve',
             'questions.view',
             'questions.respond',
             'national_data.review',

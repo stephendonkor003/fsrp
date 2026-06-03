@@ -6,6 +6,7 @@ return [
     'food_security_analytics' => 'Uchambuzi wa usalama wa chakula',
     'events_webinars' => 'Matukio / Semina',
     'news_updates' => 'Habari',
+    'gallery' => 'Matunzio',
     'policy_programs_research' => 'Programu na utafiti',
     'administrative_portal' => 'Tovuti ya usimamizi',
     'treaties_page_title' => 'Taarifa za mikataba | Athari za FSRP',

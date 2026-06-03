@@ -2525,9 +2525,10 @@ Route::get('/events', [ApplicantController::class, 'events'])->name('events');
 
 /*
 |--------------------------------------------------------------------------
-| NEWS & UPDATES (Public – dummy data template, no auth required)
+| PUBLIC GALLERY / NEWS & UPDATES
 |--------------------------------------------------------------------------
 */
+Route::get('/gallery', [\App\Http\Controllers\PublicGalleryController::class, 'index'])->name('gallery.index');
 Route::get('/news', [\App\Http\Controllers\PublicNewsController::class, 'index'])->name('news.index');
 Route::post('/news/subscribe', [\App\Http\Controllers\PublicNewsController::class, 'subscribe'])->name('news.subscribe');
 Route::get('/news/unsubscribe/{token}', [\App\Http\Controllers\PublicNewsController::class, 'unsubscribe'])->name('news.unsubscribe');
@@ -3115,6 +3116,20 @@ Route::middleware(['auth', 'not.funding.partner', 'permission:news.manage|news.a
         Route::put('/{post}', 'update')->middleware('permission:news.manage|communications.respond')->name('update');
         Route::post('/{post}/approval', 'approve')->middleware('permission:news.approve|communications.respond')->name('approve');
         Route::delete('/{post}/attachments/{attachment}', 'destroyAttachment')->middleware('permission:news.manage|communications.respond')->name('attachments.destroy');
+    });
+
+Route::middleware(['auth', 'not.funding.partner', 'permission:gallery.manage|gallery.approve'])
+    ->prefix('system/gallery')
+    ->name('system.gallery.')
+    ->controller(\App\Http\Controllers\GalleryAdminController::class)
+    ->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/create', 'create')->middleware('permission:gallery.manage')->name('create');
+        Route::post('/', 'store')->middleware('permission:gallery.manage')->name('store');
+        Route::get('/{media}/edit', 'edit')->name('edit');
+        Route::put('/{media}', 'update')->middleware('permission:gallery.manage')->name('update');
+        Route::post('/{media}/approval', 'approve')->middleware('permission:gallery.approve')->name('approve');
+        Route::delete('/{media}', 'destroy')->middleware('permission:gallery.manage')->name('destroy');
     });
 
 /*

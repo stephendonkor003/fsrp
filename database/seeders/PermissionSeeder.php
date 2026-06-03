@@ -19,6 +19,8 @@ class PermissionSeeder extends Seeder
             ['name' => 'communications.respond', 'module' => 'system', 'description' => 'Respond to member-state communications and send official feedback'],
             ['name' => 'news.manage', 'module' => 'communications', 'description' => 'Create and manage FSRP news posts and downloadable attachments'],
             ['name' => 'news.approve', 'module' => 'communications', 'description' => 'Approve and publish FSRP news posts'],
+            ['name' => 'gallery.manage', 'module' => 'communications', 'description' => 'Upload and manage public gallery images and videos'],
+            ['name' => 'gallery.approve', 'module' => 'communications', 'description' => 'Approve and publish public gallery media'],
             ['name' => 'questions.view', 'module' => 'system', 'description' => 'View member-state questions submitted to AU'],
             ['name' => 'questions.respond', 'module' => 'system', 'description' => 'Respond to member-state questions and send official feedback'],
             ['name' => 'national_data.review', 'module' => 'system', 'description' => 'View and review member-state national data submissions'],

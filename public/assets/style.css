@@ -607,11 +607,13 @@ html {
     background-position: center;
     opacity: 0;
     transition: opacity 1.5s ease-in-out, transform 10s ease;
+    z-index: 0;
 }
 
 .slide.active {
     opacity: 1;
     transform: scale(1.04);
+    z-index: 1;
 }
 
 .slide.video-slide {
@@ -620,6 +622,7 @@ html {
 
 .slide.video-slide.active {
     transform: none;
+    z-index: 2;
 }
 
 .slide video {
@@ -628,10 +631,26 @@ html {
     height: 100%;
     object-fit: cover;
     pointer-events: none;
+    background: #000;
 }
 
 .slide.active video {
     pointer-events: auto;
+}
+
+.hero.video-active .slider {
+    z-index: 4;
+}
+
+.hero.video-active .overlay {
+    z-index: 5;
+    background: rgba(0, 0, 0, 0.18);
+}
+
+.hero.video-active .hero-content {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
 }
 
 .overlay {

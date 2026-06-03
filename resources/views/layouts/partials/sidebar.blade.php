@@ -56,6 +56,8 @@
         'communications.respond',
         'news.manage',
         'news.approve',
+        'gallery.manage',
+        'gallery.approve',
         'questions.view',
         'questions.respond',
         'commodity_data.review',
@@ -305,6 +307,14 @@
                                 <li class="nxl-item">
                                     <a href="{{ route('system.news.index') }}" class="nxl-link">
                                         <i class="feather-send me-2"></i> News Posting
+                                    </a>
+                                </li>
+                            @endcanany
+
+                            @canany(['gallery.manage', 'gallery.approve'])
+                                <li class="nxl-item">
+                                    <a href="{{ route('system.gallery.index') }}" class="nxl-link">
+                                        <i class="feather-image me-2"></i> Gallery Media
                                     </a>
                                 </li>
                             @endcanany
@@ -1421,7 +1431,7 @@
 
 
                 {{-- ================= COMMUNICATIONS ================= --}}
-                @canany(['communications.view', 'communications.respond', 'news.manage', 'news.approve', 'questions.view', 'questions.respond',
+                @canany(['communications.view', 'communications.respond', 'news.manage', 'news.approve', 'gallery.manage', 'gallery.approve', 'questions.view', 'questions.respond',
                     'national_data.review', 'national_data.approve', 'commodity_data.review', 'commodity_data.approve'])
                     <li class="nxl-item nxl-caption">
                         <label>Country Engagement</label>
@@ -1438,6 +1448,13 @@
                         <li class="nxl-item">
                             <a href="{{ route('system.news.index') }}" class="nxl-link">
                                 <i class="feather-send me-2"></i> News Posting
+                            </a>
+                        </li>
+                    @endcanany
+                    @canany(['gallery.manage', 'gallery.approve'])
+                        <li class="nxl-item">
+                            <a href="{{ route('system.gallery.index') }}" class="nxl-link">
+                                <i class="feather-image me-2"></i> Gallery Media
                             </a>
                         </li>
                     @endcanany

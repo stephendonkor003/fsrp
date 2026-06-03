@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'gallery' => 'Gallery',
     'programs' => 'البرامج',
     'analytics' => 'التحليلات',
     'food_security_analytics' => 'تحليلات الأمن الغذائي',

@@ -45,7 +45,7 @@
 
     <!-- Fonts & Styles -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="{{ asset('assets/style.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/style.css') }}?v={{ file_exists(public_path('assets/style.css')) ? filemtime(public_path('assets/style.css')) : time() }}" />
 
     <!-- RTL CSS for Arabic -->
     {!! app()->getLocale() === 'ar' ? '<link rel="stylesheet" href="' . asset('assets/css/rtl.css') . '">' : '' !!}
@@ -84,9 +84,35 @@
 
         <div class="slider">
             <div class="slide active" style="background-image: url('{{ asset('assets/images/fsrp/water-food-resilience-1.jpg') }}');"></div>
+            <div class="slide" style="background-image: url('{{ asset('assets/gallery/media1.jpeg') }}');"></div>
             <div class="slide video-slide">
-                <video muted playsinline preload="metadata" controls>
-                    <source src="{{ asset('assets/videos/fsrp-program-video.mp4') }}" type="video/mp4">
+                <video class="hero-video"
+                    muted
+                    playsinline
+                    preload="auto"
+                    controls
+                    poster="{{ asset('assets/images/fsrp/water-food-resilience-1.jpg') }}">
+                    <source src="{{ asset('assets/videos/fsrp-program-video.mp4') }}?v={{ file_exists(public_path('assets/videos/fsrp-program-video.mp4')) ? filemtime(public_path('assets/videos/fsrp-program-video.mp4')) : time() }}" type="video/mp4">
+                </video>
+            </div>
+            <div class="slide video-slide">
+                <video class="hero-video"
+                    muted
+                    playsinline
+                    preload="auto"
+                    controls
+                    poster="{{ asset('assets/gallery/media1.jpeg') }}">
+                    <source src="{{ asset('assets/gallery/media2.mp4') }}?v={{ file_exists(public_path('assets/gallery/media2.mp4')) ? filemtime(public_path('assets/gallery/media2.mp4')) : time() }}" type="video/mp4">
+                </video>
+            </div>
+            <div class="slide video-slide">
+                <video class="hero-video"
+                    muted
+                    playsinline
+                    preload="auto"
+                    controls
+                    poster="{{ asset('assets/gallery/media1.jpeg') }}">
+                    <source src="{{ asset('assets/gallery/media3.mp4') }}?v={{ file_exists(public_path('assets/gallery/media3.mp4')) ? filemtime(public_path('assets/gallery/media3.mp4')) : time() }}" type="video/mp4">
                 </video>
             </div>
             <div class="slide" style="background-image: url('{{ asset('assets/images/fsrp/water-food-resilience-2.jpg') }}');"></div>
@@ -202,6 +228,9 @@
                 <div class="country-impact-slide">
                     <img src="{{ asset('assets/images/fsrp/water-food-resilience-3.jpg') }}" alt="Regional food security coordination under FSRP">
                 </div>
+                <div class="country-impact-slide">
+                    <img src="{{ asset('assets/gallery/media1.jpeg') }}" alt="FSRP field implementation and food system resilience activity">
+                </div>
                 <button class="country-slider-btn country-slider-prev" type="button" data-country-slider-prev aria-label="Previous image">&#8249;</button>
                 <button class="country-slider-btn country-slider-next" type="button" data-country-slider-next aria-label="Next image">&#8250;</button>
                 <div class="country-slider-dots" aria-label="Image slider navigation"></div>
@@ -232,6 +261,9 @@
                 </div>
                 <div class="country-impact-slide">
                     <img src="{{ asset('assets/images/fsrp/water-food-resilience-1.jpg') }}" alt="Program support for water, agriculture, and resilient food systems">
+                </div>
+                <div class="country-impact-slide">
+                    <img src="{{ asset('assets/gallery/media1.jpeg') }}" alt="FSRP field implementation activity supporting resilient food systems">
                 </div>
                 <button class="country-slider-btn country-slider-prev" type="button" data-country-slider-prev aria-label="Previous image">&#8249;</button>
                 <button class="country-slider-btn country-slider-next" type="button" data-country-slider-next aria-label="Next image">&#8250;</button>
@@ -305,7 +337,7 @@
 
 
 
-    <script src="{{ asset('assets/script.js') }}"></script>
+    <script src="{{ asset('assets/script.js') }}?v={{ file_exists(public_path('assets/script.js')) ? filemtime(public_path('assets/script.js')) : time() }}"></script>
 
     <script>
         function openMobileNav() {
