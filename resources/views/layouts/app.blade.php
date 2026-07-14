@@ -1,3 +1,4 @@
+@php($isMemberStatePortal = request()->routeIs('member-state.*'))
 <!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}" data-theme="light">
 
@@ -32,6 +33,9 @@
 
     <!-- DataTable Custom CSS -->
     <link rel="stylesheet" href="{{ asset('admin/assets/css/datatable-custom.css') }}">
+
+    <!-- Admin forest theme -->
+    <link rel="stylesheet" href="{{ asset('admin/assets/css/admin-forest.css') }}">
 
     <!-- Page-specific styles -->
     @stack('styles')
@@ -342,28 +346,52 @@
             display: block !important;
         }
     </style>
+
+    @if ($isMemberStatePortal)
+        <!-- Keep the portal design system last so legacy page styles cannot override it. -->
+        <link rel="stylesheet" href="{{ asset('admin/assets/css/member-state-portal.css') }}?v={{ filemtime(public_path('admin/assets/css/member-state-portal.css')) }}">
+    @endif
 </head>
 
 
-<body>
+<body class="{{ $isMemberStatePortal ? 'member-state-portal' : '' }}">
 
 
     <div class="main-wrapper">
-        <!-- Sidebar -->
-        @include('layouts.partials.sidebar')
+        @if ($isMemberStatePortal)
+            <div class="content-wrapper">
+                @include('layouts.partials.member-state-header')
 
-        <div class="content-wrapper">
-            <!-- Header -->
-            @include('layouts.partials.header')
+                @unless (request()->routeIs('member-state.dashboard'))
+                    @include('layouts.partials.member-state-route-nav')
+                @endunless
 
-            <!-- Main Content -->
-            <div class="content p-4">
-                @yield('content')
+                <div class="content member-state-content">
+                    @yield('content')
+                </div>
+
+                @include('layouts.partials.member-state-footer')
             </div>
+        @else
+            <!-- Sidebar -->
+            @include('layouts.partials.sidebar')
 
-            <!-- Footer -->
-            @include('layouts.partials.footer')
-        </div>
+            <div class="content-wrapper">
+                <!-- Header -->
+                @include('layouts.partials.header')
+
+                <!-- Botanical secondary header -->
+                @include('layouts.partials.forest-banner')
+
+                <!-- Main Content -->
+                <div class="content p-4">
+                    @yield('content')
+                </div>
+
+                <!-- Footer -->
+                @include('layouts.partials.footer')
+            </div>
+        @endif
     </div>
 
     <!-- Scripts -->
@@ -426,12 +454,10 @@
     @stack('modals')
 
     {{-- FSRP AI Guide Integration (Admin Controlled) --}}
-    @php
-        $aiGuideSettings = \App\Models\AttpAiGuideSetting::active();
-        $showAIGuide = $aiGuideSettings && $aiGuideSettings->isAvailableForUser();
-    @endphp
+    @php($aiGuideSettings = \App\Models\AttpAiGuideSetting::active())
+    @php($showAIGuide = $aiGuideSettings && $aiGuideSettings->isAvailableForUser())
 
-    @if ($showAIGuide && $aiGuideSettings->tawk_property_id && $aiGuideSettings->tawk_widget_id)
+    @if (($showAIGuide ?? false) && $aiGuideSettings?->tawk_property_id && $aiGuideSettings?->tawk_widget_id)
         <!--Start of Tawk.to Script-->
         <script type="text/javascript">
             var Tawk_API = Tawk_API || {},

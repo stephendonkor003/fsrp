@@ -172,7 +172,7 @@
     }
 </style>
 
-<nav class="nxl-navigation" style="background: linear-gradient(180deg, #f8fafc 0%, #eef2ff 45%, #e0f2fe 100%);">
+<nav class="nxl-navigation attp-forest-sidebar" aria-label="Administration navigation">
     <div class="navbar-wrapper" style="background: transparent;">
         {{-- <div class="m-header">
             <a href="#" class="b-brand">
@@ -194,18 +194,18 @@
                             <div class="flex-grow-1">
                                 <div class="ms-hero-kicker">Country Implementation Desk</div>
                                 <div class="fw-bold">{{ $sidebarMemberState?->name ?? 'Participating Country' }}</div>
-                                <div class="small text-white-50">FSRP Country Workspace</div>
+                                <div class="small text-white-50">
+                                    {{ $sidebarMemberState?->region_name ?? 'Regional Programme' }} &middot; FSRP Workspace
+                                </div>
                             </div>
                         </div>
                     </div>
                 @else
-                    <div class="card border-0 shadow-sm position-relative overflow-hidden"
-                        style="background: linear-gradient(135deg, #0f172a 0%, #0ea5e9 50%, #10b981 100%); color:#f8fafc; border-radius:14px;">
-                        <div
-                            style="position:absolute; inset:0; background: radial-gradient(circle at 20% 20%, rgba(255,255,255,0.15), transparent 45%), radial-gradient(circle at 80% 0%, rgba(255,255,255,0.18), transparent 40%);">
+                    <div class="card attp-sidebar-welcome border-0 shadow-sm position-relative overflow-hidden">
+                        <div class="attp-sidebar-welcome-glow">
                         </div>
                         <div class="card-body py-3 d-flex align-items-center gap-3 position-relative">
-                            <span class="module-icon" style="background: rgba(255,255,255,0.18); color:#f8fafc;">
+                            <span class="module-icon">
                                 <i class="feather-cpu"></i>
                             </span>
                             <div class="flex-grow-1">
@@ -216,8 +216,7 @@
                     </div>
                 @endif
                 <div class="mt-2">
-                    <div class="d-flex align-items-center px-3 py-2 rounded-3 shadow-sm"
-                        style="background: linear-gradient(120deg, #0ea5e9 0%, #6366f1 100%); color:#f8fafc;">
+                    <div class="attp-sidebar-aspiration d-flex align-items-center px-3 py-2 rounded-3 shadow-sm">
                         <i class="feather-star me-2"></i>
                         <span id="au-aspiration-ticker" class="small" style="line-height:1.3;">Loading
                             aspiration...</span>
@@ -827,6 +826,12 @@
                                 <li class="nxl-item">
                                     <a href="{{ route('budget.me-configuration.frequencies.index') }}" class="nxl-link">
                                         <i class="feather-clock me-2"></i> Reporting Frequencies
+                                    </a>
+                                </li>
+
+                                <li class="nxl-item">
+                                    <a href="{{ route('budget.me.member-state-reporting-cycles.index') }}" class="nxl-link">
+                                        <i class="feather-calendar me-2"></i> Member State Reporting Cycles
                                     </a>
                                 </li>
 
@@ -1570,7 +1575,7 @@
 
 
             {{-- Footer card --}}
-            <div class="card text-center mt-4">
+            <div class="card attp-sidebar-footer text-center mt-4">
                 <div class="card-body">
                     <i class="feather-clipboard fs-4 text-dark"></i>
                     <h6 class="mt-4 text-dark fw-bolder">FSRP</h6>

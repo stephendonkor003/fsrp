@@ -135,6 +135,26 @@ class User extends Authenticatable
         return $this->belongsTo(AuMemberState::class, 'member_state_id');
     }
 
+    public function memberStateReportingCyclesCreated()
+    {
+        return $this->hasMany(MemberStateReportingCycle::class, 'created_by');
+    }
+
+    public function memberStateReportingCyclesUpdated()
+    {
+        return $this->hasMany(MemberStateReportingCycle::class, 'updated_by');
+    }
+
+    public function memberStateReportSubmissionsStarted()
+    {
+        return $this->hasMany(MemberStateReportSubmission::class, 'started_by');
+    }
+
+    public function memberStateReportSubmissionsSubmitted()
+    {
+        return $this->hasMany(MemberStateReportSubmission::class, 'submitted_by');
+    }
+
     /**
      * Funding partner portal relationship
      */

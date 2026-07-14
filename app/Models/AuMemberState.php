@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use App\Models\BaseModel;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -17,6 +16,7 @@ class AuMemberState extends BaseModel
         'name',
         'code',
         'code_alpha2',
+        'region_name',
         'flag_path',
         'is_active',
         'sort_order',
@@ -105,5 +105,10 @@ class AuMemberState extends BaseModel
     public function commodityTrends(): HasMany
     {
         return $this->hasMany(MemberStateCommodityTrend::class, 'member_state_id');
+    }
+
+    public function reportSubmissions(): HasMany
+    {
+        return $this->hasMany(MemberStateReportSubmission::class, 'member_state_id');
     }
 }

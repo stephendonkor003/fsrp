@@ -30,6 +30,16 @@
                                 @enderror
                             </div>
 
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Regional Name</label>
+                                <input type="text" name="region_name"
+                                    class="form-control @error('region_name') is-invalid @enderror"
+                                    value="{{ old('region_name') }}" placeholder="e.g. Eastern Africa" maxlength="100">
+                                @error('region_name')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
                             <div class="col-md-3">
                                 <label class="form-label fw-semibold">ISO Alpha-3 Code</label>
                                 <input type="text" name="code" class="form-control @error('code') is-invalid @enderror"

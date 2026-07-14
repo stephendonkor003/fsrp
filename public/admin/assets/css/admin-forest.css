@@ -1,0 +1,307 @@
+html:root {
+    --attp-primary-header-height: 95px;
+    --attp-forest-banner-height: 118px;
+    --attp-backoffice-header-offset: calc(var(--attp-primary-header-height) + var(--attp-forest-banner-height));
+    --attp-forest-950: #071d14;
+    --attp-forest-900: #0b2b1d;
+    --attp-forest-800: #12452d;
+    --attp-forest-700: #19603b;
+    --attp-forest-500: #4e8a4b;
+    --attp-leaf-300: #a8c98c;
+    --attp-leaf-100: #e5f0d8;
+}
+
+body {
+    background: #f3f7f1;
+}
+
+.content-wrapper .content {
+    background:
+        radial-gradient(circle at 94% 4%, rgba(116, 150, 82, 0.1), transparent 25rem),
+        linear-gradient(180deg, #f5f8f3 0%, #f8faf7 32rem, #f6f8f5 100%);
+}
+
+/* Secondary botanical header */
+.attp-forest-banner {
+    position: fixed;
+    top: var(--attp-primary-header-height);
+    right: 0;
+    left: 280px;
+    z-index: 1024;
+    height: var(--attp-forest-banner-height);
+    overflow: hidden;
+    isolation: isolate;
+    border-bottom: 1px solid rgba(223, 237, 211, 0.78);
+    background:
+        radial-gradient(circle at 75% -90%, rgba(210, 231, 180, 0.38), transparent 34%),
+        linear-gradient(108deg, #092b1c 0%, #145236 48%, #6f8d4c 100%);
+    box-shadow: 0 10px 26px rgba(7, 29, 20, 0.18);
+    transition: left 0.3s ease;
+}
+
+.attp-forest-banner::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    opacity: 0.22;
+    background-image:
+        linear-gradient(115deg, transparent 0 48%, rgba(255, 255, 255, 0.18) 49% 50%, transparent 51%),
+        linear-gradient(65deg, transparent 0 48%, rgba(255, 255, 255, 0.1) 49% 50%, transparent 51%);
+    background-size: 56px 56px;
+}
+
+.attp-forest-banner__plants {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    opacity: 0.72;
+    background-image: url('../images/botanical/admin-forest-plants.png');
+    background-repeat: repeat-x;
+    background-position: center bottom;
+    background-size: 330px auto;
+    filter: saturate(0.92) contrast(1.04);
+    -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.48), #000 22%, #000 100%);
+    mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.48), #000 22%, #000 100%);
+}
+
+.attp-forest-banner__copy {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    width: max-content;
+    max-width: calc(100% - 2rem);
+    height: 100%;
+    margin-left: clamp(1rem, 3vw, 3rem);
+    padding: 0.8rem 1rem;
+    color: #fff;
+    text-shadow: 0 2px 14px rgba(2, 18, 11, 0.72);
+}
+
+.attp-forest-banner__copy::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border: 1px solid rgba(232, 242, 217, 0.22);
+    border-radius: 14px;
+    background: linear-gradient(90deg, rgba(7, 29, 20, 0.76), rgba(7, 29, 20, 0.28));
+    box-shadow: 0 10px 24px rgba(2, 18, 11, 0.16);
+    backdrop-filter: blur(3px);
+}
+
+.attp-forest-banner__copy strong {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: clamp(1.05rem, 1.6vw, 1.45rem);
+    font-weight: 600;
+    letter-spacing: 0.012em;
+    line-height: 1.15;
+}
+
+.attp-forest-banner__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin-bottom: 0.3rem;
+    color: var(--attp-leaf-100);
+    font-size: 0.66rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+.attp-forest-banner__eyebrow i {
+    color: #c6dfa8;
+    font-size: 0.86rem;
+}
+
+.minimenu .attp-forest-banner {
+    left: 100px;
+}
+
+/* Forest navigation */
+.attp-forest-sidebar.nxl-navigation {
+    background:
+        radial-gradient(circle at 10% 8%, rgba(108, 148, 79, 0.24), transparent 17rem),
+        linear-gradient(180deg, var(--attp-forest-950) 0%, var(--attp-forest-900) 48%, #102f20 100%) !important;
+    box-shadow: 9px 0 28px rgba(7, 29, 20, 0.2);
+}
+
+.attp-forest-sidebar.nxl-navigation::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 0;
+    height: 170px;
+    pointer-events: none;
+    opacity: 0.12;
+    background: url('../images/botanical/admin-forest-plants.png') center bottom / 360px auto no-repeat;
+}
+
+.attp-forest-sidebar .navbar-wrapper,
+.attp-forest-sidebar .navbar-content {
+    position: relative;
+    z-index: 1;
+    background: transparent !important;
+    border-right-color: rgba(196, 222, 175, 0.13) !important;
+}
+
+.attp-forest-sidebar .navbar-content {
+    scrollbar-color: rgba(168, 201, 140, 0.42) transparent;
+}
+
+.attp-forest-sidebar .navbar-content .nxl-caption {
+    color: #9fc684;
+    letter-spacing: 0.11em;
+}
+
+.attp-forest-sidebar .navbar-content .nxl-caption label,
+.attp-forest-sidebar .navbar-content .nxl-caption span:not(.badge) {
+    color: #9fc684;
+}
+
+.attp-forest-sidebar .navbar-content .nxl-link,
+.attp-forest-sidebar .navbar-content .nxl-link .nxl-micon i,
+.attp-forest-sidebar .navbar-content .nxl-link .nxl-arrow {
+    color: #d7e6d2;
+}
+
+.attp-forest-sidebar .navbar-content .nxl-link {
+    border: 1px solid transparent;
+    border-radius: 9px;
+}
+
+.attp-forest-sidebar .navbar-content .nxl-item.active > .nxl-link,
+.attp-forest-sidebar .navbar-content .nxl-item:hover > .nxl-link,
+.attp-forest-sidebar .navbar-content .nxl-navbar > .nxl-item.active > .nxl-link,
+.attp-forest-sidebar .navbar-content .nxl-navbar > .nxl-item:hover > .nxl-link {
+    color: #fff;
+    border-color: rgba(195, 225, 166, 0.18);
+    background: linear-gradient(90deg, rgba(78, 138, 75, 0.48), rgba(78, 138, 75, 0.2));
+    box-shadow: inset 3px 0 0 #a8c98c, 0 7px 17px rgba(3, 18, 11, 0.16);
+}
+
+.attp-forest-sidebar .navbar-content .nxl-item.active > .nxl-link .nxl-micon i,
+.attp-forest-sidebar .navbar-content .nxl-item:hover > .nxl-link .nxl-micon i,
+.attp-forest-sidebar .navbar-content .nxl-item.active > .nxl-link .nxl-arrow,
+.attp-forest-sidebar .navbar-content .nxl-item:hover > .nxl-link .nxl-arrow {
+    color: #dff1c8;
+}
+
+.attp-forest-sidebar .navbar-content .nxl-submenu .nxl-link {
+    color: #bcd0b7;
+}
+
+.attp-forest-sidebar .navbar-content .nxl-submenu .nxl-item::before {
+    border-color: rgba(168, 201, 140, 0.34);
+}
+
+.attp-forest-sidebar .ms-sidebar-hero {
+    background: linear-gradient(135deg, #0c3321 0%, #276744 58%, #799354 100%) !important;
+    border-color: rgba(218, 235, 195, 0.2);
+    box-shadow: 0 13px 25px rgba(2, 18, 11, 0.32);
+}
+
+.attp-sidebar-welcome {
+    margin: 0 !important;
+    color: #f6faef !important;
+    border: 1px solid rgba(218, 235, 195, 0.2) !important;
+    border-radius: 14px !important;
+    background: linear-gradient(135deg, #0b2b1d 0%, #1c5c3b 58%, #718c4b 100%) !important;
+    box-shadow: 0 13px 25px rgba(2, 18, 11, 0.32) !important;
+}
+
+.attp-sidebar-welcome-glow {
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at 14% 16%, rgba(255, 255, 255, 0.17), transparent 40%),
+        radial-gradient(circle at 86% 8%, rgba(216, 235, 193, 0.2), transparent 42%);
+}
+
+.attp-sidebar-welcome .module-icon {
+    color: #f5faed;
+    background: rgba(255, 255, 255, 0.14);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+}
+
+.attp-sidebar-aspiration {
+    color: #eef7e5;
+    border: 1px solid rgba(211, 232, 190, 0.18);
+    background: linear-gradient(115deg, rgba(39, 103, 68, 0.92), rgba(98, 124, 66, 0.94));
+    box-shadow: 0 10px 20px rgba(2, 18, 11, 0.22) !important;
+}
+
+.attp-sidebar-aspiration i {
+    color: #d9edb9;
+}
+
+.attp-forest-sidebar .navbar-content .attp-sidebar-footer {
+    position: relative;
+    z-index: 1;
+    color: #dcebd5 !important;
+    border: 1px solid rgba(190, 218, 167, 0.15) !important;
+    background: rgba(4, 26, 16, 0.58) !important;
+    box-shadow: 0 14px 30px rgba(2, 15, 9, 0.3) !important;
+    backdrop-filter: blur(6px);
+}
+
+.attp-forest-sidebar .attp-sidebar-footer .text-dark {
+    color: #dcebd5 !important;
+}
+
+.attp-forest-sidebar .attp-sidebar-footer .feather-clipboard {
+    color: #a8c98c !important;
+}
+
+.attp-forest-sidebar .attp-sidebar-footer .btn-danger {
+    border-color: #814c3e;
+    background: #814c3e;
+}
+
+.attp-forest-sidebar .attp-sidebar-footer .btn-danger:hover {
+    border-color: #9a5e4d;
+    background: #9a5e4d;
+}
+
+@media (max-width: 1199.98px) {
+    .attp-forest-banner,
+    .minimenu .attp-forest-banner {
+        left: 0;
+    }
+}
+
+@media (max-width: 767.98px) {
+    html:root {
+        --attp-forest-banner-height: 90px;
+    }
+
+    .attp-forest-banner__plants {
+        opacity: 0.58;
+        background-size: 270px auto;
+    }
+
+    .attp-forest-banner__copy {
+        margin-left: 0.75rem;
+        padding: 0.65rem 0.8rem;
+    }
+
+    .attp-forest-banner__copy strong {
+        font-size: 1rem;
+    }
+
+    .attp-forest-banner__eyebrow {
+        font-size: 0.58rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .attp-forest-banner {
+        transition: none;
+    }
+}

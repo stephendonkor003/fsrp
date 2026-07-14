@@ -1,14 +1,14 @@
 @extends('layouts.app')
 
-@section('title', 'AU Member States')
+@section('title', 'FSRP Reporting Countries')
 
 @section('content')
     <main class="nxl-container">
         <div class="nxl-content">
             <div class="page-header d-flex justify-content-between align-items-center mb-4">
                 <div>
-                    <h4 class="mb-1">AU Member States</h4>
-                    <p class="text-muted mb-0">Manage African Union member states for program funding beneficiaries.</p>
+                    <h4 class="mb-1">FSRP Reporting Countries</h4>
+                    <p class="text-muted mb-0">Manage the member states authorized to report data to the platform.</p>
                 </div>
                 @can('settings.au_master_data.create')
                     <a href="{{ route('settings.au.member-states.create') }}" class="btn btn-success">
@@ -26,12 +26,13 @@
 
             <div class="card shadow-sm border-0">
                 <div class="card-body">
-                    <x-data-table id="memberStatesTable" :config="['order' => [[4, 'asc']], 'pageLength' => 25]">
+                    <x-data-table id="memberStatesTable" :config="['order' => [[5, 'asc']], 'pageLength' => 25]">
                         <thead class="table-light">
                             <tr>
                                 <th width="60">#</th>
                                 <th width="70">Flag</th>
                                 <th>Name</th>
+                                <th>Region</th>
                                 <th>ISO Code</th>
                                 <th width="80">Order</th>
                                 <th width="80">Status</th>
@@ -51,6 +52,7 @@
                                         @endif
                                     </td>
                                     <td>{{ $state->name }}</td>
+                                    <td>{{ $state->region_name ?: '—' }}</td>
                                     <td>
                                         @if ($state->code)
                                             <span class="badge bg-light text-dark">{{ $state->code }}</span>

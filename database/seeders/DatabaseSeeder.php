@@ -34,6 +34,7 @@ class DatabaseSeeder extends Seeder
             FsrpGalleryMediaSeeder::class,
             WorldIndicatorsSeeder::class,
             MasterAdminSeeder::class,
+            MemberStateUserSeeder::class,
         ]);
     }
 }

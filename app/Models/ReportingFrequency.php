@@ -2,7 +2,8 @@
 
 namespace App\Models;
 
-use App\Models\BaseModel;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ReportingFrequency extends BaseModel
 {
@@ -47,6 +48,11 @@ class ReportingFrequency extends BaseModel
         return $this->hasMany(Indicator::class, 'frequency_of_reporting_id');
     }
 
+    public function memberStateReportingCycles(): HasMany
+    {
+        return $this->hasMany(MemberStateReportingCycle::class, 'reporting_frequency_id');
+    }
+
     // Scopes
     public function scopeActive($query)
     {
@@ -58,9 +64,19 @@ class ReportingFrequency extends BaseModel
         return $query->orderBy('sort_order')->orderBy('name');
     }
 
+    public function scopeMemberStateReporting(Builder $query): Builder
+    {
+        return $query->whereIn('code', MemberStateReportingCycle::allowedFrequencyCodes());
+    }
+
     public static function intervalOptions(): array
     {
         return self::INTERVAL_UNITS;
+    }
+
+    public function isMemberStateReportingFrequency(): bool
+    {
+        return in_array($this->code, MemberStateReportingCycle::allowedFrequencyCodes(), true);
     }
 
     public function resolvedIntervalUnit(): string
@@ -133,7 +149,7 @@ class ReportingFrequency extends BaseModel
             return null;
         }
 
-        if (!is_null($this->interval_value) && (int) $this->interval_value > 0) {
+        if (! is_null($this->interval_value) && (int) $this->interval_value > 0) {
             return (int) $this->interval_value;
         }
 
@@ -161,8 +177,8 @@ class ReportingFrequency extends BaseModel
 
         $label = self::INTERVAL_UNITS[$unit] ?? ucfirst($unit);
         $value = $this->resolvedIntervalValue() ?? 1;
-        $pluralLabel = $value === 1 ? $label : $label . 's';
+        $pluralLabel = $value === 1 ? $label : $label.'s';
 
-        return 'Every ' . $value . ' ' . $pluralLabel;
+        return 'Every '.$value.' '.$pluralLabel;
     }
 }

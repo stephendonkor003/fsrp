@@ -3,8 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\IndicatorLevel;
-use App\Models\ReportingFrequency;
 use App\Models\IndicatorUnit;
+use App\Models\ReportingFrequency;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -42,6 +42,7 @@ class MEConfigurationSeeder extends Seeder
             ['name' => 'Week', 'code' => 'WEEK', 'interval_unit' => 'week', 'interval_value' => 1, 'frequency_in_days' => 7],
             ['name' => 'Month', 'code' => 'MONTH', 'interval_unit' => 'month', 'interval_value' => 1, 'frequency_in_days' => 30],
             ['name' => 'Quarterly', 'code' => 'QUARTERLY', 'interval_unit' => 'quarterly', 'interval_value' => 1, 'frequency_in_days' => 90],
+            ['name' => 'Semi-Annual', 'code' => 'SEMI_ANNUAL', 'interval_unit' => 'month', 'interval_value' => 6, 'frequency_in_days' => 182],
             ['name' => 'Year', 'code' => 'YEAR', 'interval_unit' => 'year', 'interval_value' => 1, 'frequency_in_days' => 365],
             ['name' => 'Annual', 'code' => 'ANNUAL', 'interval_unit' => 'annual', 'interval_value' => 1, 'frequency_in_days' => 365],
             ['name' => 'Quinquennial', 'code' => 'QUINQUENNIAL', 'interval_unit' => 'quinquennial', 'interval_value' => 1, 'frequency_in_days' => 1825],

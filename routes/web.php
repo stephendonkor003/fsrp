@@ -102,6 +102,7 @@ use App\Http\Controllers\{
 	    FsrpSafeguardsController,
 	    ProjectBudgetController,
 	    MeConfigurationController,
+        MemberStateReportingCycleController,
         MeIndicatorController,
         MeDataSourceController,
         MeSurveyController,
@@ -197,6 +198,7 @@ use App\Http\Controllers\MemberState\{
     MemberStateComparisonController,
     MemberStateQuestionController,
     MemberStateCommodityController,
+    ReportingSectionController,
 };
 
 /*
@@ -1209,6 +1211,18 @@ Route::middleware(['auth', 'not.funding.partner'])
 
         Route::delete('me/frequencies/{frequency}', [MeConfigurationController::class, 'frequenciesDestroy'])
             ->name('me-configuration.frequencies.destroy');
+
+        // Member State reporting windows
+        Route::resource('me/member-state-reporting-cycles', MemberStateReportingCycleController::class)
+            ->except(['show'])
+            ->names([
+                'index' => 'me.member-state-reporting-cycles.index',
+                'create' => 'me.member-state-reporting-cycles.create',
+                'store' => 'me.member-state-reporting-cycles.store',
+                'edit' => 'me.member-state-reporting-cycles.edit',
+                'update' => 'me.member-state-reporting-cycles.update',
+                'destroy' => 'me.member-state-reporting-cycles.destroy',
+            ]);
 
         // Indicator Units
         Route::get('me/units', [MeConfigurationController::class, 'unitsIndex'])
@@ -2842,6 +2856,16 @@ Route::middleware(['auth', 'member.state'])
     ->group(function () {
         Route::get('/dashboard', [MemberStateDashboardController::class, 'index'])
             ->name('dashboard');
+
+        Route::get('/reporting', [ReportingSectionController::class, 'index'])
+            ->name('reporting.index');
+
+        Route::post('/reporting/start', [ReportingSectionController::class, 'start'])
+            ->name('reporting.start');
+
+        Route::get('/reporting/{section}', [ReportingSectionController::class, 'show'])
+            ->where('section', '[a-z0-9-]+')
+            ->name('reporting.show');
 
         Route::get('/communications', [MemberStateCommunicationController::class, 'index'])
             ->name('communications.index');
