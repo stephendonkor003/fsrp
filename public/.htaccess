@@ -27,3 +27,18 @@
         Header set Content-Disposition "inline"
     </FilesMatch>
 </IfModule>
+
+# News/gallery uploads: applies when PHP is loaded as an Apache module.
+<IfModule mod_php.c>
+    php_value upload_max_filesize 25M
+    php_value post_max_size 64M
+    php_value max_execution_time 120
+    php_value memory_limit 256M
+</IfModule>
+
+<IfModule php_module>
+    php_value upload_max_filesize 25M
+    php_value post_max_size 64M
+    php_value max_execution_time 120
+    php_value memory_limit 256M
+</IfModule>

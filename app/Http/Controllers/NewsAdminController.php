@@ -57,7 +57,7 @@ class NewsAdminController extends Controller
         $data['published_at'] = $action === 'publish' ? $now : null;
 
         if ($request->hasFile('cover_image')) {
-            $data['cover_image_path'] = $request->file('cover_image')->store('news/covers', 'public');
+            $data['cover_image_path'] = $this->storeCoverImage($request);
         }
 
         $post = NewsPost::create($data);
@@ -85,16 +85,15 @@ class NewsAdminController extends Controller
     {
         $data = $this->validated($request);
         $action = (string) $request->input('action', 'draft');
+        $previousCoverPath = null;
 
         if ($action === 'publish') {
             abort_unless($this->canPublish($request), 403, 'You do not have permission to publish news.');
         }
 
         if ($request->hasFile('cover_image')) {
-            if ($post->cover_image_path) {
-                Storage::disk('public')->delete($post->cover_image_path);
-            }
-            $data['cover_image_path'] = $request->file('cover_image')->store('news/covers', 'public');
+            $previousCoverPath = $post->cover_image_path;
+            $data['cover_image_path'] = $this->storeCoverImage($request);
         }
 
         if ($action === 'submit') {
@@ -114,6 +113,11 @@ class NewsAdminController extends Controller
         }
 
         $post->update($data);
+
+        if ($previousCoverPath && $previousCoverPath !== $post->cover_image_path) {
+            Storage::disk('public')->delete($previousCoverPath);
+        }
+
         $this->storeAttachments($request, $post);
 
         $message = $action === 'publish'
@@ -196,12 +200,14 @@ class NewsAdminController extends Controller
             'body' => 'required|string',
             'tags' => 'nullable|string|max:1000',
             'action' => ['required', Rule::in(['draft', 'submit', 'publish'])],
-            'cover_image' => 'nullable|image|max:4096',
+            'cover_image' => 'nullable|image|max:20480',
             'attachments' => 'nullable|array|max:10',
             'attachments.*' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,zip,jpg,jpeg,png|max:20480',
         ], [
-            'cover_image.max' => 'The cover image must not be larger than 4 MB.',
+            'cover_image.uploaded' => 'The cover image could not be uploaded. The server must allow files up to 25 MB and requests up to 64 MB.',
+            'cover_image.max' => 'The cover image must not be larger than 20 MB.',
             'attachments.max' => 'You may attach up to 10 files to one news post.',
+            'attachments.*.uploaded' => 'An attachment could not be uploaded. The server must allow files up to 25 MB and requests up to 64 MB.',
             'attachments.*.max' => 'Each attachment must not be larger than 20 MB.',
             'attachments.*.mimes' => 'Attachments must be PDF, Office, ZIP, JPG, JPEG, or PNG files.',
         ]);
@@ -264,6 +270,31 @@ class NewsAdminController extends Controller
         return '';
     }
 
+    private function storeCoverImage(Request $request): string
+    {
+        try {
+            $path = $request->file('cover_image')?->store('news/covers', 'public');
+        } catch (Throwable $exception) {
+            Log::error('News cover image storage failed.', [
+                'user_id' => $request->user()?->id,
+                'storage_path' => storage_path('app/public/news/covers'),
+                'message' => $exception->getMessage(),
+            ]);
+
+            throw ValidationException::withMessages([
+                'cover_image' => 'The cover image could not be saved because the server upload directory is not writable. Run the production storage preparation script on the server.',
+            ]);
+        }
+
+        if (! is_string($path) || $path === '') {
+            throw ValidationException::withMessages([
+                'cover_image' => 'The cover image could not be saved because the server upload directory is not writable. Run the production storage preparation script on the server.',
+            ]);
+        }
+
+        return $path;
+    }
+
     private function storeAttachments(Request $request, NewsPost $post): void
     {
         foreach ($request->file('attachments', []) as $file) {
@@ -271,7 +302,26 @@ class NewsAdminController extends Controller
                 continue;
             }
 
-            $path = $file->store("news/attachments/{$post->id}", 'local');
+            try {
+                $path = $file->store("news/attachments/{$post->id}", 'local');
+            } catch (Throwable $exception) {
+                Log::error('News attachment storage failed.', [
+                    'news_post_id' => $post->id,
+                    'user_id' => $request->user()?->id,
+                    'storage_path' => storage_path("app/private/news/attachments/{$post->id}"),
+                    'message' => $exception->getMessage(),
+                ]);
+
+                throw ValidationException::withMessages([
+                    'attachments' => 'An attachment could not be saved because the server upload directory is not writable. Run the production storage preparation script on the server.',
+                ]);
+            }
+
+            if (! is_string($path) || $path === '') {
+                throw ValidationException::withMessages([
+                    'attachments' => 'An attachment could not be saved because the server upload directory is not writable. Run the production storage preparation script on the server.',
+                ]);
+            }
 
             $post->attachments()->create([
                 'uploaded_by' => $request->user()?->id,

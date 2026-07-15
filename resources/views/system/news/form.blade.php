@@ -117,7 +117,7 @@
                             <div class="col-md-6">
                                 <label class="form-label fw-semibold">Cover Image</label>
                                 <input type="file" name="cover_image" class="form-control" accept="image/*">
-                                <div class="form-text">JPG, PNG, GIF, or WebP; maximum 4 MB.</div>
+                                <div class="form-text">JPG, PNG, GIF, or WebP; maximum 20 MB.</div>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label fw-semibold">Downloadable Attachments</label>

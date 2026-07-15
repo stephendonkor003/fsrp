@@ -135,6 +135,10 @@ class NewsPublishingSmoke
                     'category' => 'press',
                     'excerpt' => 'Published directly by an authorized communications responder.',
                     'body' => '<p>This post should be saved and displayed publicly in one action.</p>',
+                    'cover_image' => UploadedFile::fake()->image('large-cover.jpg', 1200, 675)->size(10240),
+                    'attachments' => [
+                        UploadedFile::fake()->create('large-brief.pdf', 10240, 'application/pdf'),
+                    ],
                     'action' => 'publish',
                 ])
                 ->assertRedirect();
@@ -144,6 +148,8 @@ class NewsPublishingSmoke
             $this->assertSame('published', $directPost->status, 'Direct publication did not set published status.');
             $this->assertTrue($directPost->approved_at !== null, 'Direct publication did not approve the news post.');
             $this->assertTrue($directPost->published_at !== null, 'Direct publication did not set the publication date.');
+            $this->assertTrue($directPost->cover_image_path !== null, 'The 10 MB cover image was not stored.');
+            $this->assertTrue($directPost->attachments()->exists(), 'The 10 MB attachment was not stored.');
 
             $this->get(route('news.index'))
                 ->assertOk()
