@@ -20,14 +20,14 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
-$app = require __DIR__ . '/bootstrap.php';
+$app = require __DIR__.'/bootstrap.php';
 
 class NewsPublishingSmoke
 {
-    use MakesHttpRequests;
     use InteractsWithAuthentication;
-    use InteractsWithSession;
     use InteractsWithExceptionHandling;
+    use InteractsWithSession;
+    use MakesHttpRequests;
 
     protected $app;
 
@@ -50,13 +50,13 @@ class NewsPublishingSmoke
             $user = $this->communicationsUser();
 
             $subscriber = NewsSubscriber::create([
-                'email' => 'news-subscriber-' . Str::lower(Str::random(6)) . '@example.test',
+                'email' => 'news-subscriber-'.Str::lower(Str::random(6)).'@example.test',
                 'name' => 'News Subscriber',
                 'status' => 'active',
                 'source' => 'smoke',
             ]);
 
-            $title = 'E2E Approved News ' . Str::upper(Str::random(5));
+            $title = 'E2E Approved News '.Str::upper(Str::random(5));
 
             $this->actingAs($user)
                 ->get(route('system.news.create'))
@@ -116,10 +116,38 @@ class NewsPublishingSmoke
                 ->assertOk();
 
             $this->postWithCsrf(route('news.subscribe'), [
-                'email' => 'new-public-subscriber-' . Str::lower(Str::random(6)) . '@example.test',
+                'email' => 'new-public-subscriber-'.Str::lower(Str::random(6)).'@example.test',
             ])->assertRedirect();
 
             $this->assertTrue(NewsSubscriber::where('source', 'news_page')->active()->exists(), 'Public subscription did not create an active subscriber.');
+
+            $responder = $this->communicationsResponder();
+            $directTitle = 'Directly Published News '.Str::upper(Str::random(5));
+
+            $this->actingAs($responder)
+                ->get(route('system.news.create'))
+                ->assertOk()
+                ->assertSee('Save &amp; Publish', false);
+
+            $this->actingAs($responder)
+                ->postWithCsrf(route('system.news.store'), [
+                    'title' => $directTitle,
+                    'category' => 'press',
+                    'excerpt' => 'Published directly by an authorized communications responder.',
+                    'body' => '<p>This post should be saved and displayed publicly in one action.</p>',
+                    'action' => 'publish',
+                ])
+                ->assertRedirect();
+
+            $directPost = NewsPost::where('title', $directTitle)->first();
+            $this->assertTrue((bool) $directPost, 'Direct publication did not create the news post.');
+            $this->assertSame('published', $directPost->status, 'Direct publication did not set published status.');
+            $this->assertTrue($directPost->approved_at !== null, 'Direct publication did not approve the news post.');
+            $this->assertTrue($directPost->published_at !== null, 'Direct publication did not set the publication date.');
+
+            $this->get(route('news.index'))
+                ->assertOk()
+                ->assertSee($directTitle);
 
             echo "NEWS_E2E_OK\n";
         } finally {
@@ -135,7 +163,25 @@ class NewsPublishingSmoke
 
         return User::create([
             'name' => 'E2E Communications Officer',
-            'email' => 'e2e-news-' . Str::lower(Str::random(6)) . '@example.test',
+            'email' => 'e2e-news-'.Str::lower(Str::random(6)).'@example.test',
+            'password' => Hash::make('Password123!'),
+            'user_type' => 'admin',
+            'role_id' => $role->id,
+            'must_change_password' => false,
+        ]);
+    }
+
+    private function communicationsResponder(): User
+    {
+        $role = Role::firstOrCreate(
+            ['name' => 'E2E Communications Responder'],
+            ['description' => 'Communications responder used by the news smoke test']
+        );
+        $role->permissions()->sync(Permission::where('name', 'communications.respond')->pluck('id')->all());
+
+        return User::create([
+            'name' => 'E2E Communications Responder',
+            'email' => 'e2e-news-responder-'.Str::lower(Str::random(6)).'@example.test',
             'password' => Hash::make('Password123!'),
             'user_type' => 'admin',
             'role_id' => $role->id,

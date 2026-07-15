@@ -45,7 +45,14 @@
             <div class="alert alert-success border-0 shadow-sm">{{ session('success') }}</div>
         @endif
         @if ($errors->any())
-            <div class="alert alert-danger border-0 shadow-sm">{{ $errors->first() }}</div>
+            <div class="alert alert-danger border-0 shadow-sm">
+                <div class="fw-semibold mb-1">Please correct the following before saving:</div>
+                <ul class="mb-0 ps-3">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
         @endif
 
         <div class="row g-4">
@@ -110,10 +117,13 @@
                             <div class="col-md-6">
                                 <label class="form-label fw-semibold">Cover Image</label>
                                 <input type="file" name="cover_image" class="form-control" accept="image/*">
+                                <div class="form-text">JPG, PNG, GIF, or WebP; maximum 4 MB.</div>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label fw-semibold">Downloadable Attachments</label>
-                                <input type="file" name="attachments[]" class="form-control" multiple>
+                                <input type="file" name="attachments[]" class="form-control" multiple
+                                    accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.zip,.jpg,.jpeg,.png">
+                                <div class="form-text">Up to 10 files; maximum 20 MB per file.</div>
                             </div>
                         </div>
                     </div>
@@ -124,7 +134,18 @@
                         <button class="btn btn-primary" type="submit" name="action" value="submit">
                             <i class="feather-send me-1"></i> Submit for Approval
                         </button>
+                        @canany(['news.approve', 'communications.respond'])
+                            <button class="btn btn-success" type="submit" name="action" value="publish">
+                                <i class="feather-globe me-1"></i> Save &amp; Publish
+                            </button>
+                        @endcanany
                     </div>
+                    @canany(['news.approve', 'communications.respond'])
+                        <div class="px-4 pb-3 text-end small text-muted">
+                            Save &amp; Publish makes this item visible immediately at
+                            <a href="{{ route('news.index') }}" target="_blank">the public news page</a>.
+                        </div>
+                    @endcanany
                 </form>
             </div>
 
@@ -147,7 +168,7 @@
                 </div>
 
                 @if ($post->exists)
-                    @can('news.approve')
+                    @canany(['news.approve', 'communications.respond'])
                         <div class="card border-0 shadow-sm mb-4">
                             <div class="card-header bg-white">
                                 <h5 class="mb-0 fw-bold"><i class="feather-check-circle me-1"></i> Approval</h5>
@@ -157,8 +178,8 @@
                                     @csrf
                                     <label class="form-label fw-semibold">Decision</label>
                                     <select name="status" class="form-select mb-3" required>
-                                        <option value="approved">Approve only</option>
                                         <option value="published">Approve and publish</option>
+                                        <option value="approved">Approve only (not public)</option>
                                         <option value="rejected">Reject</option>
                                     </select>
 
@@ -174,7 +195,7 @@
                                 </form>
                             </div>
                         </div>
-                    @endcan
+                    @endcanany
 
                     <div class="card border-0 shadow-sm">
                         <div class="card-header bg-white">
@@ -187,7 +208,7 @@
                                     <small class="text-muted">
                                         {{ $attachment->file_name }} · {{ number_format(($attachment->file_size_bytes ?? 0) / 1024, 1) }} KB
                                     </small>
-                                    @can('news.manage')
+                                    @canany(['news.manage', 'communications.respond'])
                                         <form method="POST"
                                             action="{{ route('system.news.attachments.destroy', [$post, $attachment]) }}"
                                             class="mt-2">
@@ -197,7 +218,7 @@
                                                 <i class="feather-trash-2 me-1"></i> Remove
                                             </button>
                                         </form>
-                                    @endcan
+                                    @endcanany
                                 </div>
                             @empty
                                 <p class="text-muted mb-0">No attachments uploaded.</p>

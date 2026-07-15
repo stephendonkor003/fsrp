@@ -302,7 +302,7 @@
                         </a>
 
                         <ul class="nxl-submenu">
-                            @canany(['news.manage', 'news.approve'])
+                            @canany(['news.manage', 'news.approve', 'communications.respond'])
                                 <li class="nxl-item">
                                     <a href="{{ route('system.news.index') }}" class="nxl-link">
                                         <i class="feather-send me-2"></i> News Posting
@@ -1449,7 +1449,7 @@
                             </a>
                         </li>
                     @endcan
-                    @canany(['news.manage', 'news.approve'])
+                    @canany(['news.manage', 'news.approve', 'communications.respond'])
                         <li class="nxl-item">
                             <a href="{{ route('system.news.index') }}" class="nxl-link">
                                 <i class="feather-send me-2"></i> News Posting

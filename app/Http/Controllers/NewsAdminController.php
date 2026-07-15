@@ -7,11 +7,12 @@ use App\Models\NewsAttachment;
 use App\Models\NewsPost;
 use App\Models\NewsSubscriber;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use Throwable;
 
 class NewsAdminController extends Controller
@@ -30,16 +31,30 @@ class NewsAdminController extends Controller
 
     public function create()
     {
-        return view('system.news.form', ['post' => new NewsPost()]);
+        return view('system.news.form', ['post' => new NewsPost]);
     }
 
     public function store(Request $request)
     {
         $data = $this->validated($request);
+        $action = (string) $request->input('action', 'draft');
+
+        if ($action === 'publish') {
+            abort_unless($this->canPublish($request), 403, 'You do not have permission to publish news.');
+        }
+
+        $now = now();
         $data['created_by'] = $request->user()?->id;
-        $data['status'] = $request->input('action') === 'submit' ? 'submitted' : 'draft';
-        $data['submitted_by'] = $data['status'] === 'submitted' ? $request->user()?->id : null;
-        $data['submitted_at'] = $data['status'] === 'submitted' ? now() : null;
+        $data['status'] = match ($action) {
+            'submit' => 'submitted',
+            'publish' => 'published',
+            default => 'draft',
+        };
+        $data['submitted_by'] = in_array($action, ['submit', 'publish'], true) ? $request->user()?->id : null;
+        $data['submitted_at'] = in_array($action, ['submit', 'publish'], true) ? $now : null;
+        $data['approved_by'] = $action === 'publish' ? $request->user()?->id : null;
+        $data['approved_at'] = $action === 'publish' ? $now : null;
+        $data['published_at'] = $action === 'publish' ? $now : null;
 
         if ($request->hasFile('cover_image')) {
             $data['cover_image_path'] = $request->file('cover_image')->store('news/covers', 'public');
@@ -48,7 +63,15 @@ class NewsAdminController extends Controller
         $post = NewsPost::create($data);
         $this->storeAttachments($request, $post);
 
-        return redirect()->route('system.news.edit', $post)->with('success', 'News post saved.');
+        $message = $action === 'publish'
+            ? 'News post saved and published. It is now visible on the public news page.'
+            : ($action === 'submit' ? 'News post saved and submitted for approval.' : 'News draft saved.');
+
+        if ($post->status === 'published') {
+            $message .= $this->notifyPublishedPost($post->fresh());
+        }
+
+        return redirect()->route('system.news.edit', $post)->with('success', $message);
     }
 
     public function edit(NewsPost $post)
@@ -61,6 +84,11 @@ class NewsAdminController extends Controller
     public function update(Request $request, NewsPost $post)
     {
         $data = $this->validated($request);
+        $action = (string) $request->input('action', 'draft');
+
+        if ($action === 'publish') {
+            abort_unless($this->canPublish($request), 403, 'You do not have permission to publish news.');
+        }
 
         if ($request->hasFile('cover_image')) {
             if ($post->cover_image_path) {
@@ -69,16 +97,34 @@ class NewsAdminController extends Controller
             $data['cover_image_path'] = $request->file('cover_image')->store('news/covers', 'public');
         }
 
-        if ($request->input('action') === 'submit') {
+        if ($action === 'submit') {
             $data['status'] = 'submitted';
             $data['submitted_by'] = $request->user()?->id;
             $data['submitted_at'] = now();
+            $data['approved_by'] = null;
+            $data['approved_at'] = null;
+            $data['published_at'] = null;
+        } elseif ($action === 'publish') {
+            $data['status'] = 'published';
+            $data['submitted_by'] = $post->submitted_by ?: $request->user()?->id;
+            $data['submitted_at'] = $post->submitted_at ?: now();
+            $data['approved_by'] = $request->user()?->id;
+            $data['approved_at'] = $post->approved_at ?: now();
+            $data['published_at'] = $post->published_at ?: now();
         }
 
         $post->update($data);
         $this->storeAttachments($request, $post);
 
-        return redirect()->route('system.news.edit', $post)->with('success', 'News post updated.');
+        $message = $action === 'publish'
+            ? 'News post updated and published. It is visible on the public news page.'
+            : ($action === 'submit' ? 'News post updated and submitted for approval.' : 'News post updated.');
+
+        if ($post->status === 'published') {
+            $message .= $this->notifyPublishedPost($post->fresh());
+        }
+
+        return redirect()->route('system.news.edit', $post)->with('success', $message);
     }
 
     public function approve(Request $request, NewsPost $post)
@@ -111,20 +157,11 @@ class NewsAdminController extends Controller
                 : null,
         ]);
 
-        if ($post->status === 'published') {
-            try {
-                $this->notifySubscribers($post->fresh());
-            } catch (Throwable $exception) {
-                Log::warning('News subscriber notification failed.', [
-                    'news_post_id' => $post->id,
-                    'message' => $exception->getMessage(),
-                ]);
+        $message = $post->status === 'published'
+            ? 'News approval saved. The post is visible on the public news page.'.$this->notifyPublishedPost($post->fresh())
+            : 'News approval saved.';
 
-                return back()->with('success', 'News approval saved. Subscriber email notification failed because the mail server connection was closed.');
-            }
-        }
-
-        return back()->with('success', 'News approval saved.');
+        return back()->with('success', $message);
     }
 
     public function destroyAttachment(NewsPost $post, NewsAttachment $attachment)
@@ -139,16 +176,17 @@ class NewsAdminController extends Controller
     private function validated(Request $request): array
     {
         $post = $request->route('post');
-        $slug = filled($request->input('slug'))
-            ? Str::slug((string) $request->input('slug'))
-            : Str::slug((string) $request->input('title'));
+        $requestedSlug = trim((string) $request->input('slug'));
+        $slugBase = Str::slug($requestedSlug !== '' ? $requestedSlug : (string) $request->input('title'));
+        $slugBase = $slugBase !== '' ? $slugBase : 'news';
+        $slug = $requestedSlug !== '' ? $slugBase : $this->availableSlug($slugBase, $post);
 
         $request->merge(['slug' => $slug]);
 
         $data = $request->validate([
             'title' => 'required|string|max:255',
             'slug' => [
-                'nullable',
+                'required',
                 'string',
                 'max:255',
                 Rule::unique('attp_news_posts', 'slug')->when($post?->exists, fn ($rule) => $rule->ignore($post->id)),
@@ -157,8 +195,15 @@ class NewsAdminController extends Controller
             'excerpt' => 'nullable|string|max:500',
             'body' => 'required|string',
             'tags' => 'nullable|string|max:1000',
+            'action' => ['required', Rule::in(['draft', 'submit', 'publish'])],
             'cover_image' => 'nullable|image|max:4096',
+            'attachments' => 'nullable|array|max:10',
             'attachments.*' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,zip,jpg,jpeg,png|max:20480',
+        ], [
+            'cover_image.max' => 'The cover image must not be larger than 4 MB.',
+            'attachments.max' => 'You may attach up to 10 files to one news post.',
+            'attachments.*.max' => 'Each attachment must not be larger than 20 MB.',
+            'attachments.*.mimes' => 'Attachments must be PDF, Office, ZIP, JPG, JPEG, or PNG files.',
         ]);
 
         $data['tags'] = collect(explode(',', (string) ($data['tags'] ?? '')))
@@ -167,11 +212,56 @@ class NewsAdminController extends Controller
             ->values()
             ->all();
         $data['body'] = $this->sanitizeNewsHtml($data['body']);
-        $data['slug'] = $data['slug'] ?: null;
 
-        unset($data['cover_image'], $data['attachments']);
+        $plainBody = trim((string) preg_replace('/\s+/u', ' ', html_entity_decode(strip_tags($data['body']))));
+        if ($plainBody === '' && ! preg_match('/<img\b/i', $data['body'])) {
+            throw ValidationException::withMessages([
+                'body' => 'Please enter the news story in the Body editor before saving.',
+            ]);
+        }
+
+        unset($data['action'], $data['cover_image'], $data['attachments']);
 
         return $data;
+    }
+
+    private function availableSlug(string $base, ?NewsPost $post = null): string
+    {
+        $slug = $base;
+        $counter = 2;
+
+        while (NewsPost::query()
+            ->where('slug', $slug)
+            ->when($post?->exists, fn ($query) => $query->whereKeyNot($post->id))
+            ->exists()) {
+            $slug = $base.'-'.$counter++;
+        }
+
+        return $slug;
+    }
+
+    private function canPublish(Request $request): bool
+    {
+        $user = $request->user();
+
+        return $user !== null
+            && ($user->hasPermission('news.approve') || $user->hasPermission('communications.respond'));
+    }
+
+    private function notifyPublishedPost(NewsPost $post): string
+    {
+        try {
+            $this->notifySubscribers($post);
+        } catch (Throwable $exception) {
+            Log::warning('News subscriber notification failed.', [
+                'news_post_id' => $post->id,
+                'message' => $exception->getMessage(),
+            ]);
+
+            return ' Subscriber email notification could not be queued, but publication succeeded.';
+        }
+
+        return '';
     }
 
     private function storeAttachments(Request $request, NewsPost $post): void
