@@ -6,6 +6,12 @@
     @php
         $seoDescription = $post->excerpt ?: \Illuminate\Support\Str::limit(strip_tags($post->body), 160);
         $seoImage = $post->cover_image_path ? asset('storage/' . $post->cover_image_path) : asset('assets/images/fsrp/water-food-resilience-2.jpg');
+        $articleBody = preg_replace(
+            '#<(p|div)\b[^>]*>(?:\s|&nbsp;|<br\s*/?>)*</\1>#i',
+            '',
+            $post->body
+        ) ?? $post->body;
+        $articleBody = preg_replace('#(?:<br\s*/?>\s*){3,}#i', '<br><br>', $articleBody) ?? $articleBody;
     @endphp
     <title>{{ $post->title }} | FSRP Eastern and Southern Africa News</title>
     <meta name="description" content="{{ $seoDescription }}">
@@ -51,7 +57,7 @@
 
         /* ── ARTICLE HERO ── */
         .article-hero {
-            position: relative; min-height: 420px;
+            position: relative; min-height: 320px;
             display: flex; flex-direction: column; justify-content: flex-end;
             overflow: hidden;
         }
@@ -65,13 +71,13 @@
         }
         .hero-content {
             position: relative; z-index: 2;
-            max-width: 860px; margin: 0 auto; padding: 48px 24px 40px;
+            max-width: 900px; margin: 0 auto; padding: 36px 24px 32px;
             color: #fff; width: 100%;
         }
         .back-link {
             display: inline-flex; align-items: center; gap: 6px;
             color: var(--gold); text-decoration: none; font-size: .85rem;
-            font-weight: 600; margin-bottom: 20px; opacity: .9;
+            font-weight: 600; margin-bottom: 14px; opacity: .9;
             transition: opacity .2s;
         }
         .back-link:hover { opacity: 1; }
@@ -82,39 +88,44 @@
         }
         .hero-content h1 {
             font-family: 'Merriweather', Georgia, serif;
-            font-size: 2.2rem; line-height: 1.25; margin: 0 0 16px; color: #fff;
+            font-size: 2rem; line-height: 1.28; margin: 0 0 12px; color: #fff;
+            text-wrap: balance;
         }
         .hero-meta { font-size: .9rem; color: #b8d4c5; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
         .hero-meta-sep { opacity: .5; }
 
         /* ── LAYOUT ── */
         .article-layout {
-            max-width: 1160px; margin: 0 auto; padding: 40px 24px 60px;
-            display: grid; grid-template-columns: 1fr 320px; gap: 28px;
-            align-items: start;
+            max-width: 900px; margin: 0 auto; padding: 28px 20px 48px;
         }
 
         /* ── ARTICLE CARD ── */
         .article-card {
             background: #fff; border-radius: 14px; border: 1px solid #e0ebe5;
-            padding: 36px 40px; box-shadow: 0 2px 12px rgba(0,0,0,.06);
+            padding: 34px clamp(24px, 6vw, 64px); box-shadow: 0 2px 12px rgba(0,0,0,.06);
         }
         .article-body {
-            font-family: 'Merriweather', Georgia, serif;
-            font-size: 1.05rem; line-height: 1.9; color: #2a3d30;
+            max-width: 720px; margin: 0 auto;
+            font-family: 'Inter', Arial, sans-serif;
+            font-size: 1rem; line-height: 1.72; color: #2a3d30;
+            overflow-wrap: anywhere;
         }
-        .article-body h2 { font-size: 1.35rem; margin-top: 2rem; color: var(--au-green); }
-        .article-body h3 { font-size: 1.1rem; margin-top: 1.5rem; color: var(--au-green-dark); }
-        .article-body p { margin: 0 0 1.2rem; }
+        .article-body > :first-child { margin-top: 0; }
+        .article-body > :last-child { margin-bottom: 0; }
+        .article-body h2 { font-size: 1.35rem; line-height: 1.35; margin: 1.6rem 0 .7rem; color: var(--au-green); }
+        .article-body h3 { font-size: 1.1rem; line-height: 1.4; margin: 1.3rem 0 .6rem; color: var(--au-green-dark); }
+        .article-body p { margin: 0 0 1rem; }
+        .article-body p:empty, .article-body div:empty { display: none; }
         .article-body a { color: var(--au-green); }
-        .article-body ul, .article-body ol { padding-left: 1.5rem; margin-bottom: 1.2rem; }
+        .article-body ul, .article-body ol { padding-left: 1.4rem; margin: 0 0 1rem; }
+        .article-body li + li { margin-top: .35rem; }
         .article-body blockquote {
             border-left: 4px solid var(--gold); margin: 1.5rem 0;
             padding: .8rem 1.2rem; background: #f7faf8; color: #3a5040;
             font-style: italic;
         }
         .article-body img {
-            max-width: 100%; height: auto; border-radius: 12px; margin: 1rem 0;
+            display: block; max-width: 100%; height: auto; border-radius: 12px; margin: 1rem auto;
             box-shadow: 0 8px 22px rgba(0,0,0,.08);
         }
         .article-body table {
@@ -133,7 +144,7 @@
         }
 
         /* ── TAGS ── */
-        .tags-row { margin-top: 28px; padding-top: 20px; border-top: 1px solid #e8f0eb; display: flex; flex-wrap: wrap; gap: 8px; }
+        .tags-row { max-width: 720px; margin: 24px auto 0; padding-top: 18px; border-top: 1px solid #e8f0eb; display: flex; flex-wrap: wrap; gap: 8px; }
         .tag-chip {
             padding: 5px 12px; border-radius: 99px; border: 1.5px solid #c8d8ce;
             color: #3a5040; font-size: .82rem; font-weight: 500; text-decoration: none;
@@ -142,7 +153,7 @@
         .tag-chip:hover { background: var(--au-green); color: #fff; border-color: var(--au-green); }
 
         /* ── SHARE ROW ── */
-        .share-row { margin-top: 24px; padding-top: 18px; border-top: 1px solid #e8f0eb; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .share-row { max-width: 720px; margin: 20px auto 0; padding-top: 16px; border-top: 1px solid #e8f0eb; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
         .share-row span { font-size: .85rem; font-weight: 600; color: #5a7065; }
         .share-btn {
             padding: 7px 16px; border-radius: 8px; border: 1.5px solid #c8d8ce;
@@ -152,7 +163,10 @@
         .share-btn:hover { background: var(--au-green); color: #fff; border-color: var(--au-green); }
 
         /* ── SIDEBAR ── */
-        .sidebar { display: flex; flex-direction: column; gap: 20px; }
+        .sidebar {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 18px; margin-top: 20px; align-items: start;
+        }
         .side-card {
             background: #fff; border-radius: 14px; border: 1px solid #e0ebe5;
             padding: 22px 24px; box-shadow: 0 2px 10px rgba(0,0,0,.05);
@@ -203,10 +217,15 @@
 
         /* ── RESPONSIVE ── */
         @media (max-width: 900px) {
-            .article-layout { grid-template-columns: 1fr; }
             .hero-content h1 { font-size: 1.7rem; }
-            .article-hero { min-height: 320px; }
+            .article-hero { min-height: 280px; }
             .article-card { padding: 24px 20px; }
+        }
+        @media (max-width: 600px) {
+            .article-layout { padding: 20px 14px 36px; }
+            .article-card { border-radius: 10px; }
+            .article-body { font-size: .98rem; line-height: 1.68; }
+            .sidebar { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -247,7 +266,7 @@
     <!-- LEFT: ARTICLE BODY -->
     <main>
         <article class="article-card">
-            <div class="article-body">{!! $post->body !!}</div>
+            <div class="article-body">{!! $articleBody !!}</div>
 
             @if($post->tags && count($post->tags))
                 <div class="tags-row">
@@ -270,18 +289,18 @@
     <aside class="sidebar">
 
         <!-- Downloads -->
-        <div class="side-card">
-            <h3>Downloads</h3>
-            @forelse($post->attachments as $attachment)
+        @if($post->attachments->isNotEmpty())
+            <div class="side-card">
+                <h3>Downloads</h3>
+                @foreach($post->attachments as $attachment)
                 <a class="download-item" href="{{ route('news.attachments.download', [$post, $attachment]) }}">
                     <span class="dl-icon">&#8659;</span>
                     <strong>{{ $attachment->title }}</strong>
                     <small>{{ $attachment->file_name }}</small>
                 </a>
-            @empty
-                <p style="color:#7a9384;font-size:.88rem;margin:0;">No downloadable files for this update.</p>
-            @endforelse
-        </div>
+                @endforeach
+            </div>
+        @endif
 
         <!-- Subscribe -->
         <div class="side-card side-subscribe">

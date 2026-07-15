@@ -134,7 +134,7 @@ class NewsPublishingSmoke
                     'title' => $directTitle,
                     'category' => 'press',
                     'excerpt' => 'Published directly by an authorized communications responder.',
-                    'body' => '<p>This post should be saved and displayed publicly in one action.</p>',
+                    'body' => '<p><br></p><p>This post should be saved and displayed publicly in one action.</p><p>&nbsp;</p>',
                     'cover_image' => UploadedFile::fake()->image('large-cover.jpg', 1200, 675)->size(10240),
                     'attachments' => [
                         UploadedFile::fake()->create('large-brief.pdf', 10240, 'application/pdf'),
@@ -151,9 +151,45 @@ class NewsPublishingSmoke
             $this->assertTrue($directPost->cover_image_path !== null, 'The 10 MB cover image was not stored.');
             $this->assertTrue($directPost->attachments()->exists(), 'The 10 MB attachment was not stored.');
 
+            $directCoverPath = $directPost->cover_image_path;
+            $directAttachmentPath = $directPost->attachments()->value('file_path');
+            $directPublicUrl = route('news.show', $directPost);
+            $this->assertTrue(Storage::disk('public')->exists($directCoverPath), 'The cover image was missing before deletion.');
+            $this->assertTrue(Storage::disk('local')->exists($directAttachmentPath), 'The attachment was missing before deletion.');
+
             $this->get(route('news.index'))
                 ->assertOk()
                 ->assertSee($directTitle);
+
+            $this->get($directPublicUrl)
+                ->assertOk()
+                ->assertSee('article-body', false)
+                ->assertDontSee('<p><br></p>', false)
+                ->assertDontSee('<p>&nbsp;</p>', false);
+
+            $this->actingAs($responder)
+                ->get(route('system.news.edit', $directPost))
+                ->assertOk()
+                ->assertSee('Remove News Post');
+
+            $this->actingAs($responder)
+                ->get(route('system.news.index'))
+                ->assertOk()
+                ->assertSee(route('system.news.destroy', $directPost), false);
+
+            $this->actingAs($responder)
+                ->deleteWithCsrf(route('system.news.destroy', $directPost))
+                ->assertRedirect(route('system.news.index'));
+
+            $this->assertTrue(! NewsPost::whereKey($directPost->id)->exists(), 'The deleted news post still exists.');
+            $this->assertTrue(! Storage::disk('public')->exists($directCoverPath), 'The deleted cover image still exists.');
+            $this->assertTrue(! Storage::disk('local')->exists($directAttachmentPath), 'The deleted attachment still exists.');
+
+            $this->get(route('news.index'))
+                ->assertOk()
+                ->assertDontSee($directPublicUrl, false);
+
+            $this->get($directPublicUrl)->assertNotFound();
 
             echo "NEWS_E2E_OK\n";
         } finally {
@@ -201,6 +237,14 @@ class NewsPublishingSmoke
 
         return $this->withSession(['_token' => $token])
             ->post($uri, ['_token' => $token, ...$data]);
+    }
+
+    private function deleteWithCsrf(string $uri)
+    {
+        $token = Str::random(40);
+
+        return $this->withSession(['_token' => $token])
+            ->delete($uri, ['_token' => $token]);
     }
 
     private function assertTrue(bool $condition, string $message): void

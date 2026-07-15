@@ -177,6 +177,30 @@ class NewsAdminController extends Controller
         return back()->with('success', 'Attachment removed.');
     }
 
+    public function destroy(NewsPost $post)
+    {
+        $title = $post->title;
+        $coverImagePath = $post->cover_image_path;
+        $attachmentPaths = $post->attachments()->pluck('file_path')->all();
+        $attachmentDirectory = "news/attachments/{$post->id}";
+
+        $post->delete();
+
+        if ($coverImagePath) {
+            Storage::disk('public')->delete($coverImagePath);
+        }
+
+        if ($attachmentPaths !== []) {
+            Storage::disk('local')->delete($attachmentPaths);
+        }
+
+        Storage::disk('local')->deleteDirectory($attachmentDirectory);
+
+        return redirect()
+            ->route('system.news.index')
+            ->with('success', "News post \"{$title}\" was removed.");
+    }
+
     private function validated(Request $request): array
     {
         $post = $request->route('post');

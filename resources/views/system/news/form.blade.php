@@ -225,6 +225,28 @@
                             @endforelse
                         </div>
                     </div>
+
+                    @canany(['news.manage', 'communications.respond'])
+                        <div class="card border-danger shadow-sm mt-4">
+                            <div class="card-header bg-white text-danger fw-bold">
+                                <i class="feather-alert-triangle me-1"></i> Danger Zone
+                            </div>
+                            <div class="card-body">
+                                <p class="text-muted small">
+                                    Removing this news post also removes its cover image and downloadable attachments.
+                                    This action cannot be undone.
+                                </p>
+                                <form method="POST" action="{{ route('system.news.destroy', $post) }}"
+                                    onsubmit="return confirm('Permanently remove this news post and all of its files? This action cannot be undone.');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="btn btn-outline-danger w-100" type="submit">
+                                        <i class="feather-trash-2 me-1"></i> Remove News Post
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    @endcanany
                 @endif
             </div>
         </div>

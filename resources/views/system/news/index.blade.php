@@ -94,6 +94,17 @@
                                                 <i class="feather-external-link me-1"></i> Public
                                             </a>
                                         @endif
+                                        @canany(['news.manage', 'communications.respond'])
+                                            <form method="POST" action="{{ route('system.news.destroy', $post) }}"
+                                                class="d-inline"
+                                                onsubmit="return confirm('Permanently remove this news post and all of its files? This action cannot be undone.');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button class="btn btn-sm btn-outline-danger" type="submit">
+                                                    <i class="feather-trash-2 me-1"></i> Remove
+                                                </button>
+                                            </form>
+                                        @endcanany
                                     </td>
                                 </tr>
                             @empty

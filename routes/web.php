@@ -3140,6 +3140,7 @@ Route::middleware(['auth', 'not.funding.partner', 'permission:news.manage|news.a
         Route::put('/{post}', 'update')->middleware('permission:news.manage|communications.respond')->name('update');
         Route::post('/{post}/approval', 'approve')->middleware('permission:news.approve|communications.respond')->name('approve');
         Route::delete('/{post}/attachments/{attachment}', 'destroyAttachment')->middleware('permission:news.manage|communications.respond')->name('attachments.destroy');
+        Route::delete('/{post}', 'destroy')->middleware('permission:news.manage|communications.respond')->name('destroy');
     });
 
 Route::middleware(['auth', 'not.funding.partner', 'permission:gallery.manage|gallery.approve'])
